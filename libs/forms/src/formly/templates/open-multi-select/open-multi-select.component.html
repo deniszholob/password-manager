@@ -1,0 +1,13 @@
+<ng-select
+  [items]="items | async"
+  [bindLabel]="to.label"
+  [placeholder]="to.placeholder"
+  [bindValue]="to.bindValue"
+  [formControl]="asFormControl(formControl)"
+  [multiple]="true"
+  [addTag]="addTagFn"
+  [class.is-invalid]="showError"
+>
+</ng-select>
+
+<!-- [hideSelected]="true" -->

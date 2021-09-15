@@ -1,0 +1,130 @@
+<main class="flex flex-col h-screen">
+  <header class="text-center font-medium">
+    <section *ngIf="WEB_WARNING" class="p-1 bg-red-900 w-full decoration-clone">
+      {{ WEB_WARNING }}
+    </section>
+
+    <section class="p-1 bg-gray-700 w-full">
+      Data from "{{ (settings$ | async)?.dataFile }}"
+    </section>
+
+    <aside id="status" class="flex flex-col px-4 mx-auto">
+      <div *ngIf="error" class="p-2 text-red-500">{{ error }}</div>
+      <div *ngIf="loading" class="p-2 text-blue-500">{{ loading }}</div>
+    </aside>
+  </header>
+
+  <div id="horizontal-center" class="flex flex-row flex-1 overflow-y-auto">
+    <pwm-settings-edit
+      class="bg-black bg-opacity-20 p-4 overflow-y-auto flex-auto sm:max-w-lg"
+      *ngIf="getIsSettingsOpen()"
+      (closeSettings)="toggleSettings()"
+      [disableFileSelection]="(appStore$ | async)?.unsavedChanges"
+    ></pwm-settings-edit>
+
+    <div
+      id="main-container"
+      class="container mx-auto flex flex-col flex-auto relative"
+      [ngClass]="[
+        getIsSettingsOpen() ? 'hidden sm:flex' : '',
+        getIsEditEntryOpen() ? 'max-w-screen-xlg' : 'max-w-screen-lg'
+      ]"
+    >
+      <pwm-search-header
+        [ngClass]="detailEntry ? 'hidden lg:block' : ''"
+        (clearSearch)="clearSearch()"
+        [(searchQuery)]="searchQuery"
+        [disabledSearch]="fileData.length <= 0"
+        (createNewEntry)="createNewEntry()"
+        [disabledCreateNew]="!!newEntry || (appStore$ | async)?.unsavedChanges"
+        (openSettings)="toggleSettings()"
+        [tags]="allTags$ | async"
+        (filterTagsChange)="searchFilters = $event"
+      ></pwm-search-header>
+
+      <aside
+        id="new-file"
+        class="flex flex-col justify-between text-center py-8"
+        *ngIf="fileData.length <= 0 && !newEntry"
+      >
+        <h2 class="mb-6 text-2xl text-gray-500">Looks like an empty canvas</h2>
+        <p>
+          <button
+            type="button"
+            class="text-green-500"
+            (click)="createNewEntry()"
+          >
+            Add an entry
+          </button>
+          to get started.
+        </p>
+      </aside>
+
+      <div id="center-pane" class="flex flex-row flex-1 overflow-y-auto">
+        <pwm-search-results
+          class="px-4 flex flex-col overflow-y-auto flex-auto"
+          *ngIf="getIsSearchOpen()"
+          [ngClass]="getIsEditEntryOpen() ? 'hidden lg:flex' : ''"
+          [newEntry]="newEntry"
+          [filteredSearchResults]="filteredSearchResults"
+          [totalResultsCount]="fileData.length"
+          [selectedEntry]="detailEntry"
+          (selectedEntryChange)="selectEntryDetail($event)"
+          [disableSelect]="(appStore$ | async)?.unsavedChanges"
+        >
+          <p noEntries *ngIf="searchQuery">
+            <button type="button" class="text-red-500" (click)="clearSearch()">
+              Clear
+            </button>
+            the search to show {{ fileData.length }} Entries.
+          </p>
+        </pwm-search-results>
+
+        <pwm-entry-edit
+          class="p-4 overflow-auto flex-auto"
+          [ngClass]="{
+            'bg-red-800 bg-opacity-5': (appStore$ | async)?.unsavedChanges
+          }"
+          *ngIf="getIsEditEntryOpen()"
+          [detailEntry]="detailEntry"
+          (saveEntry)="saveDetailEntry($event)"
+          (deleteEntry)="deleteDetailEntry($event)"
+          (cancelEntry)="cancelDetailEntry()"
+        ></pwm-entry-edit>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center text-sm font-medium">
+    <!-- <section
+      class="p-1 bg-yellow-900 w-full decoration-clone"
+      *ngIf="unsavedChanges"
+    >
+      Unsaved changes!
+    </section> -->
+
+    <section
+      class="bg-gray-700 text-sm flex flex-row flex-wrap justify-evenly py-1"
+    >
+      <p class="px-2">
+        <a
+          class="no-underline text-blue-500 hover:text-blue-200"
+          href="{{ GITHUB }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Github</a
+        >
+      </p>
+      <p class="px-2">
+        Design by
+        <a
+          class="no-underline text-blue-500 hover:text-blue-200"
+          href="http://deniszholob.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          >deniszholob.com</a
+        >
+      </p>
+    </section>
+  </footer>
+</main>

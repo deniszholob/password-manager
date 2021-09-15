@@ -1,0 +1,43 @@
+<a
+  *ngIf="serviceUrl"
+  href="{{ serviceUrl }}"
+  target="_blank"
+  rel="noopener noreferrer"
+  class="p-2 flex text-center items-center no-underline"
+>
+  <div class="rounded-full icon-circle">
+    <ng-container *ngTemplateOutlet="icons"></ng-container>
+  </div>
+</a>
+
+<div *ngIf="!serviceUrl" class="p-2 flex text-center items-center">
+  <div class="rounded-full icon-circle">
+    <ng-container *ngTemplateOutlet="icons"></ng-container>
+  </div>
+</div>
+
+<ng-template #icons>
+  <i
+    class="fas fa-globe fa-2x"
+    *ngIf="!serviceUrl || !iconSrc || iconSrc === IconSrcOptions.default"
+  ></i>
+
+  <img
+    *ngIf="
+      serviceUrl &&
+      (iconSrc === IconSrcOptions.google ||
+        iconSrc === IconSrcOptions.duck ||
+        iconSrc === IconSrcOptions.statvoo)
+    "
+    src="{{ getIconSrc() }}"
+    alt="Service Icon"
+    height="32"
+    width="32"
+  />
+
+  <i
+    *ngIf="serviceUrl && iconSrc === IconSrcOptions.fontawesome"
+    class="fa-2x"
+    [ngClass]="[getFontIconSrc()]"
+  ></i>
+</ng-template>

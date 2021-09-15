@@ -1,0 +1,82 @@
+<!-- <h3>Entry Form</h3> -->
+<!-- <div class="flex flex-row"> -->
+  <form class="" [formGroup]="fGroup" (ngSubmit)="formSubmit(fGroup)">
+    <formly-form
+      [form]="fGroup"
+      [fields]="fFields"
+      [model]="fModel"
+    ></formly-form>
+    <div class="flex flex-row justify-evenly">
+      <button
+        type="submit"
+        class="
+          flex
+          items-center
+          px-4
+          py-2
+          text-sm
+          font-medium
+          text-gray-900
+          bg-green-300
+          hover:bg-green-200 hover:text-green-800
+          disabled:opacity-50
+        "
+      >
+        Save Entry
+      </button>
+
+      <button
+        type="button"
+        class="
+          flex
+          items-center
+          px-4
+          py-2
+          text-sm
+          font-medium
+          text-gray-900
+          bg-red-300
+          hover:bg-red-200 hover:text-red-800
+          disabled:opacity-50
+        "
+        (click)="formDelete()"
+      >
+        Delete Entry
+      </button>
+
+      <button
+        type="button"
+        class="
+          flex
+          items-center
+          px-4
+          py-2
+          text-sm
+          font-medium
+          text-gray-900
+          bg-blue-300
+          hover:bg-blue-200 hover:text-blue-800
+          disabled:opacity-50
+        "
+        (click)="formCancel()"
+      >
+        Cancel Changes
+      </button>
+    </div>
+  </form>
+<!--
+  <div>
+    <pwm-form-debug
+      [form]="fGroup.value"
+      [model]="fModel"
+      class="my-4"
+    ></pwm-form-debug>
+
+    <hr />
+
+    <pre
+      >{{ fModelInitial | json }}
+    </pre>
+  </div>
+-->
+<!-- </div> -->

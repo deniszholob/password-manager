@@ -1,0 +1,19 @@
+<!-- <section
+  class="my-1 p-1 bg-yellow-900 w-full decoration-clone"
+  *ngIf="unsaved"
+>
+  Unsaved changes!
+</section> -->
+<h2 class="py-4 text-center lg:hidden">Edit Entry</h2>
+<!-- <hr class="mt-2" /> -->
+
+<pwm-entry-form
+  #formly
+  [fModel]="detailEntry"
+  [defaultIconSrc]="(settings$ | async)?.defaultIconSrc"
+  [allTags$]="allTags$"
+  (cancel)="cancelEntryClick()"
+  (delete)="deleteEntryClick($event)"
+  (save)="saveEntryClick($event)"
+  (unsavedChanges)="unsavedChangesChange($event)"
+></pwm-entry-form>

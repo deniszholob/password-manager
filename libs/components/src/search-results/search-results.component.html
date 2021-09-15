@@ -1,0 +1,50 @@
+<div id="results header" class="">
+  <pwm-entry
+    class="block my-2 border-dashed border border-gray-500 hover:bg-gray-700"
+    *ngIf="newEntry"
+    [entry]="newEntry"
+    (selected)="!disableSelect ? (selectedEntry = newEntry) : null"
+    [ngClass]="{
+      'bg-gray-800': selectedEntry === newEntry,
+      'opacity-30': disableSelect && selectedEntry !== newEntry
+    }"
+  ></pwm-entry>
+
+  <!-- <hr *ngIf="newEntry" class="py-4 "> -->
+
+  <div id="results-info" class="flex flex-row justify-between my-2">
+    <div id="results-sort">
+      <button class="btn btn-outline" (click)="changeSort()" type="button">
+        <span *ngIf="sortDown">&#9660;</span>
+        <span *ngIf="!sortDown">&#9650;</span>
+        Title/Email
+      </button>
+    </div>
+    <div id="results-count">
+      {{ filteredSearchResults.length }} / {{ totalResultsCount }} Entries
+    </div>
+  </div>
+</div>
+
+<div id="searchResultsList" class="flex flex-col overflow-y-auto">
+  <div
+    id="results-none"
+    *ngIf="filteredSearchResults.length <= 0"
+    class="flex flex-col justify-between text-center py-8"
+  >
+    <h2 class="mb-6 text-2xl text-gray-500">No Entries Found</h2>
+    <ng-content #noEntries></ng-content>
+  </div>
+
+  <pwm-entry
+    id="results-entries"
+    class="block hover:bg-gray-700"
+    *ngFor="let item of filteredSearchResults; let i = index"
+    [entry]="item"
+    (selected)="!disableSelect ? (selectedEntry = item) : null"
+    [ngClass]="{
+      'bg-blue-900': selectedEntry === item,
+      'opacity-30': disableSelect && selectedEntry !== item
+    }"
+  ></pwm-entry>
+</div>

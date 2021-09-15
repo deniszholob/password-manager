@@ -1,0 +1,25 @@
+<div class="flex flex-row justify-center space-x-10">
+  <button
+    class="
+      px-4
+      py-2
+      font-medium
+      text-gray-900
+      bg-green-300
+      hover:bg-green-200 hover:text-green-800
+      disabled:opacity-50
+    "
+    [disabled]="disabled"
+    (click)="newDataFile()"
+  >
+    Create New File
+  </button>
+
+  <pwm-file-picker
+    btnName="Open File..."
+    (fileChange)="openDataFile($event)"
+    accept="{{ FILE_ACCEPT }}"
+    [disabled]="disabled"
+  ></pwm-file-picker>
+</div>
+<div *ngIf="error" class="p-2 text-red-500">{{ error }}</div>

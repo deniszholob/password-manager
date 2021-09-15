@@ -1,0 +1,35 @@
+<div class="flex flex-row items-stretch">
+  <pwm-service-icon
+    class="flex"
+    [iconSrc]="entry.iconSrc"
+    [serviceUrl]="entry.serviceUrl"
+  ></pwm-service-icon>
+
+  <h2 class="flex flex-col flex-grow p-2 text-lg" (click)="selectedClick()">
+    {{ entry?.serviceName }}
+    <small class="text-gray-400">{{ entry?.username || entry?.email }}</small>
+  </h2>
+
+  <pwm-click-to-copy
+    [text]="isUsernamePresent() ? entry.username : entry.email"
+    [name]="'Login'"
+  >
+    <i class="fas fa-id-badge fa-2x"></i>
+  </pwm-click-to-copy>
+
+  <pwm-click-to-copy [text]="entry.password" name="password">
+    <i class="fas fa-key fa-2x"></i>
+  </pwm-click-to-copy>
+</div>
+
+<!--
+<pre>
+  {{entry | json}}
+</pre> -->
+
+<!--
+<span class="fa-stack fa-1x">
+  <i class="fas fa-id-badge fa-stack-2x"></i>
+  <i class="fas fa-copy fa-stack-1x fa-inverse top-2 -left-2"></i>
+</span>
+-->

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html
+  lang="en-US"
+  class="h-screen text-gray-700 bg-gray-100 dark:bg-gray-900 dark:text-gray-300"
+>
+  <head>
+    <!-- Meta Data -->
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Language" content="en_US" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Denis Zholob" />
+    <meta
+      name="keywords"
+      content="Denis, Zholob, Password Manager, open source, offline, privacy, local, app"
+    />
+    <meta name="title" content="Password Manager" />
+    <meta
+      name="description"
+      content="Privacy centric, open source password manager app designed for offline use.
+    Saves a passwords collection file on your file system only."
+    />
+
+    <!-- Title/Icon -->
+    <title>Password Manager</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <base href="./" />
+  </head>
+
+  <body class="contents">
+    <pwm-web-root>
+      <div class="text-center pt-5">
+        Loading...
+        <div class="fa-3x">
+          <i class="fa fa-spinner fa-spin"></i>
+        </div>
+        <p class="text-muted">
+          If this is loading forever, there may be a bug.
+          <br />
+          Hit <strong>F12</strong> to bring up the Debug console, and
+          <a
+            href="https://github.com/deniszholob/password-manager/issues"
+            target="_blank"
+            rel="noopener"
+            >report</a
+          >
+          any errors.
+        </p>
+      </div>
+    </pwm-web-root>
+  </body>
+</html>

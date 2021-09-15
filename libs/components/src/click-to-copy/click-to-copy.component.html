@@ -1,0 +1,11 @@
+<button
+  type="button"
+  class="p-2 disabled:opacity-50 hover:text-blue-500"
+  [ngClass]="tooltipMsg === tooltipCopied ? 'bounceIn' : ''"
+  (click)="copyToClipboard()"
+  [attr.aria-label]="tooltipMsg"
+  [attr.data-balloon-pos]="pos"
+  data-balloon-nofocus
+>
+  <ng-content></ng-content>
+</button>

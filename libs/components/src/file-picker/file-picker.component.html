@@ -1,0 +1,25 @@
+<div class="item-group">
+  <button
+    class="
+      px-4
+      py-2
+      font-medium
+      text-gray-900
+      bg-blue-400
+      hover:bg-blue-300 hover:text-blue-700
+      disabled:opacity-50
+    "
+    [disabled]="disabled"
+    (click)="fileInput.click()"
+  >
+    {{ btnName }}
+    <input #fileInput type="file" hidden (change)="doFileInput($event)" accept="{{accept}}"/>
+  </button>
+  <div class="group-member member-full">
+    <!-- <clr-icon *ngIf="path.length > 0 shape="file" class="is-info is-solid"></clr-icon> -->
+    <!-- <clr-icon *ngIf="path.length == 0" shape="error-standard" class="is-warning is-solid"></clr-icon> -->
+
+    <!-- <div *ngIf="f" class="inline">{{ f.name }}</div> -->
+    <!-- <div *ngIf="!f" class="inline">No File Selected</div> -->
+  </div>
+</div>

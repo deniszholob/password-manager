@@ -1,0 +1,23 @@
+$sb-radius: 0px;
+$sb-width: 8px;
+$c-pallette-neutral: #313131;
+$c-pallette-accent-dark: #005586;
+$c-pallette-transp-light: rgba(0, 0, 0, 0.2);
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 $sb-radius $c-pallette-transp-light;
+    border-radius: $sb-radius;
+    background-color: $c-pallette-neutral;
+}
+
+::-webkit-scrollbar {
+    border-radius: $sb-radius;
+    width: $sb-width;
+    background-color: $c-pallette-neutral;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: $sb-radius;
+    box-shadow: inset 0 0 $sb-radius $c-pallette-transp-light;
+    background-color: $c-pallette-accent-dark;
+}

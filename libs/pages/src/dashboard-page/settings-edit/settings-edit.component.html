@@ -1,0 +1,25 @@
+<div
+  class="flex flex-row justify-between"
+>
+  <h2 class="p-2">Settings</h2>
+  <button
+    type="button"
+    class="p-2 text-red-500 hover:text-red-300"
+    title="Close"
+    (click)="closeSettingsClick()"
+  >
+    <i class="fas fa-times fa-2x"></i>
+  </button>
+</div>
+
+<div class="flex flex-row my-4 justify-evenly">
+  <pwm-file-selection
+    [disabled]="disableFileSelection"
+    (buttonClick)="closeSettingsClick()"
+  ></pwm-file-selection>
+</div>
+
+<pwm-settings-form
+  [fModel]="settings$ | async"
+  (save)="saveSettings($event)"
+></pwm-settings-form>
