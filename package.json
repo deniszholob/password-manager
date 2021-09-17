@@ -4,15 +4,20 @@
   "license": "MIT",
   "author": "Denis Zholob",
   "description": "Offline password manager app",
+  "private": true,
+  "engines": {
+    "node": ">= 14.17.0",
+    "npm": ">= 6.14.13"
+  },
   "scripts": {
     "i": "npm i --no-package-lock",
     "start": "nx serve",
     "start:web-prod": "http-server -p 8080 -c-1 dist/apps/web",
     "start:electron": "nx serve electron",
-    "build": "nx build --prod --baseHref='./'",
-    "build:electron-app": "nx run-many --target=build --projects=web,electron --baseHref='./' --prod",
-    "package-electron": "nx run electron:package",
-    "make-electron": "nx run electron:make",
+    "build:web": "nx run web:build:production --baseHref='./'",
+    "build:electron": "nx run electron:build:production",
+    "electron:package": "nx run electron:package",
+    "electron:make": "nx run electron:make",
     "build-and-package": "nx run web:build:production --baseHref='./' && nx run electron:build:production && nx run electron:package",
     "build-and-make": "nx run web:build:production --baseHref='./' && nx run electron:build:production && nx run electron:make",
     "test": "nx run-many --all --target=test --parallel --codeCoverage",
@@ -54,7 +59,6 @@
     "nx": "nx",
     "postinstall": "exitzero electron-builder install-app-deps && ngcc --properties es2015 browser module main"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^12.1.0",
     "@angular/common": "^12.1.0",

@@ -52,6 +52,7 @@
     "forms": "docs",
     "wrappers": "hook",
     "document": "",
+    "workflows": "github",
     "formly": "scala",
   },
   "material-icon-theme.files.associations": {
