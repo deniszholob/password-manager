@@ -1,7 +1,7 @@
 {
   "name": "password-manager",
   "version": "0.0.1",
-  "license": "MIT",
+  "license": "GPL-3",
   "author": "Denis Zholob",
   "description": "Offline password manager app",
   "private": true,
@@ -23,7 +23,7 @@
     "build-and-make": "nx run web:build:production --baseHref='./' && nx run electron:build:production && nx run electron:make",
     "test": "nx run-many --all --target=test --parallel --codeCoverage",
     "test:force-regenerate": "nx run-many --all --target=test --parallel --codeCoverage --skip-nx-cache",
-    "test:view-coverage": "npm run test && gen-combined-coverage && npm run view-coverage",
+    "test:view-coverage": "npm run test && npm run gen-combined-coverage && npm run view-coverage",
     "test:web": "nx run web:test --codeCoverage && npm run view-coverage:web",
     "test:electron": "nx run electron:test --codeCoverage && npm run view-coverage:electron",
     "test:components": "nx run components:test --codeCoverage && npm run view-coverage:components",
