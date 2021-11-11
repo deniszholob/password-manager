@@ -56,6 +56,14 @@ jobs:
       - name: Install NPM Dependencies
         run: npm run i
 
+      - name: Cache Nx
+        uses: actions/cache@v2
+        with:
+          path: node_modules/.cache/nx
+          key: cache-nx-${{ hashFiles('package.json') }}-build-web-${{ github.sha }}
+          restore-keys: |
+            cache-nx-${{ hashFiles('package.json') }}-
+
       - name: Build
         run: npm run build:web
 
@@ -200,46 +208,22 @@ jobs:
         run: ls -R
         working-directory: release-package-${{env.RELEASE_VERSION}}
 
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   with:
-      #     tag_name: ${{env.RELEASE_VERSION}}
-      #     release_name: Password Manager ${{env.RELEASE_VERSION}}
-      #     body: |
-      #       Windows desktop app.
-      #       Saves data in non encrypted files only.
-
-      #       Expand the Assets below.
-      #       Run either the setup installer Password.Manager.Setup.${{env.RELEASE_VERSION}}.exe or extract the Password-Manager-${{env.RELEASE_VERSION}}.zip contents.
-      #       Antivirus will probably freak out for a couple seconds, it does for me.
-      #     draft: true # true to create a draft (unpublished) release, false to create a published one. Default: false
-      #     prerelease: true # true to identify the release as a prerelease. false to identify the release as a full release. Default: false
-
-      # # Ref: https://github.com/actions/upload-release-asset
-      # - name: Upload Release Asset
-      #   id: upload-release-asset
-      #   uses: actions/upload-release-asset@v1
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-      #     asset_path: release-package-${{env.RELEASE_VERSION}}
-      #     asset_name: release-package-${{env.RELEASE_VERSION}}
-      #     asset_content_type: application/zip
-
+      # ====================================================================== #
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: ncipollo/release-action@v1
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           name: Password Manager v${{env.RELEASE_VERSION}}
-          tag_name: v${{env.RELEASE_VERSION}}
+          tag: v${{env.RELEASE_VERSION}}
           body: |
-            Windows desktop app.
+            Password Manager Windows desktop app.
             Saves data in non encrypted files only.
 
-            Expand the Assets below.
-            Run either the setup installer Password.Manager.Setup.${{env.RELEASE_VERSION}}.exe or extract the Password.Manager.${{env.RELEASE_VERSION}}.zip contents.
-            Antivirus will probably freak out for a couple seconds, it does for me.
-          files: |
-            ./dist/executables/Password Manager Setup ${{env.RELEASE_VERSION}}.exe
-            ./Password Manager ${{env.RELEASE_VERSION}}.zip
-          fail_on_unmatched_files: true
-          draft: true # true to create a draft (unpublished) release, false to create a published one. Default: false
+            * **Expand the _Assets_ below.**
+            * Run either the setup installer `Password.Manager.Setup.${{env.RELEASE_VERSION}}.exe` or extract the `Password.Manager.${{env.RELEASE_VERSION}}.zip` contents.
+            * Antivirus will probably freak out for a couple seconds, it does for me.
+          artifacts: |
+            ./release-package-${{env.RELEASE_VERSION}}/dist/executables/Password Manager Setup ${{env.RELEASE_VERSION}}.exe,
+            ./release-package-${{env.RELEASE_VERSION}}/Password Manager ${{env.RELEASE_VERSION}}.zip
+          artifactErrorsFailBuild: true
+          draft: false # true to create a draft (unpublished) release, false to create a published one. Default: false

@@ -3,10 +3,11 @@ import { NgModule } from '@angular/core';
 import { ComponentsModule } from '@pwm/components';
 import { EntryFormModule } from '@pwm/forms';
 
+import { LayoutModule } from './layout';
 import { SandboxPageComponent } from './sandbox-page.component';
 
 @NgModule({
-  imports: [CommonModule, ComponentsModule, EntryFormModule],
+  imports: [CommonModule, LayoutModule, ComponentsModule, EntryFormModule],
   declarations: [SandboxPageComponent],
   exports: [SandboxPageComponent],
 })
