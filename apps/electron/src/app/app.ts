@@ -114,9 +114,9 @@ export default class App {
         devTools: true,
       },
     });
-    if (App.isDevelopmentMode()) {
+    // if (App.isDevelopmentMode()) {
       App.mainWindow.webContents.openDevTools();
-    }
+    // }
     App.initMenu();
     App.mainWindow.center();
 
