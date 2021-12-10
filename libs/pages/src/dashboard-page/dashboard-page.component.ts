@@ -339,7 +339,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   private search(query?: string) {
     // console.log('search() - ', query);
-    const q: string = query || this.searchQuery.toLocaleLowerCase() || '';
+    const q: string = (query || this.searchQuery || '').toLocaleLowerCase();
     this.filteredSearchResults = this.fileData
       // Tags
       .filter((value) => {

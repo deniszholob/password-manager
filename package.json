@@ -10,7 +10,9 @@
     "npm": ">= 6.14.13"
   },
   "scripts": {
-    "i": "npm i --no-package-lock",
+    "ci": "npm ci",
+    "i": "npm i",
+    "i:deps": "npm i --legacy-peer-deps",
     "gen-combined-coverage": "node ./tools/scripts/coverage/merge-coverage.js",
     "start": "nx serve",
     "start:web-prod": "http-server -p 8080 -c-1 dist/apps/web",
@@ -19,8 +21,8 @@
     "build:electron": "nx run electron:build:production",
     "electron:package": "nx run electron:package",
     "electron:make": "nx run electron:make",
-    "build-and-package": "nx run web:build:production --baseHref='./' && nx run electron:build:production && nx run electron:package",
-    "build-and-make": "nx run web:build:production --baseHref='./' && nx run electron:build:production && nx run electron:make",
+    "build-and-package": "nx run electron:build:production && nx run electron:package",
+    "build-and-make": "nx run electron:build:production && nx run electron:make",
     "test": "nx run-many --all --target=test --parallel --codeCoverage",
     "test:force-regenerate": "nx run-many --all --target=test --parallel --codeCoverage --skip-nx-cache",
     "test:view-coverage": "npm run test && npm run gen-combined-coverage && npm run view-coverage",
