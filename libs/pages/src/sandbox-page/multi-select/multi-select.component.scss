@@ -1,0 +1,27 @@
+main {
+  display: flex;
+  width: 400px;
+  flex-direction: column;
+  margin: 40px auto;
+}
+
+:host ::ng-deep {
+  .ng-dropdown-header {
+    border: 1px solid transparent;
+    border-top-color: #555;
+    border-bottom-color: #555;
+  }
+  .ng-dropdown-footer {
+    border: 1px solid transparent;
+    border-top-color: #555;
+    display: flex;
+    justify-content: flex-end;
+    padding: .8rem;
+  }
+  input {
+    outline: none;
+    &:focus {
+      outline: none;
+    }
+  }
+}
