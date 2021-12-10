@@ -1,3 +1,4 @@
+// TODO: File IO just return/accept strings? Do JSON.parse/JSON/stringify in whatever uses this (state.service) instead?
 import { Injectable } from '@angular/core';
 import { from, fromEvent, Observable, of, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -92,6 +93,7 @@ export class RawFileIOService {
       : this.readFileLocal<T>(location);
   }
 
+  // TODO: Return Observable<string>
   private readFileElectron<T>(path: string): Observable<T> {
     // console.log(`  readFileElectron() - `, path);
     if (!this.electron) return throwError('Electron is not available!');
@@ -100,11 +102,13 @@ export class RawFileIOService {
         if (!v) {
           throw new Error(`${ERRORS.ANGULAR_NO_DATA} for "${path}"`);
         }
+        // TODO: Needs decrypting before parsing, move both out to the readfile function instead of duplicating
         return JSON.parse(v.data);
       })
     );
   }
 
+  // TODO: Return Observable<string>
   /** @see https://developer.mozilla.org/en-US/docs/Web/API/FileReader/onload */
   private readFileWeb<T>(f: File): Observable<T> {
     // console.log(`  readFileWeb() - `, f);
@@ -115,11 +119,13 @@ export class RawFileIOService {
         if (!ev.target) {
           throw new Error(`${ERRORS.ANGULAR_NO_DATA} for "${f.name}"`);
         }
+        // TODO: Needs decrypting before parsing, move both out to the readfile function instead of duplicating
         return JSON.parse(ev.target.result as string);
       })
     );
   }
 
+  // TODO: Return Observable<string>
   private readFileLocal<T>(key: string): Observable<T> {
     // console.log(`  readFileLocal() - `, key);
     return of(localStorage.getItem(key)).pipe(
@@ -127,6 +133,7 @@ export class RawFileIOService {
         if (!v) {
           throw new Error(`${ERRORS.ANGULAR_NO_DATA} for "${key}"`);
         }
+        // TODO: Needs decrypting before parsing, move both out to the readfile function instead of duplicating
         return JSON.parse(v);
       })
     );
@@ -152,6 +159,7 @@ export class RawFileIOService {
     const spacing = this.electron ? 2 : 0;
     const myFile: MyFile = {
       path: location,
+      // TODO: Needs encrypting after stringifying
       data: JSON.stringify(fileContents, null, spacing),
     };
     return this.electron
