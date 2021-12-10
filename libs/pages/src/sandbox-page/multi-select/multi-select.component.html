@@ -1,0 +1,141 @@
+<main>
+  <h1>toBeSelected NG Model</h1>
+  <small>{{ toBeSelected | json }}</small>
+  <br>
+  <hr>
+  <br>
+  <h1>selectionsMade</h1>
+  <small>{{ selectionsMade | json }}</small>
+
+  <br><br>
+
+  <!-- <button (click)="getWidths()"> Get Widths</button>
+  <small>{{ elWidth }}</small>
+  <small>{{ textWidth }}</small>
+  <p>{{displayText}}</p> -->
+
+  <br><br>
+<!--
+  <ng-select
+    [items]="options"
+    [multiple]="true"
+    bindLabel="name"
+    bindValue="id"
+    placeholder="Select Stuff"
+    [(ngModel)]="toBeSelected"
+  >
+  </ng-select>
+
+  <br /> -->
+  <!--
+<ng-select
+  [items]="options"
+  [multiple]="true"
+  bindLabel="name"
+  bindValue="id"
+  placeholder="Select Stuff"
+  [(ngModel)]="toBeSelected"
+>
+  <ng-option *ngFor="let o of options" [value]="o.id">{{ o.name }}</ng-option>
+</ng-select>
+
+<br />
+-->
+  <!-- <input
+class="w-full py-2 pl-10 text-black placeholder-gray-500 dark:text-white dark:bg-gray-800"
+#searchInput
+style="width: 100%; line-height: 24px"
+type="text"
+(input)="select.filter($any($event.target).value)"
+/> -->
+
+  <ng-select
+    #select
+    [items]="options"
+    [multiple]="true"
+    [closeOnSelect]="false"
+    [searchable]="false"
+    [clearable]="false"
+    bindLabel="name"
+    placeholder="Select Stuff"
+    [ngModel]="toBeSelected"
+    (ngModelChange)="updateSelections($event)"
+    (open)="setSearchFocus()"
+  >
+    <!-- <ng-template ng-label-tmp let-item="item"> {{ item.name }}; </ng-template> -->
+
+
+    <ng-template ng-multi-label-tmp let-items="items">
+      <div #selectionText>{{displayText}}</div>
+      <!-- <span *ngFor="let item of selectionsMade">{{ item.name }};</span> -->
+    </ng-template>
+
+
+    <!-- <ng-template ng-label-tmp let-item="item">
+      <ng-container *ngIf="toBeSelected">
+        <span *ngFor="let item of toBeSelected">{{ item.name }};</span>
+      </ng-container>
+    </ng-template> -->
+
+    <ng-template ng-header-tmp>
+      <input
+        #searchInput
+        class="w-full py-2 text-black placeholder-gray-500 dark:text-white dark:bg-gray-800"
+        placeholder="Search"
+        type="text"
+        (input)="select.filter($any($event.target).value)"
+      />
+    </ng-template>
+
+    <ng-template
+      ng-option-tmp
+      let-item="item"
+      let-item$="item$"
+      let-index="index"
+    >
+      <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected" />
+      {{ item.name }}
+    </ng-template>
+
+    <ng-template ng-footer-tmp>
+      <!-- Selected: {{ toBeSelected.length }} -->
+      <button
+        type="button"
+        class="px-4 py-2 mx-2 text-sm text-blue-300 hover:text-blue-200 disabled:opacity-50"
+        (click)="actionCancel()"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="px-4 py-2 mx-2 text-sm text-blue-300 border-2 border-gray-500 hover:text-blue-200 disabled:opacity-50"
+        (click)="actionClear()"
+      >
+        Clear All
+      </button>
+      <button
+        type="button"
+        class="px-4 py-2 mx-2 text-sm text-gray-900 bg-blue-300 hover:bg-blue-200 hover:text-blue-800 disabled:opacity-50"
+        (click)="actionApply()"
+      >
+        Apply
+      </button>
+    </ng-template>
+  </ng-select>
+
+  <!-- <h1>Reactive</h1>
+<form [formGroup]="form">
+  <ng-select
+      [items]="options"
+      [multiple]="true"
+      bindLabel="name"
+      placeholder="Select people"
+      [(ngModel)]="toBeSelected">
+  </ng-select>
+</form> -->
+
+  <!--
+    [closeOnSelect]="false"
+    [hideSelected]="true"
+   -->
+</main>
