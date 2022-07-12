@@ -25,10 +25,11 @@ Saves a passwords collection file on your file system only.
 
 
 
-# [Support Me](https://www.patreon.com/deniszholob)
-If you find the app or the source code useful, consider supporting me on [Patreon](https://www.patreon.com/deniszholob).
+# Support Me
+If you find the cheat sheet or the source code useful, consider:
 
-[<img src="https://c5.patreon.com/external/logo/downloads_wordmark_white_on_coral.png" width="260" />](https://www.patreon.com/deniszholob)
+* Donating Ko-fi: https://ko-fi.com/deniszholob
+* Supporting on Patreon: https://www.patreon.com/deniszholob
 
 
 
