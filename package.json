@@ -10,7 +10,9 @@
     "npm": ">= 6.14.13"
   },
   "scripts": {
-    "i": "npm i --no-package-lock",
+    "ci": "npm ci",
+    "i": "npm i",
+    "i:deps": "npm i --legacy-peer-deps",
     "gen-combined-coverage": "node ./tools/scripts/coverage/merge-coverage.js",
     "start": "nx serve",
     "start:web-prod": "http-server -p 8080 -c-1 dist/apps/web",
