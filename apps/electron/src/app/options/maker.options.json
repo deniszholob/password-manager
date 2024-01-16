@@ -3,13 +3,19 @@
   "productName": "Password Manager",
   "copyright": "Copyright © 2021 year Denis Zholob",
   "icon": "global/assets/PasswordManagerIcon.png",
-  "fileAssociations": {
-    "ext": [
-      "psw",
-      "pswm"
-    ]
-  },
   "win": {
-    "icon": "global/assets/PasswordManagerIcon.png"
+    "icon": "global/assets/PasswordManagerIcon.png",
+    "target": ""
+  },
+  "linux": {
+    "icon": "global/assets/PasswordManagerIcon.png",
+    "target": ["AppImage"],
+    "category": "Office",
+    "maintainer": "Denis Zholob"
+  },
+  "mac":{
+    "icon": "global/assets/PasswordManagerIcon.png",
+    "target": "dmg",
+    "identity": null
   }
 }
