@@ -1,11 +1,9 @@
 module.exports = {
   purge: {
     enabled: process.env.TAILWIND_MODE === 'build',
-    content: [
-      './**/*.html',
-    ]
+    content: ['./**/*.html'],
   },
-  darkMode: 'media', // or 'media' or 'class'
+  darkMode: 'class', // or 'media' or 'class'
   theme: {
     extend: {},
     // fill: theme => ({
@@ -19,7 +17,7 @@ module.exports = {
     extend: {
       opacity: ['disabled'],
       backgroundColor: ['active'],
-    }
+    },
   },
   plugins: [],
-}
+};

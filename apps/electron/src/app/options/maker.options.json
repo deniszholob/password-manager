@@ -2,14 +2,26 @@
   "$schema": "../../../../../node_modules/nx-electron/src/validation/maker.schema.json",
   "productName": "Password Manager",
   "copyright": "Copyright © 2021 year Denis Zholob",
-  "icon": "global/assets/PasswordManagerIcon.png",
-  "fileAssociations": {
-    "ext": [
-      "psw",
-      "pswm"
-    ]
-  },
+  "appId": "com.electron.${name}",
+  "fileAssociations": [
+    {
+      "name": "Password List",
+      "ext": "pswl"
+    }
+  ],
+  "icon": "global/assets/Icon.png",
   "win": {
-    "icon": "global/assets/PasswordManagerIcon.png"
+    "target": ["nsis", "portable"]
+  },
+  "linux": {
+    "icon": ".global/assets/Icon.png",
+    "target": ["AppImage", "deb", "rpm"],
+    "category": "Utility",
+    "maintainer": "Denis Zholob",
+    "executableArgs": ["--enable-blink-features=MiddleClickAutoscroll"]
+  },
+  "mac": {
+    "target": "dmg",
+    "identity": null
   }
 }

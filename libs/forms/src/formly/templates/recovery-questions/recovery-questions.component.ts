@@ -6,4 +6,8 @@ import { FieldArrayType } from '@ngx-formly/core';
   templateUrl: './recovery-questions.component.html',
   // styleUrls: ['./recovery-questions.component.scss'],
 })
-export class RecoveryQuestionsComponent extends FieldArrayType {}
+export class RecoveryQuestionsComponent extends FieldArrayType {
+  constructor() {
+    super();
+  }
+}
