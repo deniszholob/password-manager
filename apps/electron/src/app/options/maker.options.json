@@ -14,13 +14,14 @@
     "target": ["nsis", "portable"]
   },
   "linux": {
-    "icon": ".global/assets/Icon.png",
+    "icon": "global/assets/Icon.icns",
     "target": ["AppImage", "deb", "rpm"],
     "category": "Utility",
     "maintainer": "Denis Zholob",
     "executableArgs": ["--enable-blink-features=MiddleClickAutoscroll"]
   },
   "mac": {
+    "icon": "global/assets/Icon.icns",
     "target": "dmg",
     "identity": null
   }
