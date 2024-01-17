@@ -6,6 +6,7 @@ import {
   MenuItemConstructorOptions,
   screen,
   shell,
+  dialog,
 } from 'electron';
 import { join } from 'path';
 import { async } from 'rxjs';
@@ -29,12 +30,19 @@ export default class App {
   // static BrowserWindow;
 
   public static isDevelopmentMode() {
-    const isEnvironmentSet: boolean = 'ELECTRON_IS_DEV' in process.env;
-    const getFromEnvironment: boolean =
-      !!process.env.ELECTRON_IS_DEV &&
-      parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
+    // const isEnvironmentSet: boolean = 'ELECTRON_IS_DEV' in process.env;
+    // const getFromEnvironment: boolean =
+    //   !!process.env.ELECTRON_IS_DEV &&
+    //   parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
 
-    return isEnvironmentSet ? getFromEnvironment : !environment.production;
+    //   console.log(`process.env;`, process.env;);
+    //   console.log(`isEnvironmentSet`, isEnvironmentSet);
+    // console.log(`getFromEnvironment`, getFromEnvironment);
+    // console.log(`!environment.production`, !environment.production);
+
+    // return isEnvironmentSet ? getFromEnvironment : !environment.production;
+    // dialog.showErrorBox('environment.production', `${environment.production}`);
+    return !environment.production;
   }
 
   private static onWindowAllClosed() {
@@ -99,14 +107,20 @@ export default class App {
       DEFAULT_RESOLUTION.h,
       workAreaSize.height || DEFAULT_RESOLUTION.h
     );
-    // const icon = '';
+    const icon = join(
+      __dirname,
+      '..',
+      rendererAppName,
+      'assets',
+      'icon-512x512.png'
+    );
 
     // Create the browser window.
     App.mainWindow = new BrowserWindow({
       width: width,
       height: height,
       backgroundColor: '#333',
-      // icon,
+      icon,
       show: false,
       webPreferences: {
         backgroundThrottling: false,
