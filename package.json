@@ -8,8 +8,7 @@
   "homepage": "https://github.com/deniszholob/password-manager",
   "private": true,
   "engines": {
-    "node": ">= 14.17.0 <=17.0.0",
-    "npm": ">= 6.14.13"
+    "node": ">= 16.20.2 <= 17.0.0"
   },
   "build": {
     "appId": "com.electron.password-manager",
@@ -17,9 +16,7 @@
     "copyright": "Copyright © year Denis Zholob "
   },
   "scripts": {
-    "ci": "npm ci",
-    "i": "npm i",
-    "i:deps": "npm i --legacy-peer-deps",
+    "i": "pnpm install",
     "gen-combined-coverage": "node ./tools/scripts/coverage/merge-coverage.js",
     "start": "nx serve",
     "start:web-prod": "http-server -p 8080 -c-1 dist/apps/web",

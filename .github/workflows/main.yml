@@ -20,17 +20,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14.17.0'
+          node-version: '16.20.2'
 
       - name: Set RELEASE_VERSION env var
         run: node -pe "require('./package.json').version" > RELEASE_VERSION.txt
 
       - name: Archive RELEASE_VERSION
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: RELEASE_VERSION
           path: RELEASE_VERSION.txt
@@ -40,39 +40,50 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: '14.17.0'
+          version: 8
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.20.2'
+          cache: 'pnpm'
+
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
 
       - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
+        id: npm-cache
+        uses: actions/cache@v3
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          path: ${{steps.npm-cache-dir.outputs.dir}}
+          key: ${{runner.os}}-node-${{hashFiles('**/pnpm-lock.yaml')}}
+          restore-keys: |
+            ${{runner.os}}-node-
+            ${{runner.os}}-
 
       - name: Install NPM Dependencies
-        run: npm ci
+        run: pnpm run i
 
       - name: Cache Nx
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: node_modules/.cache/nx
-          key: cache-nx-${{ hashFiles('package-lock.json') }}-build-web-${{ github.sha }}
+          key: cache-nx-${{ hashFiles('pnpm-lock.yaml') }}-build-web-${{ github.sha }}
           restore-keys: |
-            cache-nx-${{ hashFiles('package-lock.json') }}-
+            cache-nx-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Build
-        run: npm run build:web
+        run: pnpm run build:web
 
       # Save dist artifacts for deployment jobs
       # https://docs.github.com/en/actions/learn-github-actions/essential-features-of-github-actions#sharing-data-between-jobs
       - name: Archive web demo build
         if: success()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: web-demo-build
           path: dist/apps/web # Directory to push to GitHub Pages
@@ -84,10 +95,10 @@ jobs:
     needs: build-web
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Download build
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: web-demo-build
           path: web-demo-build
@@ -97,25 +108,30 @@ jobs:
         working-directory: web-demo-build
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.5
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: web-demo-build
 
-  # Builds the windows executable application
+  # Builds the linux executable application
   build-linux:
     runs-on: ubuntu-latest
     needs: [get-release-version, build-web]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: '14.17.0'
+          version: 8
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.20.2'
+          cache: 'pnpm'
 
       - name: Download RELEASE_VERSION
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: RELEASE_VERSION
 
@@ -124,19 +140,25 @@ jobs:
         run: |
           echo "RELEASE_VERSION=`cat RELEASE_VERSION.txt`" >> $GITHUB_ENV
 
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
       - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
+        id: npm-cache
+        uses: actions/cache@v3
         with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-${{env.cache-name}}-${{hashFiles('**/package.json')}}
+          path: ${{steps.npm-cache-dir.outputs.dir}}
+          key: ${{runner.os}}-node-${{hashFiles('**/pnpm-lock.yaml')}}
+          restore-keys: |
+            ${{runner.os}}-node-
+            ${{runner.os}}-
 
       - name: Install NPM Dependencies
-        run: npm ci
+        run: pnpm run i
 
       - name: Download build
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: web-demo-build
           path: dist/apps/web
@@ -145,8 +167,8 @@ jobs:
         run: ls -R
         working-directory: dist/apps/web
 
-      - name: Build Windows Package
-        run: npm run build:electron && npm run electron:make:win
+      - name: Build Linux Package
+        run: pnpm run build:electron && pnpm run electron:make:lix
 
       - name: Display structure of built files
         run: ls -R
@@ -154,7 +176,7 @@ jobs:
 
       - name: Archive electron app build
         if: success()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: release-package-${{env.RELEASE_VERSION}}-linux
           path: |
@@ -169,14 +191,18 @@ jobs:
     needs: [get-release-version, build-web]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: '14.17.0'
+          version: 8
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.20.2'
 
       - name: Download RELEASE_VERSION
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: RELEASE_VERSION
 
@@ -185,19 +211,25 @@ jobs:
         run: |
           echo "RELEASE_VERSION=`cat RELEASE_VERSION.txt`" >> $GITHUB_ENV
 
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
       - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
+        id: npm-cache
+        uses: actions/cache@v3
         with:
-          path: '**/node_modules'
-          key: ${{runner.os}}-${{env.cache-name}}-${{hashFiles('**/package.json')}}
+          path: ${{steps.npm-cache-dir.outputs.dir}}
+          key: ${{runner.os}}-node-${{hashFiles('**/pnpm-lock.yaml')}}
+          restore-keys: |
+            ${{runner.os}}-node-
+            ${{runner.os}}-
 
       - name: Install NPM Dependencies
-        run: npm ci
+        run: pnpm run i
 
       - name: Download build
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: web-demo-build
           path: dist/apps/web
@@ -207,7 +239,7 @@ jobs:
         working-directory: dist/apps/web
 
       - name: Build Linux Package
-        run: npm run build:electron && npm run electron:make:lix
+        run: pnpm run build:electron && pnpm run electron:make:win
 
       - name: Display structure of built files
         run: ls -R
@@ -229,7 +261,7 @@ jobs:
       - name: Archive electron app build
         # if: github.event == 'push' && success()
         if: success()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: release-package-${{env.RELEASE_VERSION}}-windows
           path: |
@@ -242,19 +274,19 @@ jobs:
   release:
     # if: github.event == 'push'
     runs-on: ubuntu-latest
-    needs: [get-release-version, build-windows]
+    needs: [get-release-version, build-linux, build-windows]
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14.17.0'
+          node-version: '16.20.2'
 
       - name: Download RELEASE_VERSION
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: RELEASE_VERSION
 
@@ -264,13 +296,13 @@ jobs:
           echo "RELEASE_VERSION=`cat RELEASE_VERSION.txt`" >> $GITHUB_ENV
 
       - name: Download Linux build
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: release-package-${{env.RELEASE_VERSION}}-linux
           path: release-package-${{env.RELEASE_VERSION}}
 
       - name: Download Windows build
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: release-package-${{env.RELEASE_VERSION}}-windows
           path: release-package-${{env.RELEASE_VERSION}}
@@ -307,9 +339,12 @@ jobs:
             * <img src="https://github.com/deniszholob/playlist-maker/raw/main/screenshots/windows-warning-info.png" width="335" />
               <img src="https://github.com/deniszholob/playlist-maker/raw/main/screenshots/windows-warning.png" width="260" />
             * Antivirus will probably freak out for a couple seconds, it does for me (same reason as above)
-
           artifacts: |
-            ./release-package-${{env.RELEASE_VERSION}}/dist/executables/Password Manager Setup ${{env.RELEASE_VERSION}}.exe,
+            ./release-package-${{env.RELEASE_VERSION}}/dist/executables/Password Manager Setup ${{env.RELEASE_VERSION}}.exe
+            ./release-package-${{env.RELEASE_VERSION}}/dist/executables/Password Manager ${{env.RELEASE_VERSION}}.exe
             ./release-package-${{env.RELEASE_VERSION}}/Password Manager ${{env.RELEASE_VERSION}}.zip
+            ./release-package-${{env.RELEASE_VERSION}}/Password Manager-${{env.RELEASE_VERSION}}.AppImage
+            ./release-package-${{env.RELEASE_VERSION}}/password-manager-${{env.RELEASE_VERSION}}.x86_64.rpm
+            ./release-package-${{env.RELEASE_VERSION}}/password-manager_${{env.RELEASE_VERSION}}_amd64.deb
           artifactErrorsFailBuild: true
           draft: false # true to create a draft (unpublished) release, false to create a published one. Default: false
