@@ -55,7 +55,7 @@ jobs:
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install NPM Dependencies
-        run: npm run ci
+        run: npm ci
 
       - name: Cache Nx
         uses: actions/cache@v2
@@ -99,8 +99,69 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
-          BRANCH: gh-pages
-          FOLDER: web-demo-build
+          branch: gh-pages
+          folder: web-demo-build
+
+  # Builds the windows executable application
+  build-linux:
+    runs-on: ubuntu-latest
+    needs: [get-release-version, build-web]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14.17.0'
+
+      - name: Download RELEASE_VERSION
+        uses: actions/download-artifact@v2
+        with:
+          name: RELEASE_VERSION
+
+      - name: Set RELEASE_VERSION env var
+        shell: bash
+        run: |
+          echo "RELEASE_VERSION=`cat RELEASE_VERSION.txt`" >> $GITHUB_ENV
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: '**/node_modules'
+          key: ${{runner.os}}-${{env.cache-name}}-${{hashFiles('**/package.json')}}
+
+      - name: Install NPM Dependencies
+        run: npm ci
+
+      - name: Download build
+        uses: actions/download-artifact@v2
+        with:
+          name: web-demo-build
+          path: dist/apps/web
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: dist/apps/web
+
+      - name: Build Windows Package
+        run: npm run build:electron && npm run electron:make:win
+
+      - name: Display structure of built files
+        run: ls -R
+        working-directory: dist/executables
+
+      - name: Archive electron app build
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-package-${{env.RELEASE_VERSION}}-linux
+          path: |
+            dist/executables/password-manager_${{env.RELEASE_VERSION}}_amd64.deb
+            dist/executables/password-manager-${{env.RELEASE_VERSION}}.x86_64.rpm
+            dist/executables/Password Manager-${{env.RELEASE_VERSION}}.AppImage
+          if-no-files-found: error
 
   # Builds the windows executable application
   build-windows:
@@ -133,7 +194,7 @@ jobs:
           key: ${{runner.os}}-${{env.cache-name}}-${{hashFiles('**/package.json')}}
 
       - name: Install NPM Dependencies
-        run: npm run ci
+        run: npm ci
 
       - name: Download build
         uses: actions/download-artifact@v2
@@ -145,8 +206,8 @@ jobs:
         run: ls -R
         working-directory: dist/apps/web
 
-      - name: Build Windows Package
-        run: npm run build:electron && npm run electron:make
+      - name: Build Linux Package
+        run: npm run build:electron && npm run electron:make:lix
 
       - name: Display structure of built files
         run: ls -R
@@ -170,9 +231,10 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v2
         with:
-          name: release-package-${{env.RELEASE_VERSION}}
+          name: release-package-${{env.RELEASE_VERSION}}-windows
           path: |
             dist/executables/Password Manager Setup ${{env.RELEASE_VERSION}}.exe
+            dist/executables/Password Manager ${{env.RELEASE_VERSION}}.exe
             ./Password Manager ${{env.RELEASE_VERSION}}.zip
           if-no-files-found: error
 
@@ -201,10 +263,16 @@ jobs:
         run: |
           echo "RELEASE_VERSION=`cat RELEASE_VERSION.txt`" >> $GITHUB_ENV
 
-      - name: Download build
+      - name: Download Linux build
         uses: actions/download-artifact@v2
         with:
-          name: release-package-${{env.RELEASE_VERSION}}
+          name: release-package-${{env.RELEASE_VERSION}}-linux
+          path: release-package-${{env.RELEASE_VERSION}}
+
+      - name: Download Windows build
+        uses: actions/download-artifact@v2
+        with:
+          name: release-package-${{env.RELEASE_VERSION}}-windows
           path: release-package-${{env.RELEASE_VERSION}}
 
       - name: Display structure of downloaded files
@@ -219,12 +287,27 @@ jobs:
           name: Password Manager v${{env.RELEASE_VERSION}}
           tag: v${{env.RELEASE_VERSION}}
           body: |
-            Password Manager Windows desktop app.
+            Password Manager Desktop App.
             Saves data in non encrypted files only.
 
-            * **Expand the _Assets_ below.**
-            * Run either the setup installer `Password.Manager.Setup.${{env.RELEASE_VERSION}}.exe` or extract the `Password.Manager.${{env.RELEASE_VERSION}}.zip` contents.
-            * Antivirus will probably freak out for a couple seconds, it does for me.
+            ### Dowload in _Assets_ below
+            * Click on the `dropdown` => `keep` in Chrome
+            * <img src="https://github.com/deniszholob/playlist-maker/raw/main/screenshots/download-warning.png" width="300" />
+
+            #### Linux
+            * Make sure the files have 'Execute' permission: Right click => properties => permissions (on Linux Mint)
+            * Double click to install .deb or .rpm, or to run .AppImage
+
+            #### Windows
+            * EITHER:
+                * Run the setup installer `Password.Manager.Setup.${{env.RELEASE_VERSION}}.exe`
+                * Run the portable version `Password.Manager.${{env.RELEASE_VERSION}}.exe`
+                * Extract the `Password.Manager.${{env.RELEASE_VERSION}}.zip` contents and run the .exe inside that folder
+            * Click on `More info` => `Run anyway` on the Windows Protection screen (Shows because I did not pay $$$ to do the windows signing process)
+            * <img src="https://github.com/deniszholob/playlist-maker/raw/main/screenshots/windows-warning-info.png" width="335" />
+              <img src="https://github.com/deniszholob/playlist-maker/raw/main/screenshots/windows-warning.png" width="260" />
+            * Antivirus will probably freak out for a couple seconds, it does for me (same reason as above)
+
           artifacts: |
             ./release-package-${{env.RELEASE_VERSION}}/dist/executables/Password Manager Setup ${{env.RELEASE_VERSION}}.exe,
             ./release-package-${{env.RELEASE_VERSION}}/Password Manager ${{env.RELEASE_VERSION}}.zip

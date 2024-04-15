@@ -1,6 +1,6 @@
 {
   "name": "password-manager",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "GPL-3",
   "author": "Denis Zholob",
   "description": "Offline password manager app",
@@ -12,9 +12,9 @@
     "npm": ">= 6.14.13"
   },
   "build": {
-    "appId": "com.electron.${name}",
+    "appId": "com.electron.password-manager",
     "productName": "Password Manager",
-    "copyright": "Copyright © year ${author} "
+    "copyright": "Copyright © year Denis Zholob "
   },
   "scripts": {
     "ci": "npm ci",
