@@ -2,7 +2,7 @@
   "$schema": "../../../../../node_modules/nx-electron/src/validation/maker.schema.json",
   "productName": "Password Manager",
   "copyright": "Copyright © 2021 year Denis Zholob",
-  "appId": "com.electron.${name}",
+  "appId": "com.electron.password-manager",
   "fileAssociations": [
     {
       "name": "Password List",

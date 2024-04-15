@@ -30,19 +30,19 @@ export default class App {
   // static BrowserWindow;
 
   public static isDevelopmentMode() {
-    // const isEnvironmentSet: boolean = 'ELECTRON_IS_DEV' in process.env;
-    // const getFromEnvironment: boolean =
-    //   !!process.env.ELECTRON_IS_DEV &&
-    //   parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
+    const isEnvironmentSet: boolean = 'ELECTRON_IS_DEV' in process.env;
+    const getFromEnvironment: boolean =
+      !!process.env.ELECTRON_IS_DEV &&
+      parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
 
-    //   console.log(`process.env;`, process.env;);
-    //   console.log(`isEnvironmentSet`, isEnvironmentSet);
+    // console.log(`process.env;`, process.env;);
+    // console.log(`isEnvironmentSet`, isEnvironmentSet);
     // console.log(`getFromEnvironment`, getFromEnvironment);
     // console.log(`!environment.production`, !environment.production);
 
-    // return isEnvironmentSet ? getFromEnvironment : !environment.production;
+    return isEnvironmentSet ? getFromEnvironment : !environment.production;
     // dialog.showErrorBox('environment.production', `${environment.production}`);
-    return !environment.production;
+    // return !environment.production;
   }
 
   private static onWindowAllClosed() {
