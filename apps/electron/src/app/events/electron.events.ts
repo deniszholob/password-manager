@@ -11,7 +11,7 @@ import {
   MyFile,
   slash,
 } from '@pwm/util';
-import { app, dialog, ipcMain } from 'electron';
+import { app, dialog, ipcMain, shell } from 'electron';
 import { readFile, writeFile } from 'fs/promises';
 
 import { environment } from '../../environments/environment';
@@ -48,6 +48,13 @@ class ElectronEventHandler implements ElectronWindowApiRendererEvents {
     });
     return data && data.filePath ? slash(data.filePath) : null;
   }
+
+  public async showItemInFolder(path: string): Promise<void> {
+    if (!environment.production) {
+      // console.log(`showItemInFolder() - `, path);
+    }
+    await shell.showItemInFolder(path);
+  }
 }
 const handler = new ElectronEventHandler();
 
@@ -59,6 +66,10 @@ ipcMain.handle(EVENT_CHANNELS.e_write_file, (event, arg) =>
 );
 ipcMain.handle(EVENT_CHANNELS.e_get_saveFile_path, () =>
   handler.getSaveFilePath()
+);
+ipcMain.handle(
+  EVENT_CHANNELS.e_show_item_in_folder,
+  (_event, filePath: string) => handler.showItemInFolder(filePath)
 );
 
 // Retrieve app version

@@ -4,6 +4,7 @@ export enum EVENT_CHANNELS {
   e_get_saveFile_path = 'electron-get-save-file-path',
   e_open_file = 'electron-open-file',
   e_write_file = 'electron-write-file',
+  e_show_item_in_folder = 'electron-show-item-in-folder',
   ng_selected_save_file = 'angular-selected-save-file',
   ng_selected_files = 'angular-selected-files',
   ng_selected_directory = 'angular-selected-directory',

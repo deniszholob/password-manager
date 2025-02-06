@@ -9,13 +9,15 @@ import {
   getGuid,
   getIconSrcOptionValuesArray,
   mockSavedFile,
+  RawFileIOService,
   SettingsData,
   SettingsStore,
   StateService,
 } from '@pwm/util';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { GITHUB } from '../pages.data';
 import { FieldCheckOptions } from '@pwm/components';
+import { takeUntil, tap } from 'rxjs/operators';
 
 const WEB_WARNING = `DO NOT Enter sensitive information, this is a demo only!`;
 const ENTRY_MOCK: Entry = mockSavedFile[0];
@@ -29,6 +31,7 @@ const ENTRY_MOCK: Entry = mockSavedFile[0];
   // styleUrls: ['./dashboard-page.component.scss'],
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
+  private readonly clearSub$ = new Subject<void>();
   public GITHUB = GITHUB;
   public WEB_WARNING: string = null;
   private _searchQuery = '';
@@ -80,8 +83,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   public appStore$: Observable<AppData> = this.appStore.getStore();
 
   public isSettingsOpen = false;
+  public dataFile: string;
 
   constructor(
+    private rawFileIOService: RawFileIOService,
     private stateService: StateService,
     private dataStore: DataStoreService,
     private settingsStore: SettingsStore,
@@ -91,6 +96,25 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     @Inject('BUILD_DATE') public date: number
   ) {
     this.WEB_WARNING = !this.stateService.isElectron() ? WEB_WARNING : null;
+    this.settings$
+      .pipe(
+        // tap((s) => console.log(`settings$`, s)),
+        tap((s) => {
+          this.dataFile = s?.dataFile;
+        }),
+        takeUntil(this.clearSub$)
+      )
+      .subscribe();
+  }
+
+  public showItemInFolder(path: string): void {
+    try {
+      this.rawFileIOService.showItemInFolder(path);
+      this.error = null;
+    } catch (e) {
+      console.error(e);
+      this.error = `Only Available on Desktop!`;
+    }
   }
 
   // TODO: Add auto select on input fields
@@ -114,6 +138,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.clearSub$.next();
+    this.clearSub$.complete();
   }
 
   // ======================================================================== //

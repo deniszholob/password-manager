@@ -171,7 +171,7 @@ export class RawFileIOService {
     // console.log(`  writeFileElectron() - `, myFile);
     if (!this.electron) return throwError('Electron is not available!');
     return from(this.electron.writeFile(myFile)).pipe(
-      map(() => {
+      map((): null => {
         return null;
       })
     );
@@ -181,5 +181,14 @@ export class RawFileIOService {
     // console.log(`  writeFileLocal() - `, myFile);
     localStorage.setItem(String(myFile.path), myFile.data);
     return of(null);
+  }
+
+  // ======================================================================== //
+  // ============================= Other =================================== //
+
+  public showItemInFolder(filePath: string): void {
+    // TODO: Download from localstorage if Electron is not available (browser)
+    if (!this.electron) throw new Error('Electron is not available!');
+    this.electron.showItemInFolder(filePath);
   }
 }

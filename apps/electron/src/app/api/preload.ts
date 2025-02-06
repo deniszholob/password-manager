@@ -40,6 +40,8 @@ const exportApi: ElectronWindowApi = {
     ipcRenderer.invoke(EVENT_CHANNELS.e_open_file, path),
   writeFile: (file: MyFile) =>
     ipcRenderer.invoke(EVENT_CHANNELS.e_write_file, file),
+  showItemInFolder: (path: string) =>
+    ipcRenderer.invoke(EVENT_CHANNELS.e_show_item_in_folder, path),
   getSaveFilePath: () => ipcRenderer.invoke(EVENT_CHANNELS.e_get_saveFile_path),
   platform: process.platform,
   homeFile: homeFile,

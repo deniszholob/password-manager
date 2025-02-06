@@ -28,6 +28,7 @@ export interface ElectronWindowApiRendererEvents {
   openFile: (path: string) => Promise<MyFile>;
   writeFile: (file: MyFile) => Promise<void>;
   getSaveFilePath: () => Promise<string | null>;
+  showItemInFolder: (path: string) => Promise<void>;
 }
 
 export interface ElectronWindowApiMainEvents {
@@ -39,7 +40,7 @@ export interface ElectronWindowApiMainEvents {
   fileOpenedApp: (
     listener: (event: Electron.IpcRendererEvent, path: string[]) => void
   ) => void;
-  fileOpenedAppO: () => Observable<string>
+  fileOpenedAppO: () => Observable<string>;
 }
 
 /** Exposed Electron API to Angular in the preload Electron contextBridge */

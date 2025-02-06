@@ -4,8 +4,11 @@
       {{ WEB_WARNING }}
     </section>
 
-    <section class="w-full p-1 bg-gray-700">
-      Data from "{{ (settings$ | async)?.dataFile }}"
+    <section class="w-full p-1 bg-gray-700" *ngIf="dataFile">
+      Data from
+      <button class="text-blue-500" (click)="showItemInFolder(dataFile)">
+        {{ dataFile }}
+      </button>
     </section>
 
     <aside id="status" class="flex flex-col px-4 mx-auto">
