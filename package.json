@@ -1,6 +1,6 @@
 {
   "name": "password-manager",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "license": "GPL-3",
   "author": "Denis Zholob",
   "description": "Offline password manager app",

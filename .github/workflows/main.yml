@@ -20,9 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: '16.20.2'
 
@@ -30,7 +30,7 @@ jobs:
         run: node -pe "require('./package.json').version" > RELEASE_VERSION.txt
 
       - name: Archive RELEASE_VERSION
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: RELEASE_VERSION
           path: RELEASE_VERSION.txt
@@ -40,13 +40,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
         with:
           version: 8
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: '16.20.2'
           cache: 'pnpm'
@@ -57,7 +57,7 @@ jobs:
 
       - name: Cache node modules
         id: npm-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{steps.npm-cache-dir.outputs.dir}}
           key: ${{runner.os}}-node-${{hashFiles('**/pnpm-lock.yaml')}}
@@ -69,7 +69,7 @@ jobs:
         run: pnpm run i
 
       - name: Cache Nx
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules/.cache/nx
           key: cache-nx-${{ hashFiles('pnpm-lock.yaml') }}-build-web-${{ github.sha }}
@@ -83,7 +83,7 @@ jobs:
       # https://docs.github.com/en/actions/learn-github-actions/essential-features-of-github-actions#sharing-data-between-jobs
       - name: Archive web demo build
         if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: web-demo-build
           path: dist/apps/web # Directory to push to GitHub Pages
@@ -95,10 +95,10 @@ jobs:
     needs: build-web
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Download build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: web-demo-build
           path: web-demo-build
@@ -119,19 +119,19 @@ jobs:
     needs: [get-release-version, build-web]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
         with:
           version: 8
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: '16.20.2'
           cache: 'pnpm'
 
       - name: Download RELEASE_VERSION
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: RELEASE_VERSION
 
@@ -146,7 +146,7 @@ jobs:
 
       - name: Cache node modules
         id: npm-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{steps.npm-cache-dir.outputs.dir}}
           key: ${{runner.os}}-node-${{hashFiles('**/pnpm-lock.yaml')}}
@@ -158,7 +158,7 @@ jobs:
         run: pnpm run i
 
       - name: Download build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: web-demo-build
           path: dist/apps/web
@@ -176,7 +176,7 @@ jobs:
 
       - name: Archive electron app build
         if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release-package-${{env.RELEASE_VERSION}}-linux
           path: |
@@ -191,18 +191,18 @@ jobs:
     needs: [get-release-version, build-web]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
         with:
           version: 8
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: '16.20.2'
 
       - name: Download RELEASE_VERSION
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: RELEASE_VERSION
 
@@ -217,7 +217,7 @@ jobs:
 
       - name: Cache node modules
         id: npm-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{steps.npm-cache-dir.outputs.dir}}
           key: ${{runner.os}}-node-${{hashFiles('**/pnpm-lock.yaml')}}
@@ -229,7 +229,7 @@ jobs:
         run: pnpm run i
 
       - name: Download build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: web-demo-build
           path: dist/apps/web
@@ -261,7 +261,7 @@ jobs:
       - name: Archive electron app build
         # if: github.event == 'push' && success()
         if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release-package-${{env.RELEASE_VERSION}}-windows
           path: |
@@ -279,14 +279,14 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: '16.20.2'
 
       - name: Download RELEASE_VERSION
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: RELEASE_VERSION
 
@@ -296,13 +296,13 @@ jobs:
           echo "RELEASE_VERSION=`cat RELEASE_VERSION.txt`" >> $GITHUB_ENV
 
       - name: Download Linux build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: release-package-${{env.RELEASE_VERSION}}-linux
           path: release-package-${{env.RELEASE_VERSION}}
 
       - name: Download Windows build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: release-package-${{env.RELEASE_VERSION}}-windows
           path: release-package-${{env.RELEASE_VERSION}}
