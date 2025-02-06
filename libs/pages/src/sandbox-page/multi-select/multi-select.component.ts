@@ -58,13 +58,13 @@ export class MultiSelectComponent implements AfterViewInit {
   private canvas = document.createElement('canvas');
 
   ngAfterViewInit() {
-    console.log(this.selectionTextElement);
+    // console.log(this.selectionTextElement);
   }
 
   public setDisplayText() {
     let text = this.selectionsMade.map((o) => o.name).join('; ');
 
-    console.log(this.selectionTextElement);
+    // console.log(this.selectionTextElement);
     // const elWidth = this.selectionTextElement.nativeElement.offsetWidth;
     const elWidth = this.select.element.offsetWidth;
     let textWidth = this.getTextWidth(text);
@@ -155,7 +155,7 @@ export class MultiSelectComponent implements AfterViewInit {
   }
 
   public setSearchFocus() {
-    console.log(`setSearchFocus()`);
+    // console.log(`setSearchFocus()`);
     // This will make the execution after ng-template is rendered
     setTimeout(() => {
       this.searchInput.nativeElement.focus();
@@ -163,13 +163,13 @@ export class MultiSelectComponent implements AfterViewInit {
   }
 
   public actionCancel() {
-    console.log(`actionCancel()`, this.toBeSelected, this.selectionsMade);
+    // console.log(`actionCancel()`, this.toBeSelected, this.selectionsMade);
     this.toBeSelected = this.getDeepCopy(this.selectionsMade);
     this.select.close();
   }
 
   public actionClear() {
-    console.log(`applySelection()`, this.toBeSelected, this.selectionsMade);
+    // console.log(`applySelection()`, this.toBeSelected, this.selectionsMade);
     // this.select.handleClearClick();
     this.selectionsMade = [];
     this.toBeSelected = [];
@@ -178,19 +178,19 @@ export class MultiSelectComponent implements AfterViewInit {
   }
 
   public actionApply() {
-    console.log(`applySelection()`, this.toBeSelected, this.selectionsMade);
+    // console.log(`applySelection()`, this.toBeSelected, this.selectionsMade);
     this.selectionsMade = this.getDeepCopy(this.toBeSelected);
     this.select.close();
     this.setDisplayText();
   }
 
   public updateSelections(event: selectionI[]) {
-    console.log(
-      `updateSelections()`,
-      this.toBeSelected,
-      this.selectionsMade,
-      event
-    );
+    // console.log(
+    //   `updateSelections()`,
+    //   this.toBeSelected,
+    //   this.selectionsMade,
+    //   event
+    // );
     this.toBeSelected = this.getDeepCopy(event);
     // console.log(`updateSelections()`, this.toBeSelected, this.selectionsMade);
   }

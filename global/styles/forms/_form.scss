@@ -4,9 +4,10 @@ formly-field {
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  // margin-bottom: 1rem;
 
   label {
+    padding: 0 4px;
     font-size: 0.8rem;
     color: #ccc;
   }

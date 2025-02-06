@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   AppData,
   AppStore,
-  DataStore,
+  DataStoreService,
   Entry,
   IconSrcOptions,
   SettingsData,
@@ -13,7 +13,6 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'pwm-entry-edit',
   templateUrl: './entry-edit.component.html',
-  // styleUrls: ['./entry-edit.component.scss']
 })
 export class EntryEditComponent {
   @Input()
@@ -29,32 +28,36 @@ export class EntryEditComponent {
   public cancelEntry = new EventEmitter<void>();
 
   public settings$: Observable<SettingsData> = this.settingsStore.getStore();
-  public allTags$: Observable<string[]> = this.dataStore.getUniqueTagSet();
+  public tagOptions$: Observable<string[]> = this.dataStore.getUniqueTagSet();
+  public emailOptions$: Observable<string[]> =
+    this.dataStore.getUniqueEmailSet();
   public appStore$: Observable<AppData> = this.appStore.getStore();
 
   constructor(
-    private dataStore: DataStore,
+    private dataStore: DataStoreService,
     private settingsStore: SettingsStore,
     private appStore: AppStore
   ) {}
 
-  public saveEntryClick(entry: any) {
+  public saveEntryClick(entry: any): void {
     // console.log(`saveEntry() -`, entry);
     this.unsavedChangesChange(false);
     this.saveEntry.emit(entry);
   }
-  public deleteEntryClick(entry: any) {
+
+  public deleteEntryClick(entry: any): void {
     // console.log(`deleteEntry() -`, entry);
     this.unsavedChangesChange(false);
     this.deleteEntry.emit(entry);
   }
-  public cancelEntryClick() {
+
+  public cancelEntryClick(): void {
     // console.log(`cancelEntry`);
     this.unsavedChangesChange(false);
     this.cancelEntry.emit();
   }
 
-  public unsavedChangesChange(value: boolean) {
+  public unsavedChangesChange(value: boolean): void {
     // console.log('unsavedChangesChange', value)
     this.appStore.setState({
       ...this.appStore.getState(),

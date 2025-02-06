@@ -6,7 +6,6 @@ import { Observable, of } from 'rxjs';
 @Component({
   selector: 'pwm-open-multi-select',
   templateUrl: './open-multi-select.component.html',
-  // styleUrls: ['./open-multi-select.component.scss'],
 })
 export class OpenMultiSelectComponent extends FieldType implements OnInit {
   // public formControlName: string;
@@ -15,7 +14,7 @@ export class OpenMultiSelectComponent extends FieldType implements OnInit {
     return v as FormControl;
   }
 
-  public addTagFn(name: string) {
+  public addTagFn(name: string): string {
     return name;
   }
 

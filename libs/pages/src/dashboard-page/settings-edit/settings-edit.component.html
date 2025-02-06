@@ -1,10 +1,10 @@
 <div
-  class="flex flex-row justify-between"
+  class="flex flex-row items-baseline justify-between border-b border-gray-800 border-solid"
 >
-  <h2 class="p-2">Settings</h2>
+  <h2 class="p-4">Settings</h2>
   <button
     type="button"
-    class="p-2 text-red-500 hover:text-red-300"
+    class="p-4 text-red-500 hover:text-red-300"
     title="Close"
     (click)="closeSettingsClick()"
   >
@@ -12,14 +12,16 @@
   </button>
 </div>
 
-<div class="flex flex-row my-4 justify-evenly">
-  <pwm-file-selection
-    [disabled]="disableFileSelection"
-    (buttonClick)="closeSettingsClick()"
-  ></pwm-file-selection>
-</div>
+<div class="flex-1 p-4 overflow-auto">
+  <div class="flex flex-row my-4 justify-evenly">
+    <pwm-file-selection
+      [disabled]="disableFileSelection"
+      (buttonClick)="closeSettingsClick()"
+    ></pwm-file-selection>
+  </div>
 
-<pwm-settings-form
-  [fModel]="settings$ | async"
-  (save)="saveSettings($event)"
-></pwm-settings-form>
+  <pwm-settings-form
+    [fModel]="settings$ | async"
+    (save)="saveSettings($event)"
+  ></pwm-settings-form>
+</div>

@@ -16,6 +16,7 @@ import { FORMLY_ENTRY_CONFIG } from './entry-form.const';
 
 @Component({
   selector: 'pwm-entry-form',
+  styles: [':host{display:contents}'],
   templateUrl: './entry-form.component.html',
   // styleUrls: ['./entry-form.component.scss'],
 })
@@ -36,7 +37,9 @@ export class EntryFormComponent implements OnInit, AfterViewInit {
   @Input()
   public defaultIconSrc: IconSrcOptions = IconSrcOptions.default;
   @Input()
-  public allTags$: Observable<string[]> = of([]);
+  public tagOptions$: Observable<string[]> = of([]);
+  @Input()
+  public emailOptions$: Observable<string[]> = of([]);
 
   @Output()
   public cancel = new EventEmitter<void>();
@@ -52,7 +55,11 @@ export class EntryFormComponent implements OnInit, AfterViewInit {
   public fFields: FormlyFieldConfig[] = [];
 
   ngOnInit(): void {
-    this.fFields = FORMLY_ENTRY_CONFIG(this.defaultIconSrc, this.allTags$);
+    this.fFields = FORMLY_ENTRY_CONFIG(
+      this.defaultIconSrc,
+      this.tagOptions$,
+      this.emailOptions$
+    );
   }
 
   ngAfterViewInit(): void {

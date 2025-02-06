@@ -1,4 +1,6 @@
-import { Entry, FileData, IconSrcOptions } from '../models/web/FileData.model';
+import { FileData } from '../models/web/FileData.model';
+import { Entry } from '../models/web/entry/entry.model';
+import { IconSrcOptions } from '../models/web/icon-src-options.enum';
 import {
   DEFAULT_SETTINGS,
   EncryptionOptions,
@@ -26,7 +28,7 @@ export const mockEntry: Entry = {
   email: 'mock-account@mock-email.com',
   password: 'mock-password',
   serviceName: `Mock Service`,
-  tags: ['mock-tag','mock-tag2','mock-tag3'],
+  tags: ['mock-tag', 'mock-tag2', 'mock-tag3'],
   recovery: [{ question: 'Mock Question?', answer: 'Mock Answer!' }],
   serviceUrl: 'mock-service.com',
   username: 'mock-username',

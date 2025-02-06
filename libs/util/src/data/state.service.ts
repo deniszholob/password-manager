@@ -5,7 +5,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
 
 import { DEFAULT_SETTINGS, FileData, SettingsData } from '../models/web';
-import { DataStore, SettingsStore } from '../store';
+import { DataStoreService, SettingsStore } from '../store';
 import { errorHas, ERRORS } from './errors';
 import { RawFileIOService } from './raw-file-io.service';
 
@@ -17,11 +17,10 @@ const PATH_REGEX = /^[a-z]:((\\|\/)[a-z0-9\s_@\-^!#$%&+={}\[\]]+)+\.xml$/i;
 @Injectable({ providedIn: 'root' })
 export class StateService {
   constructor(
-    private dataStore: DataStore,
+    private dataStore: DataStoreService,
     private settingsStore: SettingsStore,
     private rawFileIOService: RawFileIOService
-  ) {
-  }
+  ) {}
 
   // ======================================================================== //
   // ============================= Read ===================================== //
@@ -64,7 +63,7 @@ export class StateService {
     // console.log(`readSettings() - `, location);
     return this.rawFileIOService.readFile<SettingsData>(location).pipe(
       tap((d) => this.settingsStore.setState(d)),
-      map(() => null),
+      map((): null => null),
       catchError((err) => {
         if (
           errorHas(err, ERRORS.ELECTRON_NO_FILE) ||

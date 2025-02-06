@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import {
   AppData,
   AppStore,
-  DataStore,
+  DataStoreService,
   Entry,
   FileData,
   getGuid,
@@ -72,7 +72,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private stateService: StateService,
-    private dataStore: DataStore,
+    private dataStore: DataStoreService,
     private settingsStore: SettingsStore,
     private appStore: AppStore,
     private router: Router
@@ -359,11 +359,12 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       .filter((value) => {
         // console.log('Search Filter');
         return (
-          value.email?.toLocaleLowerCase().includes(q) ||
           value.serviceName?.toLocaleLowerCase().includes(q) ||
-          (value.username && value.username?.toLocaleLowerCase().includes(q)) ||
           (value.serviceUrl &&
-            value.serviceUrl?.toLocaleLowerCase().includes(q))
+            value.serviceUrl?.toLocaleLowerCase().includes(q)) ||
+          value.email?.toLocaleLowerCase().includes(q) ||
+          (value.username && value.username?.toLocaleLowerCase().includes(q)) ||
+          (value.notes && value.notes.toLocaleLowerCase().includes(q))
         );
       });
   }

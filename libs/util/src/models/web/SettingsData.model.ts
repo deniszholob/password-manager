@@ -1,4 +1,4 @@
-import { IconSrcOptions } from './FileData.model';
+import { IconSrcOptions } from './icon-src-options.enum';
 
 export interface SettingsData {
   // version: string;

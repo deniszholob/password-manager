@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  DataStore,
+  DataStoreService,
   FileData,
   getIconSrcOptionsArray,
   getIconSrcOptionValuesArray,
@@ -30,7 +30,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private stateService: StateService,
-    private dataStore: DataStore,
+    private dataStore: DataStoreService,
     private settingsStore: SettingsStore,
     private router: Router
   ) {}

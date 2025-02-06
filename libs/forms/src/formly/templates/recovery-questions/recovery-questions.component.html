@@ -1,29 +1,31 @@
-<div class="flex flex-row items-center">
+<div class="flex flex-row items-center justify-center">
+  <span class="">Recovery Questions</span>
   <button class="p-2" (click)="add()" type="button">
     <i class="text-green-500 fas fa-plus"></i>
   </button>
-  <span class="">Recovery Questions</span>
 </div>
 
 <div class="form-group" *ngIf="field.fieldGroup?.length <= 0">
-  <span>No questions saved</span>
+  <span class="block text-center text-gray-500">
+    No questions saved,
+
+    <button type="button" class="text-green-500" (click)="add()">
+      add one!
+    </button>
+  </span>
 </div>
 
 <div
   *ngFor="let field of field.fieldGroup; let i = index"
   class="flex flex-row"
 >
-  <!-- <pwm-click-to-copy [text]="field.answer" name="Answer" pos="right">
-    <i class="fas fa-copy"></i>
-  </pwm-click-to-copy> -->
-
   <div class="flex-1">
     <formly-field class="flex flex-wrap" [field]="field"></formly-field>
   </div>
 
-  <div class="flex my-6 align-items-center">
+  <div class="flex align-items-center">
     <button
-      class="p-2 text-red-500 hover:text-red-800"
+      class="px-2 py-1 mt-10 text-red-500 hover:text-red-800"
       (click)="remove(i)"
       type="button"
     >

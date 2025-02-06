@@ -4,12 +4,13 @@ import { FormlyModule } from '@ngx-formly/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { FormFieldComponent } from './form-field.component';
+import { ClickToCopyModule } from '@pwm/components';
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
-
+    ClickToCopyModule,
     FormlyModule.forChild({
       wrappers: [
         {

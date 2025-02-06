@@ -4,6 +4,7 @@ import { FieldWrapper } from '@ngx-formly/core';
 @Component({
   selector: 'pwm-password-wrapper',
   templateUrl: './password-wrapper.component.html',
+  styles: [':host{display:contents}'],
   // styleUrls: ['./password-wrapper.component.scss'],
 })
 export class PasswordWrapperComponent extends FieldWrapper {

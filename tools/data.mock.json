@@ -1,0 +1,79 @@
+[
+  {
+    "guid": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
+    "serviceName": "TechCorp",
+    "email": "user@example.com",
+    "password": "P@ssw0rd123!",
+    "username": "tech_user",
+    "serviceUrl": "https://techcorp.com",
+    "recovery": [
+      {
+        "question": "What is your pet's name?",
+        "answer": "Fluffy"
+      },
+      {
+        "question": "What city were you born in?",
+        "answer": "Springfield"
+      }
+    ],
+    "tags": ["work", "security", "important"],
+    "notes": "This is my main account for work.",
+    "usedTimes": 42,
+    "iconSrc": "google"
+  },
+  {
+    "guid": "f3e2d1c0-b5a4-6789-9876-54321fedcba0",
+    "serviceName": "MediaStream",
+    "email": "mediafan@example.com",
+    "password": "StreamingPass!456",
+    "username": "media_fanatic",
+    "serviceUrl": "https://mediastream.com",
+    "recovery": [
+      {
+        "question": "What is your favorite movie?",
+        "answer": "Inception"
+      }
+    ],
+    "tags": ["entertainment", "subscription"],
+    "notes": "Streaming service account.",
+    "usedTimes": 19,
+    "iconSrc": "statvoo"
+  },
+  {
+    "guid": "11223344-5566-7788-9900-aabbccddeeff",
+    "serviceName": "ShopEase",
+    "password": "Shop123!",
+    "username": "shopper42",
+    "serviceUrl": "https://shopease.com",
+    "recovery": [],
+    "tags": ["shopping"],
+    "usedTimes": 7,
+    "iconSrc": "duck"
+  },
+  {
+    "guid": "abc12345-def6-7890-gh12-ijklmnopqrst",
+    "serviceName": "GameVault",
+    "email": "gamer123@example.com",
+    "password": "G@meP@ss2024",
+    "username": "gamer_hero",
+    "serviceUrl": "https://gamevault.com",
+    "recovery": [
+      {
+        "question": "What was your first gaming console?",
+        "answer": "PlayStation"
+      }
+    ],
+    "tags": ["gaming", "fun"],
+    "notes": "Game account with premium membership.",
+    "usedTimes": 35,
+    "iconSrc": "fontawesome"
+  },
+  {
+    "guid": "98765432-10ab-cdef-3456-7890abcdef12",
+    "serviceName": "CloudDrive",
+    "password": "SecureCloud2025!",
+    "username": "cloud_master",
+    "usedTimes": 12,
+    "iconSrc": "default"
+  }
+]

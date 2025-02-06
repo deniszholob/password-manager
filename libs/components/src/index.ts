@@ -1,5 +1,6 @@
 export * from './components.module';
 
+export * from './click-to-copy';
 export * from './entry';
 export * from './file-picker';
 export * from './file-selection';

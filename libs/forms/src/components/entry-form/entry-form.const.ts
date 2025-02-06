@@ -12,7 +12,8 @@ import { optionValidator, urlValidator } from '../../validators';
 
 export function FORMLY_ENTRY_CONFIG(
   defaultIconSrc: IconSrcOptions,
-  tagOptions$: Observable<string[]>
+  tagOptions$: Observable<string[]>,
+  emailOptions$: Observable<string[]>
 ): FormlyFieldConfig[] {
   return [
     { key: 'usedTimes' },
@@ -26,37 +27,38 @@ export function FORMLY_ENTRY_CONFIG(
         label: 'Icon Source',
         options: getIconSrcOptionsArray(),
         attributes: { autocomplete: 'icon-source' },
+        hideCopyButton: true,
       },
       validators: {
         validation: [optionValidator(getIconSrcOptionValuesArray())],
       },
     },
     {
-      fieldGroupClassName: 'flex flex-row flex-wrap',
+      fieldGroupClassName: 'flex flex-row flex-wrap gap-y-4',
       fieldGroup: [
         // {
         //   template: 'BOB',
         // },
         {
-          className: 'block flex-auto w-full sm:w-auto',
+          className: 'block flex-auto w-full sm:w-auto flex-1/2',
           key: 'serviceName',
           type: 'input',
           templateOptions: {
             type: 'text',
             label: 'Service Name',
-            placeholder: 'Service Name',
+            placeholder: 'Example',
             required: true,
             attributes: { autocomplete: 'off' },
           },
         },
         {
-          className: 'block flex-auto w-full sm:w-auto',
+          className: 'block flex-auto w-full sm:w-auto flex-1/2',
           key: 'serviceUrl',
           type: 'input',
           templateOptions: {
             type: 'url',
             label: 'Service Url',
-            placeholder: 'Service Url',
+            placeholder: 'https://www.example.com',
             attributes: { autocomplete: 'off' },
           },
           expressionProperties: {
@@ -77,7 +79,7 @@ export function FORMLY_ENTRY_CONFIG(
       ],
     },
     {
-      fieldGroupClassName: 'flex flex-row flex-wrap',
+      fieldGroupClassName: 'flex flex-row flex-wrap gap-y-4',
       fieldGroup: [
         // TODO: username same as email
         // {
@@ -113,27 +115,29 @@ export function FORMLY_ENTRY_CONFIG(
         //   },
         // },
         {
-          className: 'block flex-auto w-full sm:w-auto',
+          className: 'block flex-auto w-full sm:w-auto flex-1/2',
           key: 'email',
-          type: 'input',
+          type: 'open-multi-select',
           templateOptions: {
             type: 'email',
             label: 'Email',
-            placeholder: 'Email',
+            placeholder: 'username@example.com',
             attributes: { autocomplete: 'email' },
+            options: emailOptions$,
+            multiple: false,
           },
           validators: {
             validation: [Validators.email],
           },
         },
         {
-          className: 'block flex-auto w-full sm:w-auto',
+          className: 'block flex-auto w-full sm:w-auto flex-1/2',
           key: 'username',
           type: 'input',
           templateOptions: {
             type: 'text',
             label: 'Username',
-            placeholder: 'Username',
+            placeholder: 'username',
             required: true,
             attributes: { autocomplete: 'username' },
           },
@@ -153,7 +157,7 @@ export function FORMLY_ENTRY_CONFIG(
       templateOptions: {
         type: 'password',
         label: 'Password',
-        placeholder: 'Password',
+        placeholder: 'StrongPassphraseThatNo1WillGuess!',
         required: true,
         attributes: { autocomplete: 'off' },
       },
@@ -163,41 +167,9 @@ export function FORMLY_ENTRY_CONFIG(
       type: 'textarea',
       templateOptions: {
         label: 'Notes',
-        placeholder: 'Notes',
+        placeholder: 'Very important things noted here.',
         rows: 3,
         attributes: { autocomplete: 'off' },
-      },
-    },
-    {
-      key: 'recovery',
-      type: 'recovery-questions',
-      fieldArray: {
-        fieldGroup: [
-          {
-            className: 'block flex-auto w-full sm:w-auto',
-            key: 'question',
-            type: 'input',
-            templateOptions: {
-              type: 'text',
-              label: 'Question',
-              placeholder: 'Question',
-              required: true,
-              attributes: { autocomplete: 'recovery-question' },
-            },
-          },
-          {
-            className: 'block flex-auto w-full sm:w-auto',
-            key: 'answer',
-            type: 'input',
-            templateOptions: {
-              type: 'text',
-              label: 'Answer',
-              placeholder: 'Answer',
-              required: true,
-              attributes: { autocomplete: 'recovery-answer' },
-            },
-          },
-        ],
       },
     },
     {
@@ -206,8 +178,42 @@ export function FORMLY_ENTRY_CONFIG(
       templateOptions: {
         label: 'Filter Tags',
         placeholder: 'Add Tags',
-        options: tagOptions$,
         attributes: { autocomplete: 'tags' },
+        options: tagOptions$,
+        multiple: true,
+      },
+    },
+    {
+      key: 'recovery',
+      type: 'recovery-questions',
+      fieldArray: {
+        fieldGroup: [
+          {
+            className: 'block flex-auto w-full sm:w-auto flex-1/2',
+            key: 'question',
+            type: 'input',
+            templateOptions: {
+              type: 'text',
+              label: 'Question',
+              placeholder: 'What ... is your favorite color?',
+              required: true,
+              attributes: { autocomplete: 'recovery-question' },
+            },
+          },
+          {
+            className: 'block flex-auto w-full sm:w-auto flex-1/2',
+            wrappers: ['form-field', 'password-wrapper'],
+            key: 'answer',
+            type: 'input',
+            templateOptions: {
+              type: 'password',
+              label: 'Answer',
+              placeholder: 'Blue!',
+              required: true,
+              attributes: { autocomplete: 'recovery-answer' },
+            },
+          },
+        ],
       },
     },
   ];

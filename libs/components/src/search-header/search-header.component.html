@@ -1,8 +1,5 @@
-<div id="header" class="p-4 flex flex-col mx-auto">
-  <div
-    id="searchBar"
-    class="flex flex-row items-center justify-between"
-  >
+<div id="header" class="flex flex-col p-4 mx-auto">
+  <div id="searchBar" class="flex flex-row items-center justify-between">
     <!-- <h2 class="w-full text-center">Dashboard Page</h2> -->
     <button
       type="button"
@@ -34,14 +31,8 @@
         type="text"
         id="search"
         name="search"
-        class="
-          w-full
-          py-2
-          pl-10
-          text-black
-          placeholder-gray-500
-          dark:text-white dark:bg-gray-800
-        "
+        title="Search (Service Name, URL, Email, Username, Notes)"
+        class="w-full py-2 pl-10 text-black placeholder-gray-500 dark:text-white dark:bg-gray-800"
         autofocus
         placeholder="Search"
         [disabled]="disabledSearch"
@@ -53,6 +44,7 @@
     <button
       type="button"
       class="p-2 text-green-500 hover:text-green-200 disabled:opacity-50"
+      title="New Entry"
       (click)="createNewEntryClick($event)"
       [disabled]="disabledCreateNew"
     >

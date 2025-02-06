@@ -128,9 +128,23 @@ export default class App {
         devTools: true,
       },
     });
+
     if (App.isDevelopmentMode()) {
       App.mainWindow.webContents.openDevTools();
     }
+
+    // Opens url links in native browser app, instead of creating a new electron window
+    // https://stackoverflow.com/questions/31749625/make-a-link-from-electron-open-in-browser/67108615#67108615
+    App.mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+      // config.fileProtocol is my custom file protocol
+      // if (url.startsWith(config.fileProtocol)) {
+      //     return { action: 'allow' };
+      // }
+      // open url in a browser and prevent default
+      shell.openExternal(url);
+      return { action: 'deny' };
+    });
+
     App.initMenu();
     App.mainWindow.center();
 

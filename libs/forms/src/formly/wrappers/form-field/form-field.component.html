@@ -1,16 +1,34 @@
-<div class="mb-3" [class.has-error]="showError">
-  <label
-    *ngIf="to.label && to.hideLabel !== true"
-    [attr.for]="id"
-    class="form-label"
-  >
-    {{ to.label }}
-    <span *ngIf="to.required && to.hideRequiredMarker !== true">*</span>
-  </label>
+<div class="" [class.has-error]="showError">
+  <!-- TODO: model[$any(key)] should be type checked: key should be `typeof model` -->
+  <div class="flex flex-row items-baseline">
+    <pwm-click-to-copy
+      *ngIf="!to.hideCopyButton"
+      [text]="model[$any(key)] ?? ''"
+      [name]="to.label"
+      pos="right"
+    >
+      <i class="fas fa-copy"></i>
+    </pwm-click-to-copy>
+
+    <label
+      *ngIf="to.label && to.hideLabel !== true"
+      [attr.for]="id"
+      class="text-xs font-medium text-gray-500"
+    >
+      {{ to.label }}
+      <span
+        class="text-red-500"
+        *ngIf="to.required && to.hideRequiredMarker !== true"
+        >*</span
+      >
+    </label>
+  </div>
   <ng-template #fieldComponent></ng-template>
+
   <div *ngIf="showError" class="invalid-feedback" [style.display]="'block'">
     <formly-validation-message [field]="field"></formly-validation-message>
   </div>
+
   <small *ngIf="to.description" class="form-text text-muted">{{
     to.description
   }}</small>

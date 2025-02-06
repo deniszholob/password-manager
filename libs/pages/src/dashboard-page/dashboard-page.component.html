@@ -1,10 +1,10 @@
 <main class="flex flex-col h-screen">
-  <header class="text-center font-medium">
-    <section *ngIf="WEB_WARNING" class="p-1 bg-red-900 w-full decoration-clone">
+  <header class="font-medium text-center">
+    <section *ngIf="WEB_WARNING" class="w-full p-1 bg-red-900 decoration-clone">
       {{ WEB_WARNING }}
     </section>
 
-    <section class="p-1 bg-gray-700 w-full">
+    <section class="w-full p-1 bg-gray-700">
       Data from "{{ (settings$ | async)?.dataFile }}"
     </section>
 
@@ -16,7 +16,7 @@
 
   <div id="horizontal-center" class="flex flex-row flex-1 overflow-y-auto">
     <pwm-settings-edit
-      class="bg-black bg-opacity-20 p-4 overflow-y-auto flex-auto sm:max-w-lg"
+      class="flex flex-col flex-auto overflow-y-auto bg-black bg-opacity-20 sm:max-w-lg"
       *ngIf="getIsSettingsOpen()"
       (closeSettings)="toggleSettings()"
       [disableFileSelection]="(appStore$ | async)?.unsavedChanges"
@@ -24,7 +24,7 @@
 
     <div
       id="main-container"
-      class="container mx-auto flex flex-col flex-auto relative"
+      class="container relative flex flex-col flex-auto mx-auto"
       [ngClass]="[
         getIsSettingsOpen() ? 'hidden sm:flex' : '',
         getIsEditEntryOpen() ? 'max-w-screen-xlg' : 'max-w-screen-lg'
@@ -44,7 +44,7 @@
 
       <aside
         id="new-file"
-        class="flex flex-col justify-between text-center py-8"
+        class="flex flex-col justify-between py-8 text-center"
         *ngIf="fileData.length <= 0 && !newEntry"
       >
         <h2 class="mb-6 text-2xl text-gray-500">Looks like an empty canvas</h2>
@@ -62,7 +62,7 @@
 
       <div id="center-pane" class="flex flex-row flex-1 overflow-y-auto">
         <pwm-search-results
-          class="px-4 flex flex-col overflow-y-auto flex-auto"
+          class="flex flex-col flex-auto px-4 overflow-y-auto"
           *ngIf="getIsSearchOpen()"
           [ngClass]="getIsEditEntryOpen() ? 'hidden lg:flex' : ''"
           [newEntry]="newEntry"
@@ -81,7 +81,7 @@
         </pwm-search-results>
 
         <pwm-entry-edit
-          class="p-4 overflow-auto flex-auto"
+          class="flex flex-col flex-auto overflow-auto"
           [ngClass]="{
             'bg-red-800 bg-opacity-5': (appStore$ | async)?.unsavedChanges
           }"
@@ -95,20 +95,20 @@
     </div>
   </div>
 
-  <footer class="text-center text-sm font-medium">
+  <footer class="text-sm font-medium text-center">
     <!-- <section
-      class="p-1 bg-yellow-900 w-full decoration-clone"
+      class="w-full p-1 bg-yellow-900 decoration-clone"
       *ngIf="unsavedChanges"
     >
       Unsaved changes!
     </section> -->
 
     <section
-      class="bg-gray-700 text-sm flex flex-row flex-wrap justify-evenly py-1"
+      class="flex flex-row flex-wrap py-1 text-sm bg-gray-700 justify-evenly"
     >
       <p class="px-2">
         <a
-          class="no-underline text-blue-500 hover:text-blue-200"
+          class="text-blue-500 no-underline hover:text-blue-200"
           href="{{ GITHUB }}"
           target="_blank"
           rel="noopener noreferrer"
@@ -118,7 +118,7 @@
       <p class="px-2">
         Design by
         <a
-          class="no-underline text-blue-500 hover:text-blue-200"
+          class="text-blue-500 no-underline hover:text-blue-200"
           href="http://deniszholob.com"
           target="_blank"
           rel="noopener noreferrer"

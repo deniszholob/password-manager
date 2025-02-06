@@ -6,6 +6,7 @@ import { ConfigOption, FormlyModule } from '@ngx-formly/core';
 
 import { OpenMultiSelectModule, RecoveryQuestionsModule } from './templates';
 import { PasswordWrapperModule, UrlWrapperModule } from './wrappers';
+import { FormFieldModule } from './wrappers/form-field/form-field.module';
 
 const MODULE_IMPORT_EXPORT = [
   ReactiveFormsModule,
@@ -13,6 +14,7 @@ const MODULE_IMPORT_EXPORT = [
   // FormlyMaterialModule,
   RecoveryQuestionsModule,
   OpenMultiSelectModule,
+  FormFieldModule,
   PasswordWrapperModule,
   UrlWrapperModule,
 ];
