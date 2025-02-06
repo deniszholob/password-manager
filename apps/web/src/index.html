@@ -23,14 +23,7 @@
     <base href="./" />
   </head>
 
-  <body
-    class="
-      h-screen
-      text-gray-700
-      bg-gray-100
-      dark:bg-gray-900 dark:text-gray-300
-    "
-  >
+  <body class="h-screen text-gray-700 bg-gray-100 dark:bg-gray-900 dark:text-gray-300">
     <pwm-web-root>
       <div class="pt-5 text-center">
         Loading...
@@ -48,6 +41,13 @@
             >report</a
           >
           any errors.
+        </p>
+        <br />
+        <p class="text-muted">
+          <span>
+            <strong>Build: </strong>
+            {{BUILD_VERSION}} - {{BUILD_DATE}}
+          </span>
         </p>
       </div>
     </pwm-web-root>

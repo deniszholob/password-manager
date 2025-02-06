@@ -49,11 +49,7 @@
       >
         <h2 class="mb-6 text-2xl text-gray-500">Looks like an empty canvas</h2>
         <p>
-          <button
-            type="button"
-            class="text-green-500"
-            (click)="createNewEntry()"
-          >
+          <button type="button" class="text-green-500" (click)="createNewEntry()">
             Add an entry
           </button>
           to get started.
@@ -73,9 +69,7 @@
           [disableSelect]="(appStore$ | async)?.unsavedChanges"
         >
           <p noEntries *ngIf="searchQuery">
-            <button type="button" class="text-red-500" (click)="clearSearch()">
-              Clear
-            </button>
+            <button type="button" class="text-red-500" (click)="clearSearch()">Clear</button>
             the search to show {{ fileData.length }} Entries.
           </p>
         </pwm-search-results>
@@ -95,7 +89,7 @@
     </div>
   </div>
 
-  <footer class="text-sm font-medium text-center">
+  <footer class="text-xs font-light text-center">
     <!-- <section
       class="w-full p-1 bg-yellow-900 decoration-clone"
       *ngIf="unsavedChanges"
@@ -103,28 +97,32 @@
       Unsaved changes!
     </section> -->
 
-    <section
-      class="flex flex-row flex-wrap py-1 text-sm bg-gray-700 justify-evenly"
-    >
+    <section class="flex flex-row flex-wrap py-1 bg-gray-800 justify-evenly">
+      <p class="px-2">
+        <span class="text-muted">Design by</span>
+        <a
+          class="text-blue-500 no-underline hover:text-blue-200"
+          href="http://deniszholob.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          deniszholob.com
+        </a>
+      </p>
+
       <p class="px-2">
         <a
           class="text-blue-500 no-underline hover:text-blue-200"
           href="{{ GITHUB }}"
           target="_blank"
           rel="noopener noreferrer"
-          >Github</a
         >
+          <i class="fab fa-github"></i>
+          Github
+        </a>
       </p>
-      <p class="px-2">
-        Design by
-        <a
-          class="text-blue-500 no-underline hover:text-blue-200"
-          href="http://deniszholob.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          >deniszholob.com</a
-        >
-      </p>
+
+      <p class="text-muted">v{{ version }} - {{ date | date : 'yyyy/MM/dd' }}</p>
     </section>
   </footer>
 </main>

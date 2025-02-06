@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   DataStoreService,
@@ -12,6 +12,7 @@ import {
 } from '@pwm/util';
 import { of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { GITHUB } from '../pages.data';
 
 @Component({
   selector: 'pwm-landing-page',
@@ -19,6 +20,7 @@ import { catchError } from 'rxjs/operators';
   // styleUrls: ['./landing-page.component.scss'],
 })
 export class LandingPageComponent implements OnInit, OnDestroy {
+  public GITHUB = GITHUB;
   private subscription: Subscription = new Subscription();
   public appTitle = 'Password Manager';
 
@@ -32,7 +34,9 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     private stateService: StateService,
     private dataStore: DataStoreService,
     private settingsStore: SettingsStore,
-    private router: Router
+    private router: Router,
+    @Inject('BUILD_VERSION') public version: string,
+    @Inject('BUILD_DATE') public date: number
   ) {}
 
   ngOnInit(): void {

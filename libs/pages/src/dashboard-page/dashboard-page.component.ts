@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   AppData,
@@ -14,9 +14,9 @@ import {
   StateService,
 } from '@pwm/util';
 import { Observable, Subscription } from 'rxjs';
+import { GITHUB } from '../pages.data';
 
 const WEB_WARNING = `DO NOT Enter sensitive information, this is a demo only!`;
-const GITHUB = `https://github.com/deniszholob?tab=repositories`;
 const ENTRY_MOCK: Entry = mockSavedFile[0];
 
 /** TODO: Autocomplete
@@ -75,7 +75,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     private dataStore: DataStoreService,
     private settingsStore: SettingsStore,
     private appStore: AppStore,
-    private router: Router
+    private router: Router,
+    @Inject('BUILD_VERSION') public version: string,
+    @Inject('BUILD_DATE') public date: number
   ) {
     this.WEB_WARNING = !this.stateService.isElectron() ? WEB_WARNING : null;
   }
