@@ -1,0 +1,374 @@
+# CI/CD for Github Actions
+# @author Denis Zholob (deniszholob.com)
+# Checks linting, builds app
+# ref: https://pnpm.io/continuous-integration#github-actions
+# ============================================================================ #
+
+name: Code Checks
+
+# Controls when the workflow will run
+on:
+    # Triggers the workflow on push or pull request events but only for the main branch
+    push:
+        # branches: [main]
+    # pull_request:
+    #   branches: [ main ]
+
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
+env:
+    NODE_VERSION: '16.20.2'
+    PNPM_VERSION: '8'
+    NX_CACHE_DIR: '.nx'
+
+jobs:
+    # region SETUP
+    setup:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Set up pnpm ${{ env.PNPM_VERSION }}
+              uses: pnpm/action-setup@v4
+              with:
+                  version: ${{ env.PNPM_VERSION }}
+
+            - name: Set up Node.js ${{ env.NODE_VERSION }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: 'pnpm'
+
+            - name: Get npm cache directory
+              id: npm-cache-dir
+              run: echo "NPM_CACHE_DIR=$(npm config get cache)" >> $GITHUB_OUTPUT
+
+            - name: Get version from package.json
+              id: get-release-version
+              run: echo "RELEASE_VERSION=$(node -pe "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+            # - name: Cache Nx cache
+            #   uses: actions/cache@v4
+            #   with:
+            #       path: ${{env.NX_CACHE_DIR}}
+            #       key: ${{ runner.os }}-nx-cache-${{ hashFiles('**/nx.json', '**/workspace.json', '**/angular.json') }}
+            #       restore-keys: |
+            #           ${{ runner.os }}-nx-cache-
+
+            - name: Cache node cache directory
+              id: npm-cache
+              uses: actions/cache@v4
+              with:
+                  path: ${{steps.npm-cache-dir.outputs.NPM_CACHE_DIR}}
+                  key: ${{runner.os}}-node-${{hashFiles('**/pnpm-lock.yaml')}}
+                  restore-keys: |
+                      ${{runner.os}}-node-
+                      ${{runner.os}}-
+
+            - name: Install NPM Dependencies
+              run: pnpm install
+
+            - name: Display file structure
+              run: ls -R
+        outputs:
+            NPM_CACHE_DIR: ${{ steps.npm-cache-dir.outputs.NPM_CACHE_DIR }}
+            RELEASE_VERSION: ${{ steps.get-release-version.outputs.RELEASE_VERSION }}
+    # endregion
+
+    # region APP BUILD
+    app-build:
+        runs-on: ubuntu-latest
+        needs: setup
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Set up pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: ${{ env.PNPM_VERSION }}
+
+            - name: Set up Node.js ${{ env.NODE_VERSION }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: 'pnpm'
+
+            - name: Restore Nx cache
+              uses: actions/cache@v4
+              with:
+                  path: ${{env.NX_CACHE_DIR}}
+                  key: ${{ runner.os }}-nx-cache-${{ hashFiles('**/nx.json', '**/workspace.json', '**/angular.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-nx-cache-
+
+            - name: Restore node_modules cache
+              id: npm-cache
+              uses: actions/cache@v4
+              with:
+                  path: ${{ needs.setup.outputs.NPM_CACHE_DIR }}
+                  key: ${{runner.os}}-node-${{hashFiles('**/pnpm-lock.yaml')}}
+                  restore-keys: |
+                      ${{runner.os}}-node-
+                      ${{runner.os}}-
+
+            - name: Install NPM Dependencies
+              run: pnpm install
+
+            - name: Build
+              run: pnpm run build:web
+              # run: pnpm nx affected:build --base=origin/main --head=HEAD
+
+            - name: Display file structure
+              run: ls -R
+
+            - name: Archive App Build
+              if: success()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: web-demo-build # Artifact name/id for the next step
+                  path: dist/apps/web # Directory to push to GitHub Pages
+    # endregion
+
+    # region APP DEPLOY GITHUB
+    # Ref: https://focisolutions.com/2020/04/github-actions-deploying-an-angular-app/
+    app-deploy-github:
+        if: github.ref == 'refs/heads/main' # Run this job only on the main branch
+        runs-on: ubuntu-latest
+        needs: app-build
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Download App Build
+              uses: actions/download-artifact@v4
+              with:
+                  name: web-demo-build # Artifact name/id from the previous step
+                  path: dist # Destination directory
+
+            - name: Display structure of downloaded files
+              run: ls -R
+              working-directory: dist
+
+            - name: Deploy to GitHub Pages
+              uses: JamesIves/github-pages-deploy-action@v4
+              with:
+                  branch: gh-pages
+                  folder: dist
+    # endregion
+
+    # region LINUX BUILD
+    # Builds the linux executable application
+    build-linux:
+        runs-on: ubuntu-latest
+        needs: [setup, app-build]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Set up pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: ${{ env.PNPM_VERSION }}
+
+            - name: Set up Node.js ${{ env.NODE_VERSION }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: 'pnpm'
+
+            - name: Restore Nx cache
+              uses: actions/cache@v4
+              with:
+                  path: ${{env.NX_CACHE_DIR}}
+                  key: ${{ runner.os }}-nx-cache-${{ hashFiles('**/nx.json', '**/workspace.json', '**/angular.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-nx-cache-
+
+            - name: Restore node_modules cache
+              id: npm-cache
+              uses: actions/cache@v4
+              with:
+                  path: ${{ needs.setup.outputs.NPM_CACHE_DIR }}
+                  key: ${{runner.os}}-node-${{hashFiles('**/pnpm-lock.yaml')}}
+                  restore-keys: |
+                      ${{runner.os}}-node-
+                      ${{runner.os}}-
+
+            - name: Install NPM Dependencies
+              run: pnpm install
+
+            - name: Download build
+              uses: actions/download-artifact@v4
+              with:
+                  name: web-demo-build
+                  path: dist/apps/web
+
+            - name: Display structure of downloaded files
+              run: ls -R
+              working-directory: dist/apps/web
+
+            - name: Build Linux Package
+              run: pnpm run build:electron && pnpm run electron:make:lix
+
+            - name: Display structure of built files
+              run: ls -R
+              working-directory: dist/executables
+
+            - name: Archive electron app build
+              if: success()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: release-package-${{needs.setup.outputs.RELEASE_VERSION}}-linux
+                  path: |
+                      dist/executables/password-manager_${{needs.setup.outputs.RELEASE_VERSION}}_amd64.deb
+                      dist/executables/password-manager-${{needs.setup.outputs.RELEASE_VERSION}}.x86_64.rpm
+                      dist/executables/Password Manager-${{needs.setup.outputs.RELEASE_VERSION}}.AppImage
+                  if-no-files-found: error
+    # endregion
+
+    # region WINDOWS BUILD
+    # Builds the windows executable application
+    build-windows:
+        runs-on: windows-latest
+        needs: [setup, app-build]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Set up pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: ${{ env.PNPM_VERSION }}
+
+            - name: Set up Node.js ${{ env.NODE_VERSION }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: 'pnpm'
+
+            - name: Restore Nx cache
+              uses: actions/cache@v4
+              with:
+                  path: ${{env.NX_CACHE_DIR}}
+                  key: ${{ runner.os }}-nx-cache-${{ hashFiles('**/nx.json', '**/workspace.json', '**/angular.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-nx-cache-
+
+            - name: Restore node_modules cache
+              id: npm-cache
+              uses: actions/cache@v4
+              with:
+                  path: ${{ needs.setup.outputs.NPM_CACHE_DIR }}
+                  key: ${{runner.os}}-node-${{hashFiles('**/pnpm-lock.yaml')}}
+                  restore-keys: |
+                      ${{runner.os}}-node-
+                      ${{runner.os}}-
+
+            - name: Install NPM Dependencies
+              run: pnpm install
+
+            - name: Download build
+              uses: actions/download-artifact@v4
+              with:
+                  name: web-demo-build
+                  path: dist/apps/web
+
+            - name: Display structure of downloaded files
+              run: ls -R
+              working-directory: dist/apps/web
+
+            - name: Build Linux Package
+              run: pnpm run build:electron && pnpm run electron:make:win
+
+            - name: Display structure of built files
+              run: ls -R
+              working-directory: dist/executables
+
+            - name: Zip Release
+              uses: papeloto/action-zip@v1
+              with:
+                  files: dist/executables/win-unpacked/
+                  dest: Password Manager ${{needs.setup.outputs.RELEASE_VERSION}}.zip
+
+            - name: Archive electron app build
+              if: success()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: release-package-${{needs.setup.outputs.RELEASE_VERSION}}-windows
+                  path: |
+                      dist/executables/Password Manager Setup ${{needs.setup.outputs.RELEASE_VERSION}}.exe
+                      dist/executables/Password Manager ${{needs.setup.outputs.RELEASE_VERSION}}.exe
+                      ./Password Manager ${{needs.setup.outputs.RELEASE_VERSION}}.zip
+                  if-no-files-found: error
+    # endregion
+
+    # region RELEASE
+    # Ref: https://github.com/actions/create-release
+    release:
+        # Run only for tag pushes on main
+        if: github.event == 'push'&& github.ref == 'refs/heads/main' && startsWith(github.ref, 'refs/tags/')
+        runs-on: ubuntu-latest
+        needs: [setup, build-linux, build-windows]
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Download Linux build
+              uses: actions/download-artifact@v4
+              with:
+                  name: release-package-${{needs.setup.outputs.RELEASE_VERSION}}-linux
+                  path: release-package-${{needs.setup.outputs.RELEASE_VERSION}}
+
+            - name: Download Windows build
+              uses: actions/download-artifact@v4
+              with:
+                  name: release-package-${{needs.setup.outputs.RELEASE_VERSION}}-windows
+                  path: release-package-${{needs.setup.outputs.RELEASE_VERSION}}
+
+            - name: Display structure of downloaded files
+              run: ls -R
+              working-directory: release-package-${{needs.setup.outputs.RELEASE_VERSION}}
+
+            # ====================================================================== #
+            - name: Create Release
+              uses: ncipollo/release-action@v1
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  name: Password Manager v${{needs.setup.outputs.RELEASE_VERSION}}
+                  tag: v${{needs.setup.outputs.RELEASE_VERSION}}
+                  body: |
+                      Password Manager Desktop App.
+                      Saves data in non encrypted files only.
+
+                      ### Download in _Assets_ below
+                      * Click on the `dropdown` => `keep` in Chrome
+                      * <img src="https://github.com/deniszholob/playlist-maker/raw/main/screenshots/download-warning.png" width="300" />
+
+                      #### Linux
+                      * Make sure the files have 'Execute' permission: Right click => properties => permissions (on Linux Mint)
+                      * Double click to install .deb or .rpm, or to run .AppImage
+
+                      #### Windows
+                      * EITHER:
+                          * Run the setup installer `Password.Manager.Setup.${{needs.setup.outputs.RELEASE_VERSION}}.exe`
+                          * Run the portable version `Password.Manager.${{needs.setup.outputs.RELEASE_VERSION}}.exe`
+                          * Extract the `Password.Manager.${{needs.setup.outputs.RELEASE_VERSION}}.zip` contents and run the .exe inside that folder
+                      * Click on `More info` => `Run anyway` on the Windows Protection screen (Shows because I did not pay $$$ to do the windows signing process)
+                      * <img src="https://github.com/deniszholob/playlist-maker/raw/main/screenshots/windows-warning-info.png" width="335" />
+                        <img src="https://github.com/deniszholob/playlist-maker/raw/main/screenshots/windows-warning.png" width="260" />
+                      * Antivirus will probably freak out for a couple seconds, it does for me (same reason as above)
+                  artifacts: |
+                      ./release-package-${{needs.setup.outputs.RELEASE_VERSION}}/dist/executables/Password Manager Setup ${{needs.setup.outputs.RELEASE_VERSION}}.exe
+                      ./release-package-${{needs.setup.outputs.RELEASE_VERSION}}/dist/executables/Password Manager ${{needs.setup.outputs.RELEASE_VERSION}}.exe
+                      ./release-package-${{needs.setup.outputs.RELEASE_VERSION}}/Password Manager ${{needs.setup.outputs.RELEASE_VERSION}}.zip
+                      ./release-package-${{needs.setup.outputs.RELEASE_VERSION}}/Password Manager-${{needs.setup.outputs.RELEASE_VERSION}}.AppImage
+                      ./release-package-${{needs.setup.outputs.RELEASE_VERSION}}/password-manager-${{needs.setup.outputs.RELEASE_VERSION}}.x86_64.rpm
+                      ./release-package-${{needs.setup.outputs.RELEASE_VERSION}}/password-manager_${{needs.setup.outputs.RELEASE_VERSION}}_amd64.deb
+                  artifactErrorsFailBuild: true
+                  draft: false # true to create a draft (unpublished) release, false to create a published one. Default: false
+# endregion
