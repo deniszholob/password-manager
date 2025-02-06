@@ -5,10 +5,23 @@ import {
   getIconSrcOptionsArray,
   getIconSrcOptionValuesArray,
   IconSrcOptions,
+  toTitleCase,
 } from '@pwm/util';
 import { Observable } from 'rxjs';
 
 import { optionValidator, urlValidator } from '../../validators';
+
+function parserToLowerCase(
+  str: string | undefined | null
+): string | undefined | null {
+  return str ? str.toLowerCase() : str;
+}
+
+function parserToTitleCase(
+  str: string | undefined | null
+): string | undefined | null {
+  return str ? toTitleCase(str) : str;
+}
 
 export function FORMLY_ENTRY_CONFIG(
   defaultIconSrc: IconSrcOptions,
@@ -61,6 +74,7 @@ export function FORMLY_ENTRY_CONFIG(
             placeholder: 'https://www.example.com',
             attributes: { autocomplete: 'off' },
           },
+          parsers: [parserToLowerCase],
           expressionProperties: {
             'model.serviceUrl': (
               model: Entry,
@@ -124,6 +138,7 @@ export function FORMLY_ENTRY_CONFIG(
             placeholder: 'username@example.com',
             attributes: { autocomplete: 'email' },
             options: emailOptions$,
+            addTag: parserToLowerCase,
             multiple: false,
           },
           validators: {
@@ -181,6 +196,7 @@ export function FORMLY_ENTRY_CONFIG(
         attributes: { autocomplete: 'tags' },
         options: tagOptions$,
         multiple: true,
+        addTag: parserToTitleCase,
       },
     },
     {

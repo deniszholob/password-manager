@@ -14,10 +14,6 @@ export class OpenMultiSelectComponent extends FieldType implements OnInit {
     return v as FormControl;
   }
 
-  public addTagFn(name: string): string {
-    return name;
-  }
-
   ngOnInit(): void {
     // this.formControlName = String(this.key);
     this.items =

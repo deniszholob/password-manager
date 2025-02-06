@@ -84,6 +84,10 @@ export class StateService {
 
   /** @param path is for new files, existing files will read from settings */
   public saveData(data: FileData, path?: string): Observable<null> {
+    // data.forEach((e) => {
+    //   e.email = e.email?.toLowerCase();
+    //   e.serviceUrl = e.serviceUrl?.toLowerCase();
+    // });
     // console.log(`saveData() - `, path, data);
     try {
       path = this.getDataFilePath(path);

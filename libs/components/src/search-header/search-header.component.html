@@ -17,14 +17,8 @@
         (click)="clearSearchClick($event)"
         [disabled]="searchQuery.length <= 0"
       >
-        <i
-          class="text-red-500 far fa-times-circle"
-          *ngIf="searchQuery.length > 0"
-        ></i>
-        <i
-          class="text-gray-500 fas fa-search"
-          *ngIf="searchQuery.length <= 0"
-        ></i>
+        <i class="text-red-500 far fa-times-circle" *ngIf="searchQuery.length > 0"></i>
+        <i class="text-gray-500 fas fa-search" *ngIf="searchQuery.length <= 0"></i>
       </button>
 
       <input
@@ -52,14 +46,29 @@
     </button>
   </div>
 
-  <ng-select
-    [items]="tags"
-    bindLabel="Tags"
-    placeholder="Select Tags to Filter"
-    [ngModel]="filterTags"
-    (ngModelChange)="tagsChange($event)"
-    [multiple]="true"
-    [hideSelected]="true"
-  >
-  </ng-select>
+  <div class="flex flex-row gap-2">
+    <ng-select
+      class="flex-auto"
+      [items]="tags"
+      bindLabel="Tags"
+      placeholder="Select Tags to Filter"
+      [ngModel]="filterTags"
+      (ngModelChange)="tagsChange($event)"
+      [multiple]="true"
+      [hideSelected]="true"
+    >
+    </ng-select>
+
+    <ng-select
+      class="min-w-[200px]"
+      [items]="fieldCheckOptions"
+      bindLabel="Field Checks"
+      placeholder="Check Field Values"
+      [(ngModel)]="fieldChecks"
+      (ngModelChange)="fieldChecksChange($event)"
+      [multiple]="false"
+      [hideSelected]="true"
+    >
+    </ng-select>
+  </div>
 </div>

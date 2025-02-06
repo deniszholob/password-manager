@@ -15,6 +15,7 @@ import {
 } from '@pwm/util';
 import { Observable, Subscription } from 'rxjs';
 import { GITHUB } from '../pages.data';
+import { FieldCheckOptions } from '@pwm/components';
 
 const WEB_WARNING = `DO NOT Enter sensitive information, this is a demo only!`;
 const ENTRY_MOCK: Entry = mockSavedFile[0];
@@ -57,6 +58,16 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
   public get searchFilters() {
     return this._searchFilters;
+  }
+
+  private _fieldChecks?: FieldCheckOptions;
+  public set fieldChecks(f: FieldCheckOptions | undefined) {
+    // console.log(`fieldChecks() -`, f);
+    this._fieldChecks = f;
+    this.search();
+  }
+  public get fieldChecks() {
+    return this._fieldChecks;
   }
 
   public error: string | null = null;
@@ -343,8 +354,19 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     // console.log('search() - ', query);
     const q: string = (query || this.searchQuery || '').toLocaleLowerCase();
     this.filteredSearchResults = this.fileData
+      // fieldChecks
+      .filter((value: Entry): boolean => {
+        if (!this.fieldChecks) return true;
+        if (this.fieldChecks === 'No Service Name' && !value.serviceName)
+          return true;
+        if (this.fieldChecks === 'No URL' && !value.serviceUrl) return true;
+        if (this.fieldChecks === 'No Email' && !value.email) return true;
+        if (this.fieldChecks === 'No Username' && !value.username) return true;
+        if (this.fieldChecks === 'No Password' && !value.password) return true;
+        return false;
+      })
       // Tags
-      .filter((value) => {
+      .filter((value: Entry): boolean => {
         // console.log('Tags Filter');
         if (!this.searchFilters || this.searchFilters.length <= 0) return true;
         // console.log('Tags Filter Cont1');
@@ -358,7 +380,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
           .reduce((prev, curr) => prev && curr);
       })
       // Search Query
-      .filter((value) => {
+      .filter((value: Entry): boolean => {
         // console.log('Search Filter');
         return (
           value.serviceName?.toLocaleLowerCase().includes(q) ||

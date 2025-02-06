@@ -1,5 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
+export type FieldCheckOptions =
+  | 'No Service Name'
+  | 'No URL'
+  | 'No Email'
+  | 'No Username'
+  | 'No Password';
+
 @Component({
   selector: 'pwm-search-header',
   templateUrl: './search-header.component.html',
@@ -31,6 +38,17 @@ export class SearchHeaderComponent {
   public filterTagsChange = new EventEmitter<string[]>();
   public filterTags: string[] = [];
 
+  @Output()
+  public filterFieldChecksChange = new EventEmitter<FieldCheckOptions>();
+  public fieldCheckOptions: FieldCheckOptions[] = [
+    'No Service Name',
+    'No URL',
+    'No Email',
+    'No Username',
+    'No Password',
+  ];
+  public fieldChecks: string;
+
   public openSettingsClick() {
     this.openSettings.emit();
   }
@@ -53,5 +71,9 @@ export class SearchHeaderComponent {
     // console.log(`tagsChange() -`, newValue);
     this.filterTags = newValue;
     this.filterTagsChange.emit(newValue);
+  }
+
+  public fieldChecksChange(newValue: FieldCheckOptions) {
+    this.filterFieldChecksChange.emit(newValue);
   }
 }
