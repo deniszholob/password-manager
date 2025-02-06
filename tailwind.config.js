@@ -1,3 +1,4 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   purge: {
     enabled: process.env.TAILWIND_MODE === 'build',

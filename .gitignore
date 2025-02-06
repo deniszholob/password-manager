@@ -40,3 +40,10 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# ng/nx
+.angular
+.nx/cache
+.nx/workspace-data
+migrations.json
+storybook-migration-summary.md
