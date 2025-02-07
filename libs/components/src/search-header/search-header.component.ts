@@ -14,6 +14,9 @@ export type FieldCheckOptions =
 })
 export class SearchHeaderComponent {
   @Input()
+  public name?: string;
+
+  @Input()
   public disabledSearch = false;
   @Input()
   public disabledCreateNew = false;

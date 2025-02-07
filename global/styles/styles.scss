@@ -126,3 +126,13 @@ body {
 .min-w-\[200px\] {
   min-width: 200px;
 }
+
+// Prevents extra scroll bars appearing b/c of the hidden elements that still take up space
+[aria-label][data-balloon-pos]:before,
+[aria-label][data-balloon-pos]:after {
+  display: none;
+}
+[aria-label][data-balloon-pos]:hover:before,
+[aria-label][data-balloon-pos]:hover:after {
+  display: unset;
+}

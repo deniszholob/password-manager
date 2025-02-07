@@ -4,10 +4,10 @@
       {{ WEB_WARNING }}
     </section>
 
-    <section class="w-full p-1 bg-gray-700" *ngIf="dataFile">
+    <section class="w-full p-1 bg-gray-700" *ngIf="selectedFile">
       Data from
-      <button class="text-blue-500" (click)="showItemInFolder(dataFile)">
-        {{ dataFile }}
+      <button class="text-blue-500" (click)="showItemInFolder(selectedFile.path)">
+        {{ selectedFile.path }}
       </button>
     </section>
 
@@ -35,6 +35,7 @@
     >
       <pwm-search-header
         [ngClass]="detailEntry ? 'hidden lg:block' : ''"
+        [name]="selectedFile?.displayAs ?? ''"
         (clearSearch)="clearSearch()"
         [(searchQuery)]="searchQuery"
         [disabledSearch]="fileData.length <= 0"

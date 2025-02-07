@@ -19,6 +19,10 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import { GITHUB } from '../pages.data';
 import { FieldCheckOptions } from '@pwm/components';
 import { takeUntil, tap } from 'rxjs/operators';
+import {
+  FileDisplay,
+  filePathToFileDisplay,
+} from './file-display/file-display.model';
 
 const WEB_WARNING = `DO NOT Enter sensitive information, this is a demo only!`;
 // const ENTRY_MOCK: Entry|undefined = mockSavedFile[0];
@@ -84,9 +88,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   public allTags$: Observable<string[]> = this.dataStore.getUniqueTagSet();
   public appStore$: Observable<AppData | null> = this.appStore.getStore();
 
-  public isSettingsOpen = false;
-  public dataFile?: string;
+  public isSettingsOpen: boolean = false;
   public appData?: AppData;
+  public selectedFile?: FileDisplay;
 
   constructor(
     private rawFileIOService: RawFileIOService,
@@ -103,7 +107,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.settings$
       .pipe(takeUntil(this.clearSub$))
       .subscribe((s: SettingsData | null): void => {
-        this.dataFile = s?.dataFile;
+        this.selectedFile = s?.dataFile
+          ? filePathToFileDisplay(s.dataFile)
+          : undefined;
       });
 
     this.appStore$
