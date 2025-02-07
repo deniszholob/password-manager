@@ -12,7 +12,7 @@ import {
   RawFileIOService,
   SettingsData,
   SettingsStore,
-  StateService,
+  DataService,
 } from '@pwm/util';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { GITHUB } from '../pages.data';
@@ -87,7 +87,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private rawFileIOService: RawFileIOService,
-    private stateService: StateService,
+    private dataService: DataService,
     private dataStore: DataStoreService,
     private settingsStore: SettingsStore,
     private appStore: AppStore,
@@ -95,7 +95,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     @Inject('BUILD_VERSION') public version: string,
     @Inject('BUILD_DATE') public date: number
   ) {
-    this.WEB_WARNING = !this.stateService.isElectron() ? WEB_WARNING : null;
+    this.WEB_WARNING = !this.dataService.isElectron() ? WEB_WARNING : null;
     this.settings$
       .pipe(
         // tap((s) => console.log(`settings$`, s)),
@@ -178,7 +178,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     if (!valid) {
       this.loading = 'Saving Entry...';
       this.error = null;
-      this.stateService.saveData(data).subscribe(
+      this.dataService.saveData(data).subscribe(
         () => {
           // console.log('checkValidData() saveData() success');
           this.loading = null;
@@ -239,7 +239,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
 
     // Save to file
-    this.stateService.saveData(this.fileData).subscribe(
+    this.dataService.saveData(this.fileData).subscribe(
       () => {
         // console.log('saveDetailEntry() saveData() success');
         this.loading = null;
@@ -292,7 +292,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     // console.log(deletedEntry);
 
     // Save to file
-    this.stateService.saveData(this.fileData).subscribe(
+    this.dataService.saveData(this.fileData).subscribe(
       () => {
         // console.log('deleteDetailEntry() saveData() success');
         this.loading = null;
@@ -461,7 +461,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
 
     // Save to file
-    this.stateService.saveData(this.fileData).subscribe(
+    this.dataService.saveData(this.fileData).subscribe(
       () => {
         // console.log('saveDetailEntry() saveData() success');
         this.loading = null;
@@ -510,7 +510,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     const entry = this.fileData.splice(idx, 1)[0];
 
     // Save to file
-    this.stateService.saveData(this.fileData).subscribe(
+    this.dataService.saveData(this.fileData).subscribe(
       () => {
         // console.log('deleteDetailEntry() saveData() success');
         this.loading = null;

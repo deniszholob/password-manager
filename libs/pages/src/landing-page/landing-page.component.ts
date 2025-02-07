@@ -8,7 +8,7 @@ import {
   IconSrcOptions,
   SettingsData,
   SettingsStore,
-  StateService,
+  DataService,
 } from '@pwm/util';
 import { of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -31,7 +31,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   public loading: string | null = null;
 
   constructor(
-    private stateService: StateService,
+    private dataService: DataService,
     private dataStore: DataStoreService,
     private settingsStore: SettingsStore,
     private router: Router,
@@ -112,7 +112,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     if (!valid) {
       this.loading = 'Saving Settings...';
       this.error = null;
-      this.stateService.saveSettings(settings).subscribe(
+      this.dataService.saveSettings(settings).subscribe(
         () => {
           // console.log('checkValidSettings() saveData() success');
           this.loading = null;
@@ -132,7 +132,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     // console.log(`readOpenedFile()`);
     this.loading = 'Reading Opened File...';
     this.error = null;
-    this.stateService.readOpenedFile().subscribe(
+    this.dataService.readOpenedFile().subscribe(
       (res) => {
         // console.log('  Opened File Read Done: ', res);
         this.initReadSettings();
@@ -151,7 +151,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     this.loading = 'Reading Settings...';
     this.error = null;
 
-    this.stateService.readSettings().subscribe(
+    this.dataService.readSettings().subscribe(
       (res) => {
         // console.log('  Settings Read Done: ', res)
         this.loading = null;
@@ -169,7 +169,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     this.loading = 'Reading Data...';
     this.error = null;
 
-    this.stateService
+    this.dataService
       .readData(location, file)
       .pipe(
         catchError((err) => {

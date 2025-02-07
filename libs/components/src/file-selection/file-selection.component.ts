@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FILE_ACCEPT_DATA, slash, StateService } from '@pwm/util';
+import { FILE_ACCEPT_DATA, slash, DataService } from '@pwm/util';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -19,7 +19,7 @@ export class FileSelectionComponent {
   public error: string | null = null;
   public loading: string | null = null;
 
-  constructor(private stateService: StateService) {}
+  constructor(private dataService: DataService) {}
 
   // TODO: Copied from landing page, reuse somehow?
   private initReadData(location: string, file?: File) {
@@ -27,7 +27,7 @@ export class FileSelectionComponent {
     this.loading = 'Reading Data...';
     this.error = null;
 
-    this.stateService
+    this.dataService
       .readData(location, file)
       .pipe(
         catchError((err) => {
@@ -62,7 +62,7 @@ export class FileSelectionComponent {
     this.loading = 'Creating New Data File...';
     this.error = null;
 
-    this.stateService.createDataFile().subscribe(
+    this.dataService.createDataFile().subscribe(
       (res) => {
         // console.log(`  Sub createDataFile: `, res);
         this.loading = null;

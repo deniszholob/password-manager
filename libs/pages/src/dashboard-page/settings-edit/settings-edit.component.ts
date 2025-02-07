@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SettingsData, SettingsStore, StateService } from '@pwm/util';
+import { SettingsData, SettingsStore, DataService } from '@pwm/util';
 
 @Component({
   selector: 'pwm-settings-edit',
@@ -19,7 +19,7 @@ export class SettingsEditComponent {
   public disableFileSelection = false;
 
   constructor(
-    private stateService: StateService,
+    private dataService: DataService,
     private settingsStore: SettingsStore
   ) {}
 
@@ -33,7 +33,7 @@ export class SettingsEditComponent {
     this.error = null;
 
     // Save to file
-    this.stateService.saveSettings(settings).subscribe(
+    this.dataService.saveSettings(settings).subscribe(
       () => {
         // console.log('saveDetailEntry() saveData() success');
         this.loading = null;

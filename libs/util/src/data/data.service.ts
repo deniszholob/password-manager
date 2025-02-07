@@ -1,5 +1,3 @@
-//  TODO: Rename to data.service.ts
-
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
@@ -15,7 +13,7 @@ const PATH_REGEX = /^[a-z]:((\\|\/)[a-z0-9\s_@\-^!#$%&+={}\[\]]+)+\.xml$/i;
 
 /** Uses RawFileIoService to perform actions and updates app states */
 @Injectable({ providedIn: 'root' })
-export class StateService {
+export class DataService {
   constructor(
     private dataStore: DataStoreService,
     private settingsStore: SettingsStore,

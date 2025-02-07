@@ -8,7 +8,7 @@ import { ElectronWindow, ElectronWindowApi, MyFile } from '../models/electron';
 import { ERRORS } from './errors';
 import { mockSavedFile, mockSettings } from './mock.data';
 
-/** Do not use directly in components, user StateService instead */
+/** Do not use directly in components, user DataService instead */
 @Injectable({ providedIn: 'root' })
 export class RawFileIOService {
   public readonly settingsPath: string = 'settings';
