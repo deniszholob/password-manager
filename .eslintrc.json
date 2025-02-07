@@ -1,10 +1,16 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nrwl/nx"],
+  "plugins": ["@nrwl/nx", "unused-imports", "simple-import-sort", "import"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "extends": [
+        "plugin:@nx/typescript",
+        "plugin:@nx/angular",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:import/typescript"
+      ],
       "rules": {
         "@nrwl/nx/enforce-module-boundaries": [
           "error",
@@ -18,7 +24,11 @@
               },
               {
                 "sourceTag": "scope:electron",
-                "onlyDependOnLibsWithTags": ["scope:shared", "scope:web", "scope:electron"]
+                "onlyDependOnLibsWithTags": [
+                  "scope:shared",
+                  "scope:web",
+                  "scope:electron"
+                ]
               },
               {
                 "sourceTag": "scope:shared",
@@ -48,8 +58,20 @@
             ]
           }
         ],
+        "@angular-eslint/prefer-standalone": "off",
+        "@typescript-eslint/no-inferrable-types": "off",
         "max-len": "off",
-        "eqeqeq": ["error", "smart"]
+        "eqeqeq": ["error", "smart"],
+        "no-unused-vars": "off",
+        "unused-imports/no-unused-imports": "error",
+        "unused-imports/no-unused-vars": "warn",
+        "simple-import-sort/imports": "error",
+        "import/no-cycle": "error",
+        "import/no-self-import": "error",
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/adjacent-overload-signatures": "off",
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
       }
     },
     {
