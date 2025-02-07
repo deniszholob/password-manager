@@ -21,13 +21,17 @@
       "@pwm/util": ["libs/util/src/index.ts"]
     },
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": false,
     "noImplicitReturns": true,
-    "strictNullChecks": false,
-    "strictPropertyInitialization": false
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true
   },
   "exclude": ["node_modules", "tmp"],
   "angularCompilerOptions": {
     "strictTemplates": true,
-    "fullTemplateTypeCheck": true
+    "fullTemplateTypeCheck": true,
+    "enableI18nLegacyMessageIdFormat": false
   }
 }

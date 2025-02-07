@@ -46,7 +46,8 @@ export class SearchResultsComponent {
     this.selectedEntryChange.emit(entry);
   }
   @Output()
-  public selectedEntryChange: EventEmitter<Entry> = new EventEmitter<Entry>();
+  public selectedEntryChange: EventEmitter<Entry | null> =
+    new EventEmitter<Entry | null>();
 
   public sortDown: boolean = true;
   private currentIndex: number = -1; // Index of the currently selected entry
@@ -70,37 +71,44 @@ export class SearchResultsComponent {
     }
   }
 
+  private navigateDown(): void {
+    if (this.currentIndex >= this.filteredSearchResults.length - 1) return;
+
+    this.currentIndex++;
+    const entryToSelect = this.filteredSearchResults[this.currentIndex];
+    if (!entryToSelect) return;
+
+    this.selectedEntry = entryToSelect;
+    this.scrollToSelected();
+  }
+
+  private navigateUp(): void {
+    if (this.currentIndex <= 0) return;
+
+    this.currentIndex--;
+    const entryToSelect = this.filteredSearchResults[this.currentIndex];
+    if (!entryToSelect) return;
+
+    this.selectedEntry = entryToSelect;
+    this.scrollToSelected();
+  }
+
+  private handleEscape(): void {
+    this.selectedEntry = null;
+    this.currentIndex = -1;
+  }
+
   public onSelectedItem(item: Entry, index: number): void {
     if (this.disableSelect) return;
     this.selectedEntry = item;
     this.currentIndex = index;
   }
 
-  private navigateDown(): void {
-    if (this.currentIndex < this.filteredSearchResults.length - 1) {
-      this.currentIndex++;
-      this.selectedEntry = this.filteredSearchResults[this.currentIndex];
-      this.scrollToSelected();
-    }
-  }
-  private handleEscape(): void {
-    this.selectedEntry = null;
-    this.currentIndex = -1;
-  }
-
-  private navigateUp(): void {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
-      this.selectedEntry = this.filteredSearchResults[this.currentIndex];
-      this.scrollToSelected();
-    }
-  }
-
   // Scroll the selected entry into view
   private scrollToSelected(): void {
     if (!this.selectedEntry || !this.searchResultsList) return;
 
-    const selectedElement: HTMLElement = document.getElementById(
+    const selectedElement: HTMLElement | null = document.getElementById(
       `${this.resultsEntryId}${this.currentIndex}`
     );
     if (!selectedElement) return;

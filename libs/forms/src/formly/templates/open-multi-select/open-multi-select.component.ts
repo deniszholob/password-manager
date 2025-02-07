@@ -16,9 +16,10 @@ export class OpenMultiSelectComponent extends FieldType implements OnInit {
 
   ngOnInit(): void {
     // this.formControlName = String(this.key);
-    this.items =
-      this.to.options instanceof Observable
-        ? this.to.options
-        : of(this.to.options);
+    this.items = !this.to.options
+      ? of([])
+      : this.to.options instanceof Observable
+      ? this.to.options
+      : of(this.to.options);
   }
 }

@@ -26,19 +26,20 @@ export class RawFileIOService {
     }
   }
 
-  /** @deprecated Use fileOpenedApp() returning observable*/
-  public fileOpenedAppPromise(): Promise<string[]> {
-    return new Promise((resolve, reject) => {
-      this.electron.fileOpenedApp((event, paths) => {
-        resolve(paths);
-      });
-    });
-  }
+  // /** @deprecated Use fileOpenedApp() returning observable*/
+  // public fileOpenedAppPromise(): Promise<string[]> {
+  //   return new Promise((resolve, reject) => {
+  //     this.electron.fileOpenedApp((event, paths) => {
+  //       resolve(paths);
+  //     });
+  //   });
+  // }
 
   public fileOpenedApp(): Observable<string[] | null> {
-    return this.electron
+    const electron: ElectronWindowApi | null = this.electron;
+    return electron
       ? new Observable((observer) => {
-          this.electron.fileOpenedApp((event, paths) => {
+          electron.fileOpenedApp((event, paths) => {
             observer.next(paths);
           });
         })

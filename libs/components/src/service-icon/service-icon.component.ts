@@ -10,9 +10,9 @@ export class ServiceIconComponent {
   public IconSrcOptions = IconSrcOptions;
 
   @Input()
-  public iconSrc: IconSrcOptions = IconSrcOptions.default;
+  public iconSrc?: IconSrcOptions = IconSrcOptions.default;
   @Input()
-  public serviceUrl: string | null = '';
+  public serviceUrl?: string;
 
   // public getUrl(url: string): string {
   //   if (url.includes('http://') || url.includes('https://')) {
@@ -22,27 +22,28 @@ export class ServiceIconComponent {
   // }
 
   public getIconSrc(): string | null {
-    if (this.iconSrc) {
-      let url = IconSrcOptionsMap[this.iconSrc];
-      let serviceUrl = this.serviceUrl;
+    if (!this.iconSrc || !this.serviceUrl) return null;
 
-      // strip protocol
-      let regex = /^(?:https?:\/\/)?(?:www\.)?/;
-      serviceUrl = serviceUrl.replace(regex, '');
+    let url: string = IconSrcOptionsMap[this.iconSrc];
+    let serviceUrl: string = this.serviceUrl;
 
-      // strip path
-      regex = /\/.*/;
-      serviceUrl = serviceUrl.replace(regex, '');
+    // strip protocol
+    let regex: RegExp = /^(?:https?:\/\/)?(?:www\.)?/;
+    serviceUrl = serviceUrl.replace(regex, '');
 
-      // Drop in url into api call
-      regex = /{{URL}}/gm;
-      url = url.replace('{{URL}}', serviceUrl);
-      return url;
-    }
-    return null;
+    // strip path
+    regex = /\/.*/;
+    serviceUrl = serviceUrl.replace(regex, '');
+
+    // Drop in url into api call
+    regex = /{{URL}}/gm;
+    url = url.replace('{{URL}}', serviceUrl);
+    return url;
   }
 
   public getFontIconSrc(): string | null {
+    if (!this.iconSrc || !this.serviceUrl) return null;
+
     // console.log('===================')
     // let faClass = String(IconSrcOptionsEnum[this.iconSrc]);
     // console.log(this.iconSrc);

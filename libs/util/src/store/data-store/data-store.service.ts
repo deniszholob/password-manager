@@ -53,7 +53,9 @@ export class DataStoreService extends Store<FileData | null> {
 
   public getUniqueTagSet(): Observable<string[]> {
     return this.getFieldValuesFromData('tags').pipe(
-      map((tags: string[][]): string[] => getUniqueValues(tags.flat()))
+      map((tags: (string[] | undefined)[]): string[] =>
+        getUniqueValues(tags.flat()).filter(typedNullCheck)
+      )
       // shareReplay(),
       // tap((v) => console.log(`getUniqueTagSet() -`, v))
     );
@@ -61,7 +63,9 @@ export class DataStoreService extends Store<FileData | null> {
 
   public getUniqueEmailSet(): Observable<string[]> {
     return this.getFieldValuesFromData('email').pipe(
-      map((emails: string[]): string[] => getUniqueValues(emails))
+      map((emails: (string | undefined)[]): string[] =>
+        getUniqueValues(emails).filter(typedNullCheck)
+      )
       // shareReplay(),
       // tap((v) => console.log(`getUniqueEmailSet() -`, v))
     );

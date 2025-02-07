@@ -23,11 +23,13 @@ export class SettingsEditComponent {
     private settingsStore: SettingsStore
   ) {}
 
-  public closeSettingsClick() {
+  public closeSettingsClick(): void {
     this.closeSettings.emit();
   }
 
-  public saveSettings(settings: SettingsData): void {
+  public saveSettings(settings: SettingsData | null): void {
+    if (!settings) throw new Error('Settings is null');
+
     // console.log(`saveSettings -`, settings);
     this.loading = 'Saving Settings...';
     this.error = null;

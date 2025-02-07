@@ -13,6 +13,7 @@ import {
   SettingsData,
   SettingsStore,
   DataService,
+  DEFAULT_SETTINGS,
 } from '@pwm/util';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { GITHUB } from '../pages.data';
@@ -20,7 +21,7 @@ import { FieldCheckOptions } from '@pwm/components';
 import { takeUntil, tap } from 'rxjs/operators';
 
 const WEB_WARNING = `DO NOT Enter sensitive information, this is a demo only!`;
-const ENTRY_MOCK: Entry = mockSavedFile[0];
+// const ENTRY_MOCK: Entry|undefined = mockSavedFile[0];
 
 /** TODO: Autocomplete
  * @see https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofilling-form-controls%3A-the-autocomplete-attribute
@@ -33,7 +34,7 @@ const ENTRY_MOCK: Entry = mockSavedFile[0];
 export class DashboardPageComponent implements OnInit, OnDestroy {
   private readonly clearSub$ = new Subject<void>();
   public GITHUB = GITHUB;
-  public WEB_WARNING: string = null;
+  public WEB_WARNING: string | null = null;
   private _searchQuery = '';
   private subscription: Subscription = new Subscription();
 
@@ -77,13 +78,15 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   public loading: string | null = null;
 
   // Store state management stuff
-  public data$: Observable<FileData> = this.dataStore.getStore();
-  public settings$: Observable<SettingsData> = this.settingsStore.getStore();
+  public data$: Observable<FileData | null> = this.dataStore.getStore();
+  public settings$: Observable<SettingsData | null> =
+    this.settingsStore.getStore();
   public allTags$: Observable<string[]> = this.dataStore.getUniqueTagSet();
-  public appStore$: Observable<AppData> = this.appStore.getStore();
+  public appStore$: Observable<AppData | null> = this.appStore.getStore();
 
   public isSettingsOpen = false;
-  public dataFile: string;
+  public dataFile?: string;
+  public appData?: AppData;
 
   constructor(
     private rawFileIOService: RawFileIOService,
@@ -96,15 +99,18 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     @Inject('BUILD_DATE') public date: number
   ) {
     this.WEB_WARNING = !this.dataService.isElectron() ? WEB_WARNING : null;
+
     this.settings$
-      .pipe(
-        // tap((s) => console.log(`settings$`, s)),
-        tap((s) => {
-          this.dataFile = s?.dataFile;
-        }),
-        takeUntil(this.clearSub$)
-      )
-      .subscribe();
+      .pipe(takeUntil(this.clearSub$))
+      .subscribe((s: SettingsData | null): void => {
+        this.dataFile = s?.dataFile;
+      });
+
+    this.appStore$
+      .pipe(takeUntil(this.clearSub$))
+      .subscribe((appData: AppData | null): void => {
+        this.appData = appData ?? undefined;
+      });
   }
 
   public showItemInFolder(path: string): void {
@@ -169,9 +175,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         valid = false;
         e.guid = this.getUniqueGuid();
       }
-      if (!getIconSrcOptionValuesArray().includes(e.iconSrc)) {
+      if (!e.iconSrc || !getIconSrcOptionValuesArray().includes(e.iconSrc)) {
         valid = false;
-        e.iconSrc = this.settingsStore.getState().defaultIconSrc;
+        e.iconSrc =
+          this.settingsStore.getState()?.defaultIconSrc ??
+          DEFAULT_SETTINGS.defaultIconSrc;
       }
     });
 
@@ -217,7 +225,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   // ======================================================================== //
   // ============================= Template ================================= //
 
-  public selectEntryDetail(entry: Entry) {
+  public selectEntryDetail(entry: Entry | null) {
     if (!this.appStore.getState()?.unsavedChanges) {
       this.detailEntry = entry;
     }
@@ -302,7 +310,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         // console.error(`deleteDetailEntry() saveData() fail - `, err);
         this.loading = null;
         // Rollback delete from array
-        this.fileData.splice(idx, 0, deletedEntry);
+        if (deletedEntry) this.fileData.splice(idx, 0, deletedEntry);
         this.error = err;
       }
     );
@@ -362,7 +370,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.newEntry = {
       ...ENTRY_EMPTY,
       serviceName: `New-${this.fileData.length}`,
-      iconSrc: this.settingsStore.getState().defaultIconSrc,
+      iconSrc: this.settingsStore.getState()?.defaultIconSrc,
     };
     this.detailEntry = this.newEntry;
     // this.selectedIdx = -1;
@@ -400,15 +408,13 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         // console.log('Tags Filter Cont2');
 
         return this.searchFilters
-          .map((t) => {
-            return value.tags.includes(t);
-          })
+          .map((t) => !!value.tags?.includes(t))
           .reduce((prev, curr) => prev && curr);
       })
       // Search Query
       .filter((value: Entry): boolean => {
         // console.log('Search Filter');
-        return (
+        return !!(
           value.serviceName?.toLocaleLowerCase().includes(q) ||
           (value.serviceUrl &&
             value.serviceUrl?.toLocaleLowerCase().includes(q)) ||
@@ -520,7 +526,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         // console.error(`deleteDetailEntry() saveData() fail - `, err);
         this.loading = null;
         // Rollback delete from array
-        this.fileData.splice(idx, 0, entry);
+        if (entry) this.fileData.splice(idx, 0, entry);
         this.error = err;
       }
     );

@@ -4,7 +4,7 @@
     <pwm-click-to-copy
       *ngIf="!to.hideCopyButton"
       [text]="model[$any(key)] ?? ''"
-      [name]="to.label"
+      [name]="to.label ?? ''"
       pos="right"
     >
       <i class="fas fa-copy"></i>
@@ -16,11 +16,7 @@
       class="text-xs font-medium text-gray-500"
     >
       {{ to.label }}
-      <span
-        class="text-red-500"
-        *ngIf="to.required && to.hideRequiredMarker !== true"
-        >*</span
-      >
+      <span class="text-red-500" *ngIf="to.required && to.hideRequiredMarker !== true">*</span>
     </label>
   </div>
   <ng-template #fieldComponent></ng-template>
@@ -29,7 +25,5 @@
     <formly-validation-message [field]="field"></formly-validation-message>
   </div>
 
-  <small *ngIf="to.description" class="form-text text-muted">{{
-    to.description
-  }}</small>
+  <small *ngIf="to.description" class="form-text text-muted">{{ to.description }}</small>
 </div>

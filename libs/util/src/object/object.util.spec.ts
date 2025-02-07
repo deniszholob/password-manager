@@ -85,22 +85,27 @@ describe('Object Utilities', () => {
 
   describe('getFieldValueFromObject', () => {
     test('returns correct name field string value', () => {
-      expect(getFieldValueFromObject(testObjects[0], 'name')).toBe('Alice');
+      expect(
+        getFieldValueFromObject(testObjects[0] as TestObject, 'name')
+      ).toBe('Alice');
     });
 
     test('returns correct id field number value', () => {
-      expect(getFieldValueFromObject(testObjects[1], 'id')).toBe(2);
+      expect(getFieldValueFromObject(testObjects[1] as TestObject, 'id')).toBe(
+        2
+      );
     });
 
     test('returns correct tags field array value', () => {
-      expect(getFieldValueFromObject(testObjects[2], 'tags')).toEqual([
-        'a',
-        'b',
-      ]);
+      expect(
+        getFieldValueFromObject(testObjects[2] as TestObject, 'tags')
+      ).toEqual(['a', 'b']);
     });
 
     test('returns correct details field object value', () => {
-      expect(getFieldValueFromObject(testObjects[2], 'details')).toEqual({
+      expect(
+        getFieldValueFromObject(testObjects[2] as TestObject, 'details')
+      ).toEqual({
         age: 25,
         role: 'dev',
       });

@@ -11,16 +11,14 @@ import { Observable } from 'rxjs';
 
 import { optionValidator, urlValidator } from '../../validators';
 
-function parserToLowerCase(
-  str: string | undefined | null
-): string | undefined | null {
-  return str ? str.toLowerCase() : str;
+function parserToLowerCase(str: string): string {
+  return str.toLowerCase();
 }
-
-function parserToTitleCase(
-  str: string | undefined | null
-): string | undefined | null {
-  return str ? toTitleCase(str) : str;
+function parserToTitleCase(str: string): string {
+  return toTitleCase(str);
+}
+function parserTrim(str: string): string {
+  return str.trim();
 }
 
 export function FORMLY_ENTRY_CONFIG(
@@ -74,18 +72,18 @@ export function FORMLY_ENTRY_CONFIG(
             placeholder: 'https://www.example.com',
             attributes: { autocomplete: 'off' },
           },
-          parsers: [parserToLowerCase],
-          expressionProperties: {
-            'model.serviceUrl': (
-              model: Entry,
-              formState: any,
-              field: FormlyFieldConfig
-            ) => {
-              // model.serviceUrl = model.serviceUrl?.trim();
-              field.form.get('serviceUrl').setValue(model.serviceUrl?.trim());
-              return model.serviceUrl?.trim();
-            },
-          },
+          parsers: [parserToLowerCase, parserTrim],
+          // expressionProperties: {
+          //   'model.serviceUrl': (
+          //     model: Entry,
+          //     formState: any,
+          //     field?: FormlyFieldConfig
+          //   ):string => {
+          //     // model.serviceUrl = model.serviceUrl?.trim();
+          //     field?.form?.get('serviceUrl')?.setValue(model.serviceUrl?.trim());
+          //     return model.serviceUrl?.trim()??'';
+          //   },
+          // },
           validators: {
             validation: [urlValidator],
           },

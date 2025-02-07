@@ -22,7 +22,7 @@
       class="flex flex-col flex-auto overflow-y-auto bg-black bg-opacity-20 sm:max-w-lg"
       *ngIf="getIsSettingsOpen()"
       (closeSettings)="toggleSettings()"
-      [disableFileSelection]="(appStore$ | async)?.unsavedChanges"
+      [disableFileSelection]="!!appData?.unsavedChanges"
     ></pwm-settings-edit>
 
     <div
@@ -39,9 +39,9 @@
         [(searchQuery)]="searchQuery"
         [disabledSearch]="fileData.length <= 0"
         (createNewEntry)="createNewEntry()"
-        [disabledCreateNew]="!!newEntry || (appStore$ | async)?.unsavedChanges"
+        [disabledCreateNew]="!!newEntry || !!appData?.unsavedChanges"
         (openSettings)="toggleSettings()"
-        [tags]="allTags$ | async"
+        [tags]="(allTags$ | async) ?? []"
         (filterTagsChange)="searchFilters = $event"
         (filterFieldChecksChange)="fieldChecks = $event"
       ></pwm-search-header>
@@ -70,7 +70,7 @@
           [totalResultsCount]="fileData.length"
           [selectedEntry]="detailEntry"
           (selectedEntryChange)="selectEntryDetail($event)"
-          [disableSelect]="(appStore$ | async)?.unsavedChanges"
+          [disableSelect]="!!appData?.unsavedChanges"
         >
           <p noEntries *ngIf="searchQuery">
             <button type="button" class="text-red-500" (click)="clearSearch()">Clear</button>
@@ -81,7 +81,7 @@
         <pwm-entry-edit
           class="flex flex-col flex-auto overflow-auto"
           [ngClass]="{
-            'bg-red-800 bg-opacity-5': (appStore$ | async)?.unsavedChanges
+            'bg-red-800 bg-opacity-5': !!appData?.unsavedChanges
           }"
           *ngIf="getIsEditEntryOpen()"
           [detailEntry]="detailEntry"

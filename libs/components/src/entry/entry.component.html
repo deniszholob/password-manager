@@ -1,8 +1,8 @@
 <div class="flex flex-row items-stretch overflow-hidden">
   <pwm-service-icon
     class="flex"
-    [iconSrc]="entry.iconSrc"
-    [serviceUrl]="entry.serviceUrl"
+    [iconSrc]="entry?.iconSrc"
+    [serviceUrl]="entry?.serviceUrl"
   ></pwm-service-icon>
 
   <h2 class="flex flex-col flex-grow p-2 text-lg" (click)="selectedClick()">
@@ -11,13 +11,13 @@
   </h2>
 
   <pwm-click-to-copy
-    [text]="isUsernamePresent() ? entry.username : entry.email"
+    [text]="(entry?.username && entry?.username?.length ? entry?.username : entry?.email) ?? ''"
     [name]="'Login'"
   >
     <i class="fas fa-id-badge fa-2x"></i>
   </pwm-click-to-copy>
 
-  <pwm-click-to-copy [text]="entry.password" name="password">
+  <pwm-click-to-copy [text]="entry?.password ?? ''" name="password">
     <i class="fas fa-key fa-2x"></i>
   </pwm-click-to-copy>
 </div>

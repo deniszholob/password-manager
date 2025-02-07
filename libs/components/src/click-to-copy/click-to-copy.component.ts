@@ -30,7 +30,7 @@ export class ClickToCopyComponent implements OnInit {
   @Input()
   public pos: ToolTipPositions = 'left';
 
-  public tooltipMsg: string;
+  public tooltipMsg?: string;
   public readonly tooltipCopied = 'Copied';
 
   ngOnInit(): void {

@@ -8,9 +8,9 @@ import { FormGroup } from '@angular/forms';
 })
 export class FormDebugComponent {
   @Input()
-  public form: FormGroup;
+  public form?: FormGroup;
   @Input()
-  public model: unknown;
+  public model?: unknown;
 
   public submittedValue: any = null;
   public submittedDate: any = null;

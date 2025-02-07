@@ -24,14 +24,13 @@ export class DataService {
   // ============================= Read ===================================== //
   public readOpenedFile(): Observable<boolean> {
     return this.rawFileIOService.fileOpenedApp().pipe(
-      switchMap((paths: string[]) => {
+      switchMap((paths: string[] | null) => {
         console.log(`Electron argv -`, paths);
         // paths[0] is main app
         // paths[1] is calling file
         if (paths && paths[1] && PATH_REGEX.test(paths[1])) {
           console.log(`Opened through save file -`, paths[1]);
-          return this.readData(paths[1]);
-          return of(true);
+          return this.readData(paths[1]).pipe(map(() => true));
         }
         return of(false);
       })
@@ -170,12 +169,17 @@ export class DataService {
   private clearDataFilePathFromSettingsFile(): Observable<null> {
     // console.log(`  clearDataFilePathFromSettingsFile()`);
     const settingsState = this.settingsStore.getState();
+    if (!settingsState) return throwError(`settingsState is null`);
+    // if (!settingsState) return of(null);
+
     return this.saveSettings({ ...settingsState, dataFile: undefined });
   }
 
   private saveFilePathToSettings(path: string): Observable<null> {
     // console.log(`  saveFilePathToSettings() - `, path);
-    const settingsState = this.settingsStore.getState();
+    const settingsState: SettingsData | null = this.settingsStore.getState();
+    if (!settingsState) return throwError(`settingsState is null`);
+
     if (
       !(
         settingsState &&

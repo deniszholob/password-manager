@@ -31,11 +31,18 @@ export class EntryFormComponent implements OnInit, AfterViewInit {
       this.fModelInitial = JSON.parse(JSON.stringify(model));
     }
   }
-  public get fModel() {
+  public get fModel(): Entry | null {
     return this._fModel;
   }
+  private _defaultIconSrc: IconSrcOptions = IconSrcOptions.default;
   @Input()
-  public defaultIconSrc: IconSrcOptions = IconSrcOptions.default;
+  public set defaultIconSrc(iconSrc: IconSrcOptions | undefined) {
+    this._defaultIconSrc = iconSrc ?? IconSrcOptions.default;
+  }
+  public get defaultIconSrc(): IconSrcOptions {
+    return this._defaultIconSrc;
+  }
+
   @Input()
   public tagOptions$: Observable<string[]> = of([]);
   @Input()
@@ -44,9 +51,9 @@ export class EntryFormComponent implements OnInit, AfterViewInit {
   @Output()
   public cancel = new EventEmitter<void>();
   @Output()
-  public delete = new EventEmitter<Entry>();
+  public delete = new EventEmitter<Entry | null>();
   @Output()
-  public save = new EventEmitter<Entry>();
+  public save = new EventEmitter<Entry | null>();
   @Output()
   public unsavedChanges = new EventEmitter<boolean>();
 
@@ -93,18 +100,18 @@ export class EntryFormComponent implements OnInit, AfterViewInit {
       });
   }
 
-  public formCancel() {
+  public formCancel(): void {
     // console.log(`formCancel()`);
     this.fModel = this.fModelInitial;
     this.cancel.emit();
   }
 
-  public formDelete() {
+  public formDelete(): void {
     // console.log(`formDelete()`);
     this.delete.emit(this.fModelInitial);
   }
 
-  public formSubmit({ valid, value }: any) {
+  public formSubmit({ valid, value }: any): void {
     // console.log(`formSubmit()`, valid, value);
     if (this.fGroup.valid) {
       // delete (this.fModel as any)['usernameSameAsEmail'];

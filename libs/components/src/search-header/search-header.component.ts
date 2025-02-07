@@ -47,7 +47,7 @@ export class SearchHeaderComponent {
     'No Username',
     'No Password',
   ];
-  public fieldChecks: string;
+  public fieldChecks: string | null = null;
 
   public openSettingsClick() {
     this.openSettings.emit();

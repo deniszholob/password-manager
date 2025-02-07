@@ -13,12 +13,12 @@ import { FORMLY_SETTINGS_CONFIG } from './settings-form.const';
 })
 export class SettingsFormComponent {
   @Output()
-  public save = new EventEmitter<SettingsData>();
+  public save = new EventEmitter<SettingsData | null>();
   @Output()
   public cancel = new EventEmitter<void>();
 
-  private _fModel: SettingsData | null;
-  public fModelInitial: SettingsData | null;
+  private _fModel: SettingsData | null = null;
+  public fModelInitial: SettingsData | null = null;
 
   @Input()
   public set fModel(model: SettingsData | null) {
@@ -30,7 +30,7 @@ export class SettingsFormComponent {
     }
   }
 
-  public get fModel() {
+  public get fModel(): SettingsData | null {
     return this._fModel;
   }
 

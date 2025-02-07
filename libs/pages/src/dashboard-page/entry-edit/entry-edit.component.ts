@@ -18,7 +18,7 @@ export class EntryEditComponent {
   @Input()
   public defaultIconSrc: IconSrcOptions = IconSrcOptions.default;
   @Input()
-  public detailEntry: Entry = null;
+  public detailEntry: Entry | null = null;
 
   @Output()
   public saveEntry = new EventEmitter<Entry>();
@@ -27,11 +27,12 @@ export class EntryEditComponent {
   @Output()
   public cancelEntry = new EventEmitter<void>();
 
-  public settings$: Observable<SettingsData> = this.settingsStore.getStore();
+  public settings$: Observable<SettingsData | null> =
+    this.settingsStore.getStore();
   public tagOptions$: Observable<string[]> = this.dataStore.getUniqueTagSet();
   public emailOptions$: Observable<string[]> =
     this.dataStore.getUniqueEmailSet();
-  public appStore$: Observable<AppData> = this.appStore.getStore();
+  public appStore$: Observable<AppData | null> = this.appStore.getStore();
 
   constructor(
     private dataStore: DataStoreService,
