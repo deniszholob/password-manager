@@ -7,6 +7,6 @@ import { FilePickerDirective } from './file-picker.directive';
 @NgModule({
   imports: [CommonModule],
   declarations: [FilePickerComponent, FilePickerDirective],
-  exports: [FilePickerComponent],
+  exports: [FilePickerComponent, FilePickerDirective],
 })
 export class FilePickerModule {}
