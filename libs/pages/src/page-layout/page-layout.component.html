@@ -1,0 +1,46 @@
+<main class="flex flex-col h-screen">
+  <!-- HEADER -->
+  <header class="font-medium text-center">
+    <section *ngIf="WEB_WARNING" class="w-full p-1 bg-red-900 decoration-clone">
+      {{ WEB_WARNING }}
+    </section>
+
+    <ng-content select="[header]" #header></ng-content>
+  </header>
+
+  <div id="main" class="flex flex-col flex-1 overflow-y-auto">
+    <!-- PAGE CONTENT -->
+    <ng-content></ng-content>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="text-xs font-light text-center">
+    <section class="flex flex-row flex-wrap py-1 bg-gray-800 justify-evenly">
+      <p class="px-2">
+        <span class="text-muted">Design by</span>
+        <a
+          class="text-blue-500 no-underline hover:text-blue-200"
+          href="http://deniszholob.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          deniszholob.com
+        </a>
+      </p>
+
+      <p class="px-2">
+        <a
+          class="text-blue-500 no-underline hover:text-blue-200"
+          href="{{ GITHUB }}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i class="fab fa-github"></i>
+          Github
+        </a>
+      </p>
+
+      <p class="text-muted">v{{ version }} - {{ date | date : 'yyyy/MM/dd' }}</p>
+    </section>
+  </footer>
+</main>
