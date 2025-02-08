@@ -1,0 +1,80 @@
+<section class="w-full bg-gray-800" *ngIf="files.length > 0">
+  <div
+    class="container flex flex-row max-w-screen-lg mx-auto border-l border-r border-gray-700 divide-x divide-gray-700"
+  >
+    <button
+      *ngFor="let file of files; let i = index; let first = first"
+      class="flex flex-row items-center gap-1 p-1 hover:bg-gray-700"
+      [ngClass]="{
+        'bg-gray-900 hover:bg-gray-900': file?.path === selectedFile?.path
+      }"
+      [disabled]="file?.path === selectedFile?.path"
+      [attr.aria-label]="file?.path"
+      [attr.data-balloon-pos]="first ? 'down-left' : 'down'"
+      data-balloon-nofocus
+      (click)="onSelectFile(file)"
+    >
+      <i
+        class="p-2 text-xs text-blue-400 fas fa-file"
+        (click)="onShowFileInExplorer(file)"
+        title="Open File in File Explorer"
+      ></i>
+
+      <span class="text-gray-400">{{ file?.displayAs }}</span>
+
+      <i
+        class="p-2 text-xs text-gray-400 rounded-md fas fa-times hover:text-red-500 hover:bg-gray-800"
+        (click)="onRemoveFile(file, i)"
+        title="Close File"
+      ></i>
+    </button>
+
+    <button
+      class="px-4 py-2 text-gray-500 hover:bg-gray-700"
+      [ngClass]="{ 'bg-gray-900 hover:bg-gray-900': !selectedFile }"
+      aria-label="New File"
+      data-balloon-pos="down"
+      data-balloon-nofocus
+      (click)="onCreateFile()"
+    >
+      <ng-container *ngIf="selectedFile">
+        <i class="fas fa-plus"></i>
+      </ng-container>
+
+      <span *ngIf="!selectedFile">New File</span>
+    </button>
+
+    <!-- <button
+      class="px-4 py-2 text-green-500 hover:bg-gray-700"
+      aria-label="New File"
+      data-balloon-pos="down"
+      data-balloon-nofocus
+      (click)="onCreateNewFile()"
+    >
+      <i class="fas fa-plus"></i>
+    </button> -->
+
+    <!-- <div class="flex-1"></div> -->
+
+    <!-- <button
+      class="px-4 py-2 text-blue-200 hover:bg-gray-700"
+      aria-label="Recent Files"
+      data-balloon-pos="down"
+      data-balloon-nofocus
+      (click)="onSelectRecentFile()"
+    >
+      <i class="fas fa-folder"></i>
+    </button> -->
+
+    <!-- <button
+      class="px-4 py-2 text-blue-500 hover:bg-gray-700"
+      aria-label="Open File"
+      data-balloon-pos="down-right"
+      data-balloon-nofocus
+      pwmFilePicker
+      (fileChange)="onOpenFile($event)"
+    >
+      <i class="fas fa-file"></i>
+    </button> -->
+  </div>
+</section>
