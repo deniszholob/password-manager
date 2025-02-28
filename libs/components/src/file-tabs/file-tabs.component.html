@@ -1,38 +1,39 @@
 <section class="w-full bg-gray-800" *ngIf="files.length > 0">
   <div
-    class="container flex flex-row max-w-screen-lg mx-auto border-l border-r border-gray-700 divide-x divide-gray-700"
+    class="container flex flex-row flex-wrap max-w-screen-lg mx-auto border-l border-r border-gray-700 divide-x divide-gray-700"
   >
+    <ng-content select="[file-tab-left]"></ng-content>
+
     <button
       *ngFor="let file of files; let i = index; let first = first"
       class="flex flex-row items-center gap-1 p-1 hover:bg-gray-700"
       [ngClass]="{
         'bg-gray-900 hover:bg-gray-900': file?.path === selectedFile?.path
       }"
-      [disabled]="file?.path === selectedFile?.path"
       [attr.aria-label]="file?.path"
       [attr.data-balloon-pos]="first ? 'down-left' : 'down'"
       data-balloon-nofocus
-      (click)="onSelectFile(file)"
+      (mouseup)="onTabClick(file, $event)"
     >
       <i
-        class="p-2 text-xs text-blue-400 fas fa-file"
-        (click)="onShowFileInExplorer(file)"
+        class="p-2 text-xs text-gray-400 rounded-md hover:text-blue-500 fas fa-file hover:bg-gray-800"
+        (click)="onShowFileInExplorer(file, $event)"
         title="Open File in File Explorer"
       ></i>
 
-      <span class="text-gray-400">{{ file?.displayAs }}</span>
+      <span class="px-1 text-gray-200 hover:text-white">{{ file?.displayAs }}</span>
 
       <i
-        class="p-2 text-xs text-gray-400 rounded-md fas fa-times hover:text-red-500 hover:bg-gray-800"
-        (click)="onRemoveFile(file, i)"
+        class="p-2 text-xs text-gray-500 rounded-md fas fa-times hover:text-red-500 hover:bg-gray-800"
+        (click)="onRemoveFile(file, $event)"
         title="Close File"
       ></i>
     </button>
 
     <button
-      class="px-4 py-2 text-gray-500 hover:bg-gray-700"
+      class="px-4 py-1 text-gray-400 hover:bg-gray-700 hover:text-white"
       [ngClass]="{ 'bg-gray-900 hover:bg-gray-900': !selectedFile }"
-      aria-label="New File"
+      aria-label="New"
       data-balloon-pos="down"
       data-balloon-nofocus
       (click)="onCreateFile()"
@@ -54,7 +55,8 @@
       <i class="fas fa-plus"></i>
     </button> -->
 
-    <!-- <div class="flex-1"></div> -->
+    <div class="flex-1"></div>
+    <ng-content select="[file-tab-right]"></ng-content>
 
     <!-- <button
       class="px-4 py-2 text-blue-200 hover:bg-gray-700"

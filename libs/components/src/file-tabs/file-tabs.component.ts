@@ -1,6 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FileDisplay } from '@pwm/util';
 
+/** @see https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button#value */
+enum MouseButtons {
+  LEFT = 0,
+  MIDDLE = 1,
+  RIGHT = 2,
+}
+
 @Component({
   selector: 'pwm-file-tabs',
   templateUrl: './file-tabs.component.html',
@@ -18,27 +25,46 @@ export class FileTabsComponent {
   public selectedFile?: FileDisplay;
 
   @Output()
-  public selectedFileChange = new EventEmitter<FileDisplay>();
+  public selectedFileChange = new EventEmitter<FileDisplay | undefined>();
   @Output()
   public removeFileChange = new EventEmitter<FileDisplay>();
   @Output()
   public showFileChange = new EventEmitter<FileDisplay>();
+
+  /** change tab with left click, remove tab with middle click */
+  public onTabClick(file: FileDisplay, event: MouseEvent): void {
+    // console.log('onTabClick', file, event, event.button);
+    if (event.button === MouseButtons.MIDDLE) {
+      return this.onRemoveFile(file, event);
+    }
+
+    if (
+      event.button === MouseButtons.LEFT &&
+      file.path !== this.selectedFile?.path
+    ) {
+      return this.onSelectFile(file, event);
+    }
+  }
 
   public onCreateFile(): void {
     this.selectedFile = undefined;
     this.selectedFileChange.emit(this.selectedFile);
   }
 
-  public onSelectFile(file: FileDisplay): void {
+  public onSelectFile(file: FileDisplay, event: Event): void {
+    event.stopPropagation();
     this.selectedFile = file;
+    // console.log('selectedFile', this.selectedFile);
     this.selectedFileChange.emit(this.selectedFile);
   }
 
-  public onRemoveFile(file: FileDisplay, i: number): void {
+  public onRemoveFile(file: FileDisplay, event: Event): void {
+    event.stopPropagation();
     this.removeFileChange.emit(file);
   }
 
-  public onShowFileInExplorer(file: FileDisplay): void {
+  public onShowFileInExplorer(file: FileDisplay, event: Event): void {
+    event.stopPropagation();
     this.showFileChange.emit(file);
   }
 }
