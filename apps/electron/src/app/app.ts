@@ -189,6 +189,9 @@ export default class App {
     }
 
     App.mainWindow.webContents.on('did-finish-load', () => {
+      if (!App.mainWindow) {
+        throw new Error('Electron window is null!');
+      }
       App.mainWindow.webContents.send(
         EVENT_CHANNELS.fileOpenedApp,
         process.argv

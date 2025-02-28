@@ -5,20 +5,15 @@
   </button>
 </div>
 
-<div class="form-group" *ngIf="field.fieldGroup?.length <= 0">
+<div class="form-group" *ngIf="field.fieldGroup && field.fieldGroup.length <= 0">
   <span class="block text-center text-gray-500">
     No questions saved,
 
-    <button type="button" class="text-green-500" (click)="add()">
-      add one!
-    </button>
+    <button type="button" class="text-green-500" (click)="add()">add one!</button>
   </span>
 </div>
 
-<div
-  *ngFor="let field of field.fieldGroup; let i = index"
-  class="flex flex-row"
->
+<div *ngFor="let field of field.fieldGroup; let i = index" class="flex flex-row">
   <div class="flex-1">
     <formly-field class="flex flex-wrap" [field]="field"></formly-field>
   </div>
