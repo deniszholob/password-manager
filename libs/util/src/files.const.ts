@@ -15,7 +15,7 @@ export const FILE_DATA_EXTENSION = 'json'; //'pwmd';
 export const FILE_SAVE_EXTENSION = 'json'; //'pwms';
 
 export const SETTINGS_NAME = `pswm-config.${FILE_SAVE_EXTENSION}`;
-export const DEFAULT_SETTINGS_PATH = `G:/${SETTINGS_NAME}`;
+export const SETTINGS_NAME_DEV = `pswm-config-dev.${FILE_SAVE_EXTENSION}`;
 
 /** File filters to use in electron file dialogs
  * @see https://www.electronjs.org/docs/api/dialog#dialogshowopendialogbrowserwindow-options

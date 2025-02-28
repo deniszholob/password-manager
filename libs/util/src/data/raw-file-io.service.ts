@@ -1,27 +1,37 @@
 // TODO: File IO just return/accept strings? Do JSON.parse/JSON/stringify in whatever uses this (state.service) instead?
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { from, fromEvent, Observable, of, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-import { FILE_ENCODING, SETTINGS_NAME } from '../files.const';
+import {
+  FILE_ENCODING,
+  SETTINGS_NAME,
+  SETTINGS_NAME_DEV,
+} from '../files.const';
 import { ElectronWindow, ElectronWindowApi, MyFile } from '../models/electron';
 import { ERRORS } from './errors';
 import { mockSavedFile, mockSettings } from './mock.data';
+import { ENV_CONFIG, EnvironmentConfig } from '../injection-tokens.const';
+
+const WEB_FILE_NAME = 'local';
+const WEB_SETTINGS_NAME = 'settings';
 
 /** Do not use directly in components, user DataService instead */
 @Injectable({ providedIn: 'root' })
 export class RawFileIOService {
-  public readonly settingsPath: string = 'settings';
+  public readonly settingsPath: string = WEB_SETTINGS_NAME;
   private electron: ElectronWindowApi | null = null;
 
   public get isElectron(): boolean {
     return !!this.electron;
   }
 
-  constructor() {
+  constructor(@Inject(ENV_CONFIG) private environment: EnvironmentConfig) {
     this.electron = (window as unknown as ElectronWindow).electron;
     if (this.electron) {
-      this.settingsPath = this.electron.homeFile(SETTINGS_NAME);
+      this.settingsPath = this.electron.homeFile(
+        this.environment.production ? SETTINGS_NAME : SETTINGS_NAME_DEV
+      );
       // console.log(`Settings location change to: `, this.settingsPath);
     }
   }
@@ -63,7 +73,7 @@ export class RawFileIOService {
             return p;
           })
         )
-      : of('local');
+      : of(`${WEB_FILE_NAME}${this.getHighestItemNumber(WEB_FILE_NAME) + 1}`);
   }
 
   // ======================================================================== //
@@ -182,6 +192,29 @@ export class RawFileIOService {
     // console.log(`  writeFileLocal() - `, myFile);
     localStorage.setItem(String(myFile.path), myFile.data);
     return of(null);
+  }
+
+  private getHighestItemNumber(pattern: string): number {
+    let highestItemNumber: number = 0;
+
+    // Iterate through all keys in local storage
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+
+      // Check if the key matches the pattern (e.g., item1, item2, etc.)
+      const match = key?.match(new RegExp(`^${pattern}(\\d+)$`));
+
+      if (match && match[1] != null) {
+        const itemNumber = parseInt(match[1], 10);
+
+        // Update highestItemNumber if this one is larger
+        if (itemNumber > highestItemNumber) {
+          highestItemNumber = itemNumber;
+        }
+      }
+    }
+
+    return highestItemNumber;
   }
 
   // ======================================================================== //

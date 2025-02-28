@@ -1,6 +1,7 @@
-import { SETTINGS_NAME } from '@pwm/util';
+import { SETTINGS_NAME, SETTINGS_NAME_DEV } from '@pwm/util';
 import { MenuItemConstructorOptions } from 'electron';
 import { homeFile } from './api/util';
+import { environment } from '../environments/environment';
 
 export class AppMenu {
   static getMenuTemplate(): MenuItemConstructorOptions[] {
@@ -15,7 +16,11 @@ export class AppMenu {
             // TODO: await import('electron'); ?
             const { shell } = require('electron');
             // Show the given file in a file manager. If possible, select the file.
-            shell.showItemInFolder(homeFile(SETTINGS_NAME));
+            shell.showItemInFolder(
+              homeFile(
+                environment.production ? SETTINGS_NAME : SETTINGS_NAME_DEV
+              )
+            );
           },
         },
         isMac ? { role: 'close' } : { role: 'quit' },
