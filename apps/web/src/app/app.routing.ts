@@ -1,9 +1,5 @@
 import { Routes, RouterModule } from '@angular/router';
-import {
-  DASHBOARD_PAGE_ROUTES,
-  LANDING_PAGE_ROUTES,
-  SANDBOX_PAGE_ROUTES,
-} from '@pwm/pages';
+import { DASHBOARD_PAGE_ROUTES, SANDBOX_PAGE_ROUTES } from '@pwm/pages';
 import { environment } from '../environments/environment';
 
 // import { APP_PAGE_ROUTES } from '@pwm/pages';
@@ -12,10 +8,9 @@ import { environment } from '../environments/environment';
 //   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 // ];
 
-const DEFAULT_PAGE_ROUTE = '/landing';
+const DEFAULT_PAGE_ROUTE = 'dashboard';
 const APP_PAGE_ROUTES: Routes = [
   { path: 'dashboard', children: DASHBOARD_PAGE_ROUTES },
-  { path: 'landing', children: LANDING_PAGE_ROUTES },
 ];
 
 if (!environment.production) {

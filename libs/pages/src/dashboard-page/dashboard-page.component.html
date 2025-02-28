@@ -4,12 +4,13 @@
       {{ WEB_WARNING }}
     </section>
 
-    <section class="w-full p-1 bg-gray-700" *ngIf="selectedFile">
-      Data from
-      <button class="text-blue-500" (click)="showItemInFolder(selectedFile.path)">
-        {{ selectedFile.path }}
-      </button>
-    </section>
+    <pwm-file-tabs
+      [selectedFile]="selectedFile"
+      [files]="pinnedFiles"
+      (selectedFileChange)="onSelectPinnedFile($event)"
+      (removeFileChange)="onRemovePinnedFile($event)"
+      (showFileChange)="onShowItemInFolder($event.path)"
+    ></pwm-file-tabs>
 
     <aside id="status" class="flex flex-col px-4 mx-auto">
       <div *ngIf="error" class="p-2 text-red-500">{{ error }}</div>
@@ -24,8 +25,22 @@
       (closeSettings)="toggleSettings()"
       [disableFileSelection]="!!appData?.unsavedChanges"
     ></pwm-settings-edit>
+    <!-- 
+      [ngClass]="recentFiles.length > 0 ? 'container mx-auto' : 'absolute top-1/4 justify-center'"
+       -->
+    <div
+      *ngIf="!selectedFile"
+      class="container flex flex-col w-full mx-auto text-center"
+      style="padding-top: 20dvh"
+    >
+      <h1 class="m-4 text-6xl">{{ APP_TITLE }}</h1>
+      <h2 class="mb-6 text-2xl text-gray-500">Get started</h2>
+
+      <pwm-file-selection [recentFiles]="recentFiles"></pwm-file-selection>
+    </div>
 
     <div
+      *ngIf="selectedFile"
       id="main-container"
       class="container relative flex flex-col flex-auto mx-auto"
       [ngClass]="[
@@ -35,10 +50,10 @@
     >
       <pwm-search-header
         [ngClass]="detailEntry ? 'hidden lg:block' : ''"
-        [name]="selectedFile?.displayAs ?? ''"
+        [name]="selectedFile.displayAs"
         (clearSearch)="clearSearch()"
         [(searchQuery)]="searchQuery"
-        [disabledSearch]="fileData.length <= 0"
+        [disabledSearch]="!fileData || fileData.entries.length <= 0"
         (createNewEntry)="createNewEntry()"
         [disabledCreateNew]="!!newEntry || !!appData?.unsavedChanges"
         (openSettings)="toggleSettings()"
@@ -50,7 +65,7 @@
       <aside
         id="new-file"
         class="flex flex-col justify-between py-8 text-center"
-        *ngIf="fileData.length <= 0 && !newEntry"
+        *ngIf="!fileData || (fileData.entries.length <= 0 && !newEntry)"
       >
         <h2 class="mb-6 text-2xl text-gray-500">Looks like an empty canvas</h2>
         <p>
@@ -64,18 +79,18 @@
       <div id="center-pane" class="flex flex-row flex-1 overflow-y-auto">
         <pwm-search-results
           class="flex flex-col flex-auto px-4 overflow-y-auto"
-          *ngIf="getIsSearchOpen()"
+          *ngIf="this.fileData && (!!this.fileData?.entries?.length || !!this.newEntry)"
           [ngClass]="getIsEditEntryOpen() ? 'hidden lg:flex' : ''"
           [newEntry]="newEntry"
           [filteredSearchResults]="filteredSearchResults"
-          [totalResultsCount]="fileData.length"
+          [totalResultsCount]="fileData.entries.length"
           [selectedEntry]="detailEntry"
           (selectedEntryChange)="selectEntryDetail($event)"
           [disableSelect]="!!appData?.unsavedChanges"
         >
           <p noEntries *ngIf="searchQuery">
             <button type="button" class="text-red-500" (click)="clearSearch()">Clear</button>
-            the search to show {{ fileData.length }} Entries.
+            the search to show {{ fileData.entries.length }} Entries.
           </p>
         </pwm-search-results>
 

@@ -23,6 +23,16 @@ export class DataStoreService extends Store<FileData | null> {
     super(null);
   }
 
+  public override getState(): FileData | null {
+    console.log('DataStoreService getState()');
+    return super.getState();
+  }
+
+  public override setState(d: FileData | null): void {
+    console.log('DataStoreService setState()');
+    super.setState(d);
+  }
+
   private fileData$: Observable<FileData> = this.getStore().pipe(
     // share(),
     filter(typedNullCheck)
@@ -33,8 +43,8 @@ export class DataStoreService extends Store<FileData | null> {
   ): Observable<Entry[K][]> {
     return this.fileData$.pipe(
       distinctUntilChanged(),
-      map((entries: Entry[]): Entry[K][] =>
-        getCombinedFieldValuesFromObject(entries, fieldKey)
+      map((fileData: FileData): Entry[K][] =>
+        getCombinedFieldValuesFromObject(fileData.entries, fieldKey)
       )
       // shareReplay(),
       // tap((v) => console.log(`getFieldValuesFromData() -`, v))

@@ -4,6 +4,24 @@ export interface SettingsData {
   // version: string;
   defaultIconSrc: IconSrcOptions;
   encryption: EncryptionOptions;
+  /** All the files paths that have been opened
+   * When a file is opened, it is added here if not already
+   * If there is an error opening a file, it should be removed
+   */
+  recentFiles: string[];
+  /** Subset of recentFiles
+   * File paths to show in tabs in ui
+   * When a file is opened, it is added here if not already
+   * Users will click on one to load its data
+   * Users can close the file, upon which it should be remove and the dataFile should be set to the next available file
+   */
+  pinnedFiles: string[];
+  /**
+   * Data file path to load on startup
+   * Last file user was viewing
+   * When a file is opened, this represents the file
+   * It is undefined, when a use is creating a new file or when there are no files in the recentFiles to chose from
+   */
   dataFile?: string;
   saveKeys?: SaveKeyOptions;
   keys?: { [filename: string]: string };
@@ -53,6 +71,8 @@ export const DEFAULT_SETTINGS: SettingsData = {
   defaultIconSrc: IconSrcOptions.fontawesome,
   // TODO: set to on
   encryption: EncryptionOptions.off,
+  pinnedFiles: [],
+  recentFiles: [],
 };
 
 export const DEFAULT_SETTINGS_KEY = 'ol82ynw3lo8nynla98w234yg';

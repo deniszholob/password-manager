@@ -1,4 +1,6 @@
 import { BehaviorSubject, Observable } from 'rxjs';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
+import { typedNullCheck } from '../object/object.util';
 
 // AKA "Model" or "State" or "Store"
 export class Store<T> {
@@ -13,8 +15,8 @@ export class Store<T> {
   }
 
   /** select */
-  public getStore(): Observable<T> {
-    return this.data$;
+  public getStore(): Observable<NonNullable<T>> {
+    return this.data$.pipe(distinctUntilChanged(), filter(typedNullCheck));
   }
 
   /** selectSnapshot */

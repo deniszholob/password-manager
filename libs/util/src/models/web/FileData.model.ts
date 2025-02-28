@@ -1,11 +1,9 @@
 import { Entry } from './entry/entry.model';
+import { FileDisplay } from './file-display/file-display.model';
 
-export interface MyDataFile {
-  entries: FileData;
-  path: string;
+export interface FileData extends FileDisplay {
+  entries: Entry[];
 }
-
-export type FileData = Entry[];
 
 // TODO: Replace above type with this..
 // export interface FileData {

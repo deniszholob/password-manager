@@ -13,6 +13,8 @@ export const mockSettingsEmpty: SettingsData = DEFAULT_SETTINGS;
 export const mockSettings: SettingsData = {
   // version: '0.0.1',
   dataFile: 'G:/hello.txt',
+  pinnedFiles: [],
+  recentFiles: [],
   // encryption: 'off',
   // saveKeys: 'all',
   encryption: EncryptionOptions.off,
@@ -45,4 +47,8 @@ export const mockEntryEmpty: Entry = {
   usedTimes: 0,
 };
 
-export const mockSavedFile: FileData = [mockEntry];
+export const mockSavedFile: FileData = {
+  path: 'hello.json',
+  displayAs: 'hello',
+  entries: [mockEntry],
+};

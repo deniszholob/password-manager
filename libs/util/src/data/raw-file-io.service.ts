@@ -45,16 +45,17 @@ export class RawFileIOService {
   //   });
   // }
 
-  public fileOpenedApp(): Observable<string[] | null> {
-    const electron: ElectronWindowApi | null = this.electron;
-    return electron
-      ? new Observable((observer) => {
-          electron.fileOpenedApp((event, paths) => {
-            observer.next(paths);
-          });
-        })
-      : of(null);
-  }
+  // /** @deprecated Not needed? */
+  // public fileOpenedApp(): Observable<string[] | null> {
+  //   const electron: ElectronWindowApi | null = this.electron;
+  //   return electron
+  //     ? new Observable((observer) => {
+  //         electron.fileOpenedApp((event, paths) => {
+  //           observer.next(paths);
+  //         });
+  //       })
+  //     : of(null);
+  // }
 
   // ======================================================================== //
   // ============================= Filepaths ================================ //

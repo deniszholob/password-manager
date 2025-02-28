@@ -1,6 +1,6 @@
 // import { faker } from '@faker-js/faker';
 
-import { FileDisplay, filePathToFileDisplay } from './file-display.model';
+import { FileDisplay } from './file-display.model';
 
 // ===== Simple Mock ====== //
 // export const MOCK_FileDisplay: FileDisplay = {
@@ -25,9 +25,9 @@ import { FileDisplay, filePathToFileDisplay } from './file-display.model';
 // export const MOCK_FileDisplay_Array: FileDisplay[] = createMock_FileDisplay_Array(5);
 
 export const MOCK_FileDisplay: FileDisplay =
-  filePathToFileDisplay('/file3.json');
+  FileDisplay.fromPath('/file3.json');
 export const MOCK_FileDisplay_Array: FileDisplay[] = [
   'mnt/9q3409q/folder/file.2.json',
   'src/file1.json',
   '/file3.json',
-].map(filePathToFileDisplay);
+].map(FileDisplay.fromPath);

@@ -16,7 +16,11 @@
         "answer": "Springfield"
       }
     ],
-    "tags": ["work", "security", "important"],
+    "tags": [
+      "work",
+      "security",
+      "important"
+    ],
     "notes": "This is my main account for work.",
     "usedTimes": 42,
     "iconSrc": "google"
@@ -34,7 +38,10 @@
         "answer": "Inception"
       }
     ],
-    "tags": ["entertainment", "subscription"],
+    "tags": [
+      "entertainment",
+      "subscription"
+    ],
     "notes": "Streaming service account.",
     "usedTimes": 19,
     "iconSrc": "statvoo"
@@ -46,7 +53,9 @@
     "username": "shopper42",
     "serviceUrl": "https://shopease.com",
     "recovery": [],
-    "tags": ["shopping"],
+    "tags": [
+      "shopping"
+    ],
     "usedTimes": 7,
     "iconSrc": "duck"
   },
@@ -63,7 +72,10 @@
         "answer": "PlayStation"
       }
     ],
-    "tags": ["gaming", "fun"],
+    "tags": [
+      "gaming",
+      "fun"
+    ],
     "notes": "Game account with premium membership.",
     "usedTimes": 35,
     "iconSrc": "fontawesome"
@@ -74,6 +86,8 @@
     "password": "SecureCloud2025!",
     "username": "cloud_master",
     "usedTimes": 12,
-    "iconSrc": "default"
+    "iconSrc": "default",
+    "recovery": [],
+    "notes": ""
   }
 ]

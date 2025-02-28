@@ -1,16 +1,19 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FILE_ACCEPT_DATA, slash, DataService } from '@pwm/util';
+import { FILE_ACCEPT_DATA, slash, DataService, FileDisplay } from '@pwm/util';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'pwm-file-selection',
   templateUrl: './file-selection.component.html',
-  // styleUrls: ['./file-selection.component.scss'],
+  styles: [':host{display:contents}'],
 })
 export class FileSelectionComponent {
   @Input()
-  public disabled = false;
+  public disabled: boolean = false;
+
+  @Input()
+  public recentFiles: FileDisplay[] = [];
 
   @Output()
   public buttonClick = new EventEmitter<void>();
@@ -21,8 +24,8 @@ export class FileSelectionComponent {
 
   constructor(private dataService: DataService) {}
 
-  // TODO: Copied from landing page, reuse somehow?
-  private initReadData(location: string, file?: File) {
+  // TODO: Copied from dashboard page, reuse somehow?
+  public initReadData(location: string, file?: File) {
     // console.log(`initReadData() - `, location, file);
     this.loading = 'Reading Data...';
     this.error = null;
@@ -52,6 +55,11 @@ export class FileSelectionComponent {
           this.error = err;
         }
       );
+  }
+
+  public removeRecentFile(file: FileDisplay): void {
+    // console.log(`removeRecentFile() - `, file);
+    this.dataService.removeFileFromRecents(file.path).subscribe();
   }
 
   // ======================================================================== //

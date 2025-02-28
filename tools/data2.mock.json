@@ -1,0 +1,225 @@
+[
+  {
+    "guid": "1a2b3c4d-5678-90ab-cdef-1234567890ab",
+    "serviceName": "Gmail",
+    "email": "user@gmail.com",
+    "password": "SecurePass123!",
+    "username": "gmail_user",
+    "serviceUrl": "https://mail.google.com",
+    "recovery": [
+      {
+        "question": "What is your favorite color?",
+        "answer": "Blue"
+      }
+    ],
+    "tags": [
+      "email",
+      "personal"
+    ],
+    "notes": "Primary email account.",
+    "usedTimes": 230,
+    "iconSrc": "google"
+  },
+  {
+    "guid": "2b3c4d5e-6789-01ab-cdef-2345678901bc",
+    "serviceName": "Instagram",
+    "email": "user@instagram.com",
+    "password": "InstaLife2024!",
+    "username": "insta_user",
+    "serviceUrl": "https://instagram.com",
+    "recovery": [],
+    "tags": [
+      "social",
+      "photo"
+    ],
+    "notes": "Personal Instagram account.",
+    "usedTimes": 120,
+    "iconSrc": "fontawesome"
+  },
+  {
+    "guid": "3c4d5e6f-7890-12ab-cdef-3456789012cd",
+    "serviceName": "DenisZholob.com",
+    "email": "contact@deniszholob.com",
+    "password": "PersonalSitePass!",
+    "username": "denis_admin",
+    "serviceUrl": "https://deniszholob.com",
+    "recovery": [
+      {
+        "question": "What is your favorite programming language?",
+        "answer": "TypeScript"
+      }
+    ],
+    "tags": [
+      "personal",
+      "website"
+    ],
+    "notes": "Admin login for my personal website.",
+    "usedTimes": 15,
+    "iconSrc": "default"
+  },
+  {
+    "guid": "4d5e6f7g-8901-23ab-cdef-4567890123de",
+    "serviceName": "GitHub",
+    "email": "devuser@github.com",
+    "password": "DevRepoSecure2025",
+    "username": "dev_coder",
+    "serviceUrl": "https://github.com",
+    "recovery": [
+      {
+        "question": "What was your first programming project?",
+        "answer": "Portfolio Website"
+      }
+    ],
+    "tags": [
+      "development",
+      "code",
+      "git"
+    ],
+    "notes": "Main GitHub account for projects.",
+    "usedTimes": 320,
+    "iconSrc": "statvoo"
+  },
+  {
+    "guid": "5e6f7g8h-9012-34ab-cdef-5678901234ef",
+    "serviceName": "Facebook",
+    "email": "user@facebook.com",
+    "password": "MetaSocial2024!",
+    "username": "fb_user",
+    "serviceUrl": "https://facebook.com",
+    "recovery": [],
+    "tags": [
+      "social",
+      "friends"
+    ],
+    "notes": "Facebook account for social networking.",
+    "usedTimes": 180,
+    "iconSrc": "fontawesome"
+  },
+  {
+    "guid": "6f7g8h9i-0123-45ab-cdef-6789012345fg",
+    "serviceName": "Yahoo Mail",
+    "email": "user@yahoo.com",
+    "password": "YahooSecureEmail!",
+    "username": "yahoo_user",
+    "serviceUrl": "https://mail.yahoo.com",
+    "recovery": [
+      {
+        "question": "What is your mother's maiden name?",
+        "answer": "Smith"
+      }
+    ],
+    "tags": [
+      "email",
+      "secondary"
+    ],
+    "notes": "Backup email account.",
+    "usedTimes": 90,
+    "iconSrc": "duck"
+  },
+  {
+    "guid": "7g8h9i0j-1234-56ab-cdef-7890123456gh",
+    "serviceName": "GitLab",
+    "email": "gitlab@user.com",
+    "password": "GitLabSecure123",
+    "username": "gitlab_dev",
+    "serviceUrl": "https://gitlab.com",
+    "recovery": [],
+    "tags": [
+      "development",
+      "git"
+    ],
+    "notes": "GitLab account for work projects.",
+    "usedTimes": 70,
+    "iconSrc": "statvoo"
+  },
+  {
+    "guid": "8h9i0j1k-2345-67ab-cdef-8901234567hi",
+    "serviceName": "Outlook Mail",
+    "email": "user@outlook.com",
+    "password": "OutlookSafePass!",
+    "username": "outlook_user",
+    "serviceUrl": "https://outlook.live.com",
+    "recovery": [],
+    "tags": [
+      "email",
+      "work"
+    ],
+    "notes": "Outlook mail for work.",
+    "usedTimes": 150,
+    "iconSrc": "google"
+  },
+  {
+    "guid": "9i0j1k2l-3456-78ab-cdef-9012345678ij",
+    "serviceName": "Amazon",
+    "email": "user@amazon.com",
+    "password": "AmazonShopping2024!",
+    "username": "amazon_buyer",
+    "serviceUrl": "https://amazon.com",
+    "recovery": [
+      {
+        "question": "What was your first pet's name?",
+        "answer": "Buddy"
+      }
+    ],
+    "tags": [
+      "shopping",
+      "ecommerce"
+    ],
+    "notes": "Amazon account for online purchases.",
+    "usedTimes": 300,
+    "iconSrc": "default"
+  },
+  {
+    "guid": "0j1k2l3m-4567-89ab-cdef-0123456789kl",
+    "serviceName": "Hello Fresh",
+    "email": "user@hellofresh.com",
+    "password": "HealthyMeals2025!",
+    "username": "meal_planner",
+    "serviceUrl": "https://hellofresh.com",
+    "recovery": [],
+    "tags": [
+      "subscription",
+      "food"
+    ],
+    "notes": "Hello Fresh meal kit subscription.",
+    "usedTimes": 25,
+    "iconSrc": "duck"
+  },
+  {
+    "guid": "1k2l3m4n-5678-90ab-cdef-1234567890lm",
+    "serviceName": "Apple",
+    "email": "appleuser@icloud.com",
+    "password": "iCloudSafePass!",
+    "username": "apple_user",
+    "serviceUrl": "https://apple.com",
+    "recovery": [
+      {
+        "question": "What is your favorite fruit?",
+        "answer": "Apple"
+      }
+    ],
+    "tags": [
+      "tech",
+      "icloud"
+    ],
+    "notes": "Apple ID for iCloud and App Store.",
+    "usedTimes": 220,
+    "iconSrc": "fontawesome"
+  },
+  {
+    "guid": "2l3m4n5o-6789-01ab-cdef-2345678901mn",
+    "serviceName": "Netflix",
+    "email": "user@netflix.com",
+    "password": "NetflixChill2024!",
+    "username": "netflix_fan",
+    "serviceUrl": "https://netflix.com",
+    "recovery": [],
+    "tags": [
+      "entertainment",
+      "streaming"
+    ],
+    "notes": "Netflix account for watching shows.",
+    "usedTimes": 400,
+    "iconSrc": "statvoo"
+  }
+]

@@ -18,6 +18,21 @@
 
 @tailwind components;
 
+@layer components {
+  hr {
+    @apply border-gray-500 opacity-25;
+    // Gradient hr
+    //   border: 0;
+    //   height: 1px;
+    //   background-image: linear-gradient(
+    //     to right,
+    //     rgba(255, 255, 255, 0),
+    //     rgba(255, 255, 255, 0.75),
+    //     rgba(255, 255, 255, 0)
+    //   );
+  }
+}
+
 @tailwind utilities;
 
 // TODO: Take what's needed and remove the default?

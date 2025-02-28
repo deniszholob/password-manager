@@ -8,21 +8,19 @@ import {
   FileData,
   getGuid,
   getIconSrcOptionValuesArray,
-  mockSavedFile,
   RawFileIOService,
   SettingsData,
   SettingsStore,
   DataService,
+  slash,
   DEFAULT_SETTINGS,
-} from '@pwm/util';
-import { Observable, Subject, Subscription } from 'rxjs';
-import { GITHUB } from '../pages.data';
-import { FieldCheckOptions } from '@pwm/components';
-import { takeUntil, tap } from 'rxjs/operators';
-import {
+  settingsValidator,
   FileDisplay,
-  filePathToFileDisplay,
-} from './file-display/file-display.model';
+} from '@pwm/util';
+import { Observable, of, Subject } from 'rxjs';
+import { APP_TITLE, GITHUB } from '../pages.data';
+import { FieldCheckOptions } from '@pwm/components';
+import { catchError, take, takeUntil, tap } from 'rxjs/operators';
 
 const WEB_WARNING = `DO NOT Enter sensitive information, this is a demo only!`;
 // const ENTRY_MOCK: Entry|undefined = mockSavedFile[0];
@@ -36,15 +34,16 @@ const WEB_WARNING = `DO NOT Enter sensitive information, this is a demo only!`;
   // styleUrls: ['./dashboard-page.component.scss'],
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
+  // #region Class Properties
   private readonly clearSub$ = new Subject<void>();
-  public GITHUB = GITHUB;
+  public readonly APP_TITLE: string = APP_TITLE;
+  public readonly GITHUB: string = GITHUB;
   public WEB_WARNING: string | null = null;
-  private _searchQuery = '';
-  private subscription: Subscription = new Subscription();
+  private _searchQuery: string = '';
 
   // ======================================================================== //
 
-  public fileData: Entry[] = [];
+  public fileData?: FileData;
   public filteredSearchResults: Entry[] = [];
   public detailEntry: Entry | null = null;
   // public selectedIdx: number | null = -1;
@@ -88,10 +87,18 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   public allTags$: Observable<string[]> = this.dataStore.getUniqueTagSet();
   public appStore$: Observable<AppData | null> = this.appStore.getStore();
 
-  public isSettingsOpen: boolean = false;
   public appData?: AppData;
-  public selectedFile?: FileDisplay;
 
+  private settingsData?: SettingsData;
+  public isSettingsOpen: boolean = false;
+
+  public selectedFile?: FileDisplay;
+  public pinnedFiles: FileDisplay[] = [];
+  public recentFiles: FileDisplay[] = [];
+
+  // #endregion
+
+  // #region Constructor + Lifecycle
   constructor(
     private rawFileIOService: RawFileIOService,
     private dataService: DataService,
@@ -103,41 +110,13 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     @Inject('BUILD_DATE') public date: number
   ) {
     this.WEB_WARNING = !this.dataService.isElectron() ? WEB_WARNING : null;
-
-    this.settings$
-      .pipe(takeUntil(this.clearSub$))
-      .subscribe((s: SettingsData | null): void => {
-        this.selectedFile = s?.dataFile
-          ? filePathToFileDisplay(s.dataFile)
-          : undefined;
-      });
-
-    this.appStore$
-      .pipe(takeUntil(this.clearSub$))
-      .subscribe((appData: AppData | null): void => {
-        this.appData = appData ?? undefined;
-      });
-  }
-
-  public showItemInFolder(path: string): void {
-    try {
-      this.rawFileIOService.showItemInFolder(path);
-      this.error = null;
-    } catch (e) {
-      console.error(e);
-      this.error = `Only Available on Desktop!`;
-    }
-  }
-
-  // TODO: Add auto select on input fields
-  // (click)="$event.target.select()"
-  // #myInput (click)="myInput.select()"
-
-  ngOnInit(): void {
+    this.subSettings();
     this.subData();
+    this.subAppData();
     this.searchQuery = '';
 
-    // TODO: Remove/comment out for production
+    this.initReadSettings();
+    // TODO: Remove or comment out for production
     // for (let i = 0; i < 5; i++) {
     //   this.fileData.push({
     //     ...ENTRY_MOCK,
@@ -148,35 +127,152 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     // this.detailEntry = this.newEntry || this.filteredSearchResults[0];
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  // TODO: Add auto select on input fields
+  // (click)="$event.target.select()"
+  // #myInput (click)="myInput.select()"
+
+  public ngOnInit(): void {}
+
+  public ngOnDestroy(): void {
     this.clearSub$.next();
     this.clearSub$.complete();
   }
+  // #endregion
 
+  // #region Data
   // ======================================================================== //
   // ============================= Data ===================================== //
 
-  private subData() {
+  private initReadSettings(): void {
+    // console.log(`initReadSettings()`);
+    this.loading = 'Reading Settings...';
+    this.error = null;
+
+    this.dataService.readSettings().subscribe(
+      (res) => {
+        // console.log('  Settings Read Done: ', res)
+        this.loading = null;
+      },
+      (err) => {
+        console.error(`  initReadSettings() readSettings() fail - `, err);
+        this.loading = null;
+        this.error = err;
+      }
+    );
+  }
+
+  private subAppData(): void {
+    this.appStore$
+      .pipe(takeUntil(this.clearSub$))
+      .subscribe((appData: AppData | null): void => {
+        this.appData = appData ?? undefined;
+      });
+  }
+
+  private subSettings(): void {
+    this.settings$
+      .pipe(takeUntil(this.clearSub$))
+      .subscribe((settings: SettingsData | null): void => {
+        console.log(JSON.stringify(settings));
+        if (!settings) return;
+
+        const validSettings: boolean = this.checkValidSettings(settings);
+        if (!validSettings) return;
+
+        this.settingsData = settings;
+        this.recentFiles = settings.recentFiles.map(FileDisplay.fromPath);
+        this.pinnedFiles = settings.pinnedFiles.map(FileDisplay.fromPath);
+
+        const selectedFile = settings.dataFile
+          ? // ? filePathToFileDisplay(settings.dataFile)
+            FileDisplay.fromPath(settings.dataFile)
+          : undefined;
+
+        if (!selectedFile) {
+          this.fileData = undefined;
+          // this.dataReceived(null);
+        } else if (selectedFile.path !== this.selectedFile?.path) {
+          this.fileData = undefined;
+          this.initReadData(selectedFile.path);
+        } else {
+        }
+
+        this.selectedFile = selectedFile;
+
+        // TODO: Remove if this never happens
+        // if (
+        //   this.selectedFile &&
+        //   !this.pinnedFiles.includes(this.selectedFile)
+        // ) {
+        //   this.pinnedFiles.push(this.selectedFile);
+        // }
+      });
+  }
+
+  private checkValidSettings(settings: SettingsData): boolean {
+    // console.log(`checkValidSettings() - `, settings);
+    const settingCorrections: SettingsData | null = settingsValidator(settings);
+    if (!settingCorrections) return true;
+
+    console.log(`Applying Settings Corrections and Saving...`);
+
+    this.loading = 'Applying Settings Corrections and Saving...';
+    this.error = null;
+    this.dataService.saveSettings(settingCorrections).subscribe(
+      () => {
+        // console.log('checkValidSettings() saveData() success');
+        this.loading = null;
+      },
+      (err) => {
+        console.error(`checkValidSettings() saveData() fail - `, err);
+        this.loading = null;
+        this.error = err;
+      }
+    );
+
+    return false;
+  }
+
+  private subData(): void {
     // console.debug(`subData()`)
-    const sub = this.data$.subscribe(
+    this.data$.pipe(takeUntil(this.clearSub$)).subscribe(
       (data: FileData | null) => {
         // console.log(`Data Sub`, data);
         this.dataReceived(data);
       },
       (err) => {
-        // console.error(`subData() data$ fail - `, err);
+        console.error(`subData() data$ fail - `, err);
         this.error = err;
       }
     );
-    this.subscription.add(sub);
   }
 
-  private checkValidData(data: FileData) {
-    // console.log(`checkValidData() - `, data);
+  private dataReceived(data: FileData | null): void {
+    console.log(`dataReceived() - `, data);
+    if (!data) {
+      // this.navToLanding();
+      return;
+    }
+
+    // Check data validity
+    if (this.checkValidData(data)) {
+      this.fileData = data;
+      this.closeDetailView();
+    }
+
+    // if (data.length <= 0) {
+    //   console.log(`Lets create a new entry?`);
+    //   this.createNewEntry();
+    // } else {
+    //   console.log('We have entries!');
+    // }
+  }
+
+  private checkValidData(data: FileData): boolean {
+    console.log(`checkValidData() - `, data);
 
     let valid = true;
-    data.forEach((e) => {
+    data.entries.forEach((e) => {
       if (!e.guid) {
         valid = false;
         e.guid = this.getUniqueGuid();
@@ -198,7 +294,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
           this.loading = null;
         },
         (err) => {
-          // console.error(`checkValidData() saveData() fail - `, err);
+          console.error(`checkValidData() saveData() fail - `, err);
           this.loading = null;
           this.error = err;
         }
@@ -207,29 +303,114 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     return valid;
   }
 
-  private dataReceived(data: FileData | null): void {
-    // console.log(`dataReceived() - `, data);
-    if (!data) {
-      this.navToLanding();
-      return;
-    }
+  // TODO: Copied to file-selection component, reuse somehow?
+  private initReadData(location: string): void {
+    console.log(`initReadData() - `, location);
+    this.loading = 'Reading Data...';
+    this.error = null;
 
-    // Check data validity
-    if (this.checkValidData(data)) {
-      this.fileData = data;
-      this.search();
-    }
-
-    // if (data.length <= 0) {
-    //   console.log(`Lets create a new entry?`);
-    //   this.createNewEntry();
-    // } else {
-    //   console.log('We have entries!');
-    // }
+    this.dataService
+      .readData(location, undefined)
+      .pipe(
+        catchError((err) => {
+          console.error(`  initReadData() readData() catchError - `, err);
+          if (err instanceof SyntaxError) {
+            this.error = `  Error reading file, please try again or start a new one.`;
+          } else {
+            this.error = err;
+          }
+          return of(null);
+        })
+      )
+      .subscribe(
+        (): void => {
+          // console.log('  File Read Done')
+          this.loading = null;
+        },
+        (err): void => {
+          console.error(`  initReadData() readData() fail - `, err);
+          this.loading = null;
+          this.error = err;
+        }
+      );
   }
+  // #endregion
 
+  // #region Template Methods
   // ======================================================================== //
   // ============================= Template ================================= //
+
+  /** Should update settings to selected file, this should trigger a update of data */
+  public onSelectPinnedFile(file: FileDisplay | undefined): void {
+    if (!this.settingsData) throw new Error('settingsData is null');
+
+    const newSettingsState: SettingsData = { ...this.settingsData };
+    newSettingsState.dataFile = file ? file.path : undefined;
+    this.dataService.saveSettings(newSettingsState).subscribe();
+  }
+
+  /** Should update settings to selected file, this should trigger a update of data */
+  public onRemovePinnedFile(file: FileDisplay): void {
+    if (!this.settingsData) throw new Error('settingsData is null');
+
+    const newSettingsState: SettingsData = { ...this.settingsData };
+    newSettingsState.pinnedFiles = this.settingsData.pinnedFiles.filter(
+      (p) => p !== file.path
+    );
+    newSettingsState.dataFile =
+      newSettingsState.pinnedFiles[newSettingsState.pinnedFiles.length - 1];
+
+    console.log(JSON.stringify(newSettingsState), newSettingsState);
+    this.dataService.saveSettings(newSettingsState).subscribe();
+  }
+
+  /** Should Switch to file selector view*/
+  public onCreateNewFile(): void {
+    this.selectedFile = undefined;
+  }
+
+  /** TODO: double check this is used */
+  public onSelectRecentFile(): void {
+    throw new Error('Not implemented');
+    // TODO: show recent file list
+  }
+
+  public onOpenFile(file: File | null): void {
+    if (!file) return;
+    this.loading = 'Reading Data...';
+    this.error = null;
+
+    const location: string = file.path ? slash(file.path) : file.name;
+    console.log(location, file);
+    this.dataService
+      .readData(location, file)
+      .pipe(
+        catchError((err: unknown) => {
+          console.error(`  initReadData() readData() catchError - `, err);
+          if (err instanceof SyntaxError) {
+            this.error = `Error reading file, please try again or start a new one.`;
+          } else {
+            this.error = `${err}`;
+          }
+          return of(null);
+        }),
+        tap((): void => {
+          this.loading = null;
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  public onShowItemInFolder(path: string): void {
+    try {
+      this.rawFileIOService.showItemInFolder(path);
+      this.error = null;
+    } catch (e) {
+      console.error(`  onShowItemInFolder() catch - `, e);
+      this.error = `Only Available on Desktop!`;
+    }
+  }
 
   public selectEntryDetail(entry: Entry | null) {
     if (!this.appStore.getState()?.unsavedChanges) {
@@ -238,6 +419,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   public saveDetailEntry(entry: Entry) {
+    if (!this.fileData) throw new Error('fileData is null');
+    const fileData = this.fileData;
+
     // console.log('saveDetailEntry() -', entry);
     this.loading = 'Saving Entry...';
     this.error = null;
@@ -246,14 +430,14 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     // console.log(`isAddingNewEntry`, isAddingNewEntry);
 
     if (isAddingNewEntry) {
-      this.fileData.push(entry);
+      fileData.entries.push(entry);
     } else {
-      const idx = this.fileData.findIndex((e) => entry.guid === e.guid);
-      this.fileData[idx] = entry;
+      const idx = this.fileData.entries.findIndex((e) => entry.guid === e.guid);
+      fileData.entries[idx] = entry;
     }
 
     // Save to file
-    this.dataService.saveData(this.fileData).subscribe(
+    this.dataService.saveData(fileData).subscribe(
       () => {
         // console.log('saveDetailEntry() saveData() success');
         this.loading = null;
@@ -264,11 +448,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         this.closeDetailView();
       },
       (err) => {
-        // console.error(`saveDetailEntry() saveData() fail - `, err);
+        console.error(`saveDetailEntry() saveData() fail - `, err);
         this.loading = null;
         // Rollback add to array
         if (isAddingNewEntry) {
-          this.fileData.pop();
+          fileData.entries.pop();
         }
         this.error = err;
       }
@@ -277,6 +461,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   public deleteDetailEntry(entry: Entry) {
     // console.log('deleteDetailEntry() -', entry);
+    if (!this.fileData) throw new Error('fileData is null');
+    const fileData = this.fileData;
+
     this.loading = 'Deleting Entry...';
     this.error = null;
 
@@ -292,7 +479,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
 
     // Get index of entry to delete
-    const idx = this.fileData.findIndex((e) => entry.guid === e.guid);
+    const idx = fileData.entries.findIndex((e) => entry.guid === e.guid);
 
     if (idx == null || idx < 0) {
       this.loading = null;
@@ -302,21 +489,21 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
 
     // Delete from array and save deleted entry for rollback
-    const deletedEntry = this.fileData.splice(idx, 1)[0];
+    const deletedEntry = fileData.entries.splice(idx, 1)[0];
     // console.log(deletedEntry);
 
     // Save to file
-    this.dataService.saveData(this.fileData).subscribe(
+    this.dataService.saveData(fileData).subscribe(
       () => {
         // console.log('deleteDetailEntry() saveData() success');
         this.loading = null;
         this.closeDetailView();
       },
       (err) => {
-        // console.error(`deleteDetailEntry() saveData() fail - `, err);
+        console.error(`deleteDetailEntry() saveData() fail - `, err);
         this.loading = null;
         // Rollback delete from array
-        if (deletedEntry) this.fileData.splice(idx, 0, deletedEntry);
+        if (deletedEntry) fileData.entries.splice(idx, 0, deletedEntry);
         this.error = err;
       }
     );
@@ -335,22 +522,30 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   public addEntry() {
+    if (!this.fileData) throw new Error('fileData is null');
     // console.log('addEntry()');
-    this.fileData.push();
+    this.fileData.entries.push();
   }
 
   private getUniqueGuid(): string {
+    if (!this.fileData) throw new Error('fileData is null');
     // console.log('getUniqueGuid()');
     let guid = getGuid();
     let tries = 0;
 
-    while (this.fileData.findIndex((e) => e.guid === guid) >= 0 || tries > 10) {
+    while (
+      this.fileData.entries.findIndex((e) => e.guid === guid) >= 0 ||
+      tries > 10
+    ) {
       console.warn(`Found clashing guid `, guid);
       guid = getGuid();
       tries++;
     }
 
-    if (this.fileData.findIndex((e) => e.guid === guid) >= 0 && tries >= 10) {
+    if (
+      this.fileData.entries.findIndex((e) => e.guid === guid) >= 0 &&
+      tries >= 10
+    ) {
       throw Error('Could not generate a unique guid for new entry');
     }
 
@@ -358,6 +553,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   public createNewEntry() {
+    if (!this.fileData) throw new Error('fileData is null');
     // console.log('createNewEntry()');
 
     const ENTRY_EMPTY = {
@@ -375,13 +571,15 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     this.newEntry = {
       ...ENTRY_EMPTY,
-      serviceName: `New-${this.fileData.length}`,
+      serviceName: `New-${this.fileData?.entries.length}`,
       iconSrc: this.settingsStore.getState()?.defaultIconSrc,
     };
     this.detailEntry = this.newEntry;
     // this.selectedIdx = -1;
   }
+  // #endregion
 
+  // #region Search
   // ======================================================================== //
   // ============================= Search =================================== //
 
@@ -391,9 +589,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   private search(query?: string) {
+    // if (!this.fileData) throw new Error('fileData is null');
     // console.log('search() - ', query);
     const q: string = (query || this.searchQuery || '').toLocaleLowerCase();
-    this.filteredSearchResults = this.fileData
+    this.filteredSearchResults = (this.fileData?.entries ?? [])
       // fieldChecks
       .filter((value: Entry): boolean => {
         if (!this.fieldChecks) return true;
@@ -430,7 +629,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         );
       });
   }
+  // #endregion
 
+  // #region Misc
   // ======================================================================== //
   // ============================= Misc ===================================== //
 
@@ -444,97 +645,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     return !!this.detailEntry;
   }
   public getIsSearchOpen(): boolean {
-    return this.fileData.length > 0 || !!this.newEntry;
+    return !!this.fileData?.entries?.length || !!this.newEntry;
   }
-
-  private navToLanding() {
-    // console.log('!!!! Nav to landing request');
-    this.router.navigate(['/landing'], { replaceUrl: true });
-  }
-
-  // (ngModelChange)="data = $event"
-  // public dataChange(event: Event) {
-  //   console.log(`dataChange(${event})`);
-  //   this.data = event;
-  // }
-
-  // ======================================================================== //
-  // ============================= OLD ===================================== //
-  // ======================================================================== //
-
-  public saveDetailEntry_OLD(e: Entry) {
-    // console.log('saveDetailEntry() -', e);
-    this.loading = 'Saving Entry...';
-    this.error = null;
-
-    // Add to array if new entry
-    if (this.newEntry && this.detailEntry === this.newEntry) {
-      this.fileData.push(this.newEntry);
-    }
-
-    // Save to file
-    this.dataService.saveData(this.fileData).subscribe(
-      () => {
-        // console.log('saveDetailEntry() saveData() success');
-        this.loading = null;
-        // Clear new entry now that its saved
-        if (this.detailEntry === this.newEntry) {
-          this.newEntry = null;
-        }
-        this.closeDetailView();
-      },
-      (err) => {
-        // console.error(`saveDetailEntry() saveData() fail - `, err);
-        this.loading = null;
-        // Rollback add to array
-        if (this.newEntry && this.detailEntry === this.newEntry) {
-          this.fileData.pop();
-        }
-        this.error = err;
-      }
-    );
-  }
-
-  public deleteDetailEntry_OLD(e: Entry) {
-    // console.log('deleteDetailEntry() -', e);
-    this.loading = 'Deleting Entry...';
-    this.error = null;
-
-    if (this.detailEntry === this.newEntry) {
-      this.loading = null;
-      // New entries are temps and not saved into the store, so just dereference
-      this.newEntry = null;
-      this.closeDetailView();
-      return;
-    }
-
-    // Get index of entry to delete
-    const idx = this.fileData.findIndex((entry) => entry === this.detailEntry);
-
-    if (idx == null) {
-      this.loading = null;
-      const errMsg = `Index was null; entry to delete not found`;
-      this.error = errMsg;
-      throw new Error(errMsg);
-    }
-
-    // Delete from array and save deleted entry for rollback
-    const entry = this.fileData.splice(idx, 1)[0];
-
-    // Save to file
-    this.dataService.saveData(this.fileData).subscribe(
-      () => {
-        // console.log('deleteDetailEntry() saveData() success');
-        this.loading = null;
-        this.closeDetailView();
-      },
-      (err) => {
-        // console.error(`deleteDetailEntry() saveData() fail - `, err);
-        this.loading = null;
-        // Rollback delete from array
-        if (entry) this.fileData.splice(idx, 0, entry);
-        this.error = err;
-      }
-    );
-  }
+  // #endregion
 }

@@ -37,7 +37,7 @@ export function slash(path: string) {
   return path.replace(/\\/g, '/');
 }
 
-export const UUID_NAME = 'Password Manager';
+const UUID_NAME = 'Password Manager';
 
 export function getGuid() {
   // console.log(`getGuid()`);
