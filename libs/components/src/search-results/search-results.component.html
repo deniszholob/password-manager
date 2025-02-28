@@ -14,12 +14,7 @@
 
   <div id="results-info" class="flex flex-row justify-between my-2">
     <div id="results-sort">
-      <button
-        class="btn btn-outline"
-        (click)="changeSort()"
-        type="button"
-        title="Sort"
-      >
+      <button class="btn btn-outline" (click)="changeSort()" type="button" title="Sort">
         <span *ngIf="sortDown">&#9660;</span>
         <span *ngIf="!sortDown">&#9650;</span>
         Title/Email
@@ -33,8 +28,11 @@
 
 <div
   id="searchResultsList"
-  class="flex flex-col overflow-auto"
+  class="flex flex-col overflow-auto outline-none"
   #searchResultsList
+  tabindex="0"
+  (focus)="onListFocus(true)"
+  (blur)="onListFocus(false)"
 >
   <div
     id="results-none"

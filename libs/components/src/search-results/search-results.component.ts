@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostBinding,
   HostListener,
   Input,
   Output,
@@ -12,6 +13,10 @@ import { Entry } from '@pwm/util';
 @Component({
   selector: 'pwm-search-results',
   templateUrl: './search-results.component.html',
+  host: {
+    class: 'outline-none',
+    tabindex: '0',
+  },
 })
 export class SearchResultsComponent {
   public readonly resultsEntryId: string = 'results-entry-';
@@ -23,6 +28,9 @@ export class SearchResultsComponent {
 
   @Input()
   public disableSelect: boolean = false;
+
+  @Input()
+  public isListFocused: boolean = false;
 
   // New Entry
   private _newEntry: Entry | null = null;
@@ -53,12 +61,30 @@ export class SearchResultsComponent {
   private currentIndex: number = -1; // Index of the currently selected entry
 
   // ======================================================================== //
+
   @ViewChild('searchResultsList')
   public searchResultsList: ElementRef | undefined; // Reference to the scrollable list
 
+  // Listen for the list being focused
+  @HostListener('focus', ['$event'])
+  protected onListFocusIn(event: FocusEvent): void {
+    this.onListFocus(true);
+  }
+
+  // Listen for the root element losing focus
+  @HostListener('blur', ['$event'])
+  protected onRootBlur(): void {
+    this.onListFocus(false);
+  }
+
+  public onListFocus(focused: boolean): void {
+    this.isListFocused = focused;
+  }
+
   @HostListener('document:keydown', ['$event'])
   protected onKeyDown(event: KeyboardEvent): void {
-    if (!this.selectedEntry) return;
+    if (!this.selectedEntry || this.disableSelect || !this.isListFocused)
+      return;
 
     if (event.key === 'ArrowDown') {
       event.preventDefault();
