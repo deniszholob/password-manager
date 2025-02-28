@@ -83,17 +83,18 @@ export class SearchResultsComponent {
 
   @HostListener('document:keydown', ['$event'])
   protected onKeyDown(event: KeyboardEvent): void {
-    if (!this.selectedEntry || this.disableSelect || !this.isListFocused)
-      return;
+    if (!this.selectedEntry || this.disableSelect) return;
+    if (event.key === 'Escape') {
+      return this.handleEscape();
+    }
 
+    if (!this.isListFocused) return;
     if (event.key === 'ArrowDown') {
       event.preventDefault();
-      this.navigateDown();
+      return this.navigateDown();
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
-      this.navigateUp();
-    } else if (event.key === 'Escape') {
-      this.handleEscape();
+      return this.navigateUp();
     }
   }
 
