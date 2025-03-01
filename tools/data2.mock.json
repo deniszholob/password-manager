@@ -77,7 +77,7 @@
     ],
     "notes": "Main GitHub account for projects.",
     "usedTimes": 320,
-    "iconSrc": "statvoo"
+    "iconSrc": "google"
   },
   {
     "guid": "5e6f7g8h-9012-34ab-cdef-5678901234ef",
@@ -128,9 +128,9 @@
       "development",
       "git"
     ],
-    "notes": "GitLab account for work projects.",
+    "notes": "GitLab account for work projects!",
     "usedTimes": 70,
-    "iconSrc": "statvoo"
+    "iconSrc": "google"
   },
   {
     "guid": "8h9i0j1k-2345-67ab-cdef-8901234567hi",
@@ -220,6 +220,6 @@
     ],
     "notes": "Netflix account for watching shows.",
     "usedTimes": 400,
-    "iconSrc": "statvoo"
+    "iconSrc": "duck"
   }
 ]

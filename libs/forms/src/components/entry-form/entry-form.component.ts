@@ -115,7 +115,7 @@ export class EntryFormComponent implements OnInit, AfterViewInit {
     // console.log(`formSubmit()`, valid, value);
     if (this.fGroup.valid) {
       // delete (this.fModel as any)['usernameSameAsEmail'];
-      console.log(`formSubmit`, this.fModel);
+      // console.log(`formSubmit`, this.fModel);
       this.save.emit(this.fModel);
     } else {
       this.fGroup.markAllAsTouched;

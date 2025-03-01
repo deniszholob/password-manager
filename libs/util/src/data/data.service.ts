@@ -250,7 +250,7 @@ export class DataService {
       newSettingsState.dataFile = undefined;
     }
 
-    console.log(`${filePath} was removed from settings file`);
+    // console.log(`${filePath} was removed from settings file`);
     return this.saveSettings(newSettingsState);
   }
 

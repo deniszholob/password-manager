@@ -173,7 +173,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.settings$
       .pipe(takeUntil(this.clearSub$))
       .subscribe((settings: SettingsData | null): void => {
-        console.log(JSON.stringify(settings));
+        // console.log(JSON.stringify(settings));
         if (!settings) return;
 
         const validSettings: boolean = this.checkValidSettings(settings);
@@ -248,7 +248,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   private dataReceived(data: FileData | null): void {
-    console.log(`dataReceived() - `, data);
+    // console.log(`dataReceived() - `, data);
     if (!data) {
       // this.navToLanding();
       return;
@@ -269,7 +269,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   private checkValidData(data: FileData): boolean {
-    console.log(`checkValidData() - `, data);
+    // console.log(`checkValidData() - `, data);
 
     let valid = true;
     data.entries.forEach((e) => {
@@ -305,7 +305,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   // TODO: Copied to file-selection component, reuse somehow?
   private initReadData(location: string): void {
-    console.log(`initReadData() - `, location);
+    // console.log(`initReadData() - `, location);
     this.loading = 'Reading Data...';
     this.error = null;
 
@@ -360,7 +360,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     newSettingsState.dataFile =
       newSettingsState.pinnedFiles[newSettingsState.pinnedFiles.length - 1];
 
-    console.log(JSON.stringify(newSettingsState), newSettingsState);
+    // console.log(JSON.stringify(newSettingsState), newSettingsState);
     this.dataService.saveSettings(newSettingsState).subscribe();
   }
 
@@ -381,7 +381,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.error = null;
 
     const location: string = file.path ? slash(file.path) : file.name;
-    console.log(location, file);
+    // console.log(location, file);
     this.dataService
       .readData(location, file)
       .pipe(

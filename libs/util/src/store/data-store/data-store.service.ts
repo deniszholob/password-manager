@@ -24,12 +24,12 @@ export class DataStoreService extends Store<FileData | null> {
   }
 
   public override getState(): FileData | null {
-    console.log('DataStoreService getState()');
+    // console.log('DataStoreService getState()');
     return super.getState();
   }
 
   public override setState(d: FileData | null): void {
-    console.log('DataStoreService setState()');
+    // console.log('DataStoreService setState()');
     super.setState(d);
   }
 
