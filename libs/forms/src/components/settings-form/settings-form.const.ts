@@ -3,13 +3,11 @@ import { getIconSrcOptionsArray, IconSrcOptions } from '@pwm/util';
 import { Observable } from 'rxjs';
 import { generateFormlyOptions } from '../util';
 
-
 // dataFile?: string;
 // defaultIconSrc?: IconSrcOptions;
 // encryption?: EncryptionOptions;
 // saveKeys?: SaveKeyOptions;
 // keys?: { [filename: string]: string };
-
 
 export function FORMLY_SETTINGS_CONFIG(): FormlyFieldConfig[] {
   return [
@@ -23,6 +21,7 @@ export function FORMLY_SETTINGS_CONFIG(): FormlyFieldConfig[] {
         label: 'Default Icon Source',
         options: getIconSrcOptionsArray(),
         required: true,
+        hideCopyButton: true,
       },
     },
     // {

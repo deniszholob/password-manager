@@ -1,26 +1,21 @@
-<h3>Settings Form</h3>
+<!-- <h3>Settings Form</h3> -->
 
-<form [formGroup]="fGroup" (ngSubmit)="onSubmit(fGroup)" class="my-4">
+<form
+  [formGroup]="fGroup"
+  (ngSubmit)="onSubmit(fGroup)"
+  class="flex flex-col flex-auto overflow-auto"
+>
   <formly-form
     [form]="fGroup"
     [fields]="fFields"
     [model]="fModel"
+    class="flex flex-col flex-auto gap-2 px-4 pb-8 overflow-auto"
   ></formly-form>
-  <div class="flex flex-row justify-evenly">
+
+  <div class="flex flex-row py-2 border-t border-gray-700 border-solid justify-evenly">
     <button
       type="submit"
-      class="
-        flex
-        items-center
-        px-4
-        py-2
-        text-sm
-        font-medium
-        text-gray-900
-        bg-green-300
-        hover:bg-green-200 hover:text-green-800
-        disabled:opacity-50
-      "
+      class="flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-green-300 hover:bg-green-200 hover:text-green-800 disabled:opacity-50"
       [disabled]="fGroup.invalid"
     >
       Save Settings
@@ -28,18 +23,7 @@
 
     <button
       type="button"
-      class="
-        flex
-        items-center
-        px-4
-        py-2
-        text-sm
-        font-medium
-        text-gray-900
-        bg-blue-300
-        hover:bg-blue-200 hover:text-blue-800
-        disabled:opacity-50
-      "
+      class="flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-blue-300 hover:bg-blue-200 hover:text-blue-800 disabled:opacity-50"
       (click)="resetForm()"
     >
       Cancel Changes

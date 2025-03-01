@@ -1,5 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SettingsData, SettingsStore, DataService } from '@pwm/util';
+import {
+  SettingsData,
+  SettingsStore,
+  DataService,
+  FileDisplay,
+} from '@pwm/util';
 
 @Component({
   selector: 'pwm-settings-edit',
@@ -7,16 +12,17 @@ import { SettingsData, SettingsStore, DataService } from '@pwm/util';
   styleUrls: ['./settings-edit.component.scss'],
 })
 export class SettingsEditComponent {
-  public settings$ = this.settingsStore.getStore();
-
-  public error: string | null = null;
-  public loading: string | null = null;
+  @Input()
+  public disableFileSelection = false;
 
   @Output()
   public closeSettings = new EventEmitter();
 
-  @Input()
-  public disableFileSelection = false;
+  public settingsFileDisplay: FileDisplay =
+    this.dataService.getSettingsFileDisplay();
+  public settings$ = this.settingsStore.getStore();
+  public error: string | null = null;
+  public loading: string | null = null;
 
   constructor(
     private dataService: DataService,
@@ -25,6 +31,10 @@ export class SettingsEditComponent {
 
   public closeSettingsClick(): void {
     this.closeSettings.emit();
+  }
+
+  public onShowItemInExplorer(path: string): void {
+    this.error = this.dataService.onShowItemInExplorer(path);
   }
 
   public saveSettings(settings: SettingsData | null): void {

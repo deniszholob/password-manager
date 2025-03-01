@@ -403,13 +403,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   public onShowItemInFolder(path: string): void {
-    try {
-      this.rawFileIOService.showItemInFolder(path);
-      this.error = null;
-    } catch (e) {
-      console.error(`  onShowItemInFolder() catch - `, e);
-      this.error = `Only Available on Desktop!`;
-    }
+    this.error = this.dataService.onShowItemInExplorer(path);
   }
 
   public selectEntryDetail(entry: Entry | null) {

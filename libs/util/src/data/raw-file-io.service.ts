@@ -12,6 +12,7 @@ import { ElectronWindow, ElectronWindowApi, MyFile } from '../models/electron';
 import { ERRORS } from './errors';
 import { mockSavedFile, mockSettings } from './mock.data';
 import { ENV_CONFIG, EnvironmentConfig } from '../injection-tokens.const';
+import { FileDisplay } from '../models/web';
 
 const WEB_FILE_NAME = 'local';
 const WEB_SETTINGS_NAME = 'settings';
@@ -19,7 +20,7 @@ const WEB_SETTINGS_NAME = 'settings';
 /** Do not use directly in components, user DataService instead */
 @Injectable({ providedIn: 'root' })
 export class RawFileIOService {
-  public readonly settingsPath: string = WEB_SETTINGS_NAME;
+  public readonly settingFile: FileDisplay;
   private electron: ElectronWindowApi | null = null;
 
   public get isElectron(): boolean {
@@ -27,11 +28,16 @@ export class RawFileIOService {
   }
 
   constructor(@Inject(ENV_CONFIG) private environment: EnvironmentConfig) {
+    this.settingFile = FileDisplay.fromPath(WEB_SETTINGS_NAME);
     this.electron = (window as unknown as ElectronWindow).electron;
     if (this.electron) {
-      this.settingsPath = this.electron.homeFile(
-        this.environment.production ? SETTINGS_NAME : SETTINGS_NAME_DEV
+      const settingName = this.environment.production
+        ? SETTINGS_NAME
+        : SETTINGS_NAME_DEV;
+      this.settingFile = FileDisplay.fromPath(
+        this.electron.homeFile(settingName)
       );
+
       // console.log(`Settings location change to: `, this.settingsPath);
     }
   }
@@ -221,7 +227,7 @@ export class RawFileIOService {
   // ======================================================================== //
   // ============================= Other =================================== //
 
-  public showItemInFolder(filePath: string): void {
+  public showItemInExplorer(filePath: string): void {
     // TODO: Download from localstorage if Electron is not available (browser)
     if (!this.electron) throw new Error('Electron is not available!');
     this.electron.showItemInFolder(filePath);

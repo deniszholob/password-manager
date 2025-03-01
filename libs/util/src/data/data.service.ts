@@ -86,9 +86,11 @@ export class DataService {
     );
   }
 
-  public readSettings(location = this.getSettingsFilePath()): Observable<null> {
-    // console.log(`readSettings() - `, location);
-    return this.rawFileIOService.readFile<SettingsData>(location).pipe(
+  public readSettings(): Observable<null> {
+    // console.log(`readSettings() - `);
+    const filepath = this.getSettingsFileDisplay().path;
+    // console.log(filepath);
+    return this.rawFileIOService.readFile<SettingsData>(filepath).pipe(
       switchMap(this.checkValidSettings.bind(this)),
       catchError((err) => {
         if (
@@ -143,16 +145,15 @@ export class DataService {
   }
 
   public saveSettings(data: SettingsData): Observable<null> {
-    console.log(`saveSettings() - `, data);
-    return this.rawFileIOService
-      .writeFile<SettingsData>(this.getSettingsFilePath(), data)
-      .pipe(
-        tap(() => {
-          // console.debug(`[SET STATE] settingsStore: `, data);
-          this.settingsStore.setState(data);
-        }),
-        take(1)
-      );
+    // console.log(`saveSettings() - `, data);
+    const filepath = this.getSettingsFileDisplay().path;
+    return this.rawFileIOService.writeFile<SettingsData>(filepath, data).pipe(
+      tap(() => {
+        // console.debug(`[SET STATE] settingsStore: `, data);
+        this.settingsStore.setState(data);
+      }),
+      take(1)
+    );
   }
 
   // ======================================================================== //
@@ -188,9 +189,9 @@ export class DataService {
   // ======================================================================== //
   // ============================= Filepaths ================================ //
 
-  private getSettingsFilePath(): string {
+  public getSettingsFileDisplay(): FileDisplay {
     // console.log(`  getSettingsFilePath()`);
-    return this.rawFileIOService.settingsPath;
+    return this.rawFileIOService.settingFile;
   }
 
   /** Note: Will not propagate to observable return,
@@ -208,6 +209,17 @@ export class DataService {
 
   // ======================================================================== //
   // ============================= Misc ===================================== //
+
+  public onShowItemInExplorer(path: string): string | null {
+    try {
+      this.rawFileIOService.showItemInExplorer(path);
+      return null;
+    } catch (e) {
+      console.error(`  onShowItemInFolder() catch - `, e);
+      return `Only Available on Desktop!`;
+    }
+  }
+
   public removeFileFromRecents(filePath: string): Observable<null> {
     // console.log(`removeFileFromRecents() - `, path);
     const settingsState: SettingsData | null = this.settingsStore.getState();

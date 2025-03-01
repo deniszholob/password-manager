@@ -1,27 +1,32 @@
-<div
-  class="flex flex-row items-baseline justify-between border-b border-gray-800 border-solid"
->
-  <h2 class="p-4">Settings</h2>
-  <button
-    type="button"
-    class="p-4 text-red-500 hover:text-red-300"
-    title="Close"
-    (click)="closeSettingsClick()"
-  >
-    <i class="fas fa-times fa-2x"></i>
-  </button>
-</div>
+<div class="flex flex-col gap-2">
+  <div class="flex flex-row items-center justify-between border-b border-gray-800 border-solid">
+    <!-- Settings Header -->
+    <h2
+      class="inline-flex items-center h-full gap-2 p-4"
+      [attr.aria-label]="settingsFileDisplay.path"
+      [attr.data-balloon-pos]="'down'"
+      data-balloon-nofocus
+    >
+      <i
+        class="p-2 text-xs text-gray-400 rounded-md hover:text-blue-500 fas fa-file hover:bg-gray-800"
+        (click)="onShowItemInExplorer(settingsFileDisplay.path)"
+        title="Open File in File Explorer"
+      ></i>
 
-<div class="flex-1 p-4 overflow-auto">
-  <div class="flex flex-row my-4 justify-evenly">
-    <pwm-file-selection
-      [disabled]="disableFileSelection"
-      (buttonClick)="closeSettingsClick()"
-    ></pwm-file-selection>
+      <span>Settings</span>
+    </h2>
+
+    <button
+      type="button"
+      class="p-4 text-red-500 hover:text-red-300"
+      title="Close"
+      (click)="closeSettingsClick()"
+    >
+      <i class="fas fa-times fa-2x"></i>
+    </button>
   </div>
 
-  <pwm-settings-form
-    [fModel]="settings$ | async"
-    (save)="saveSettings($event)"
-  ></pwm-settings-form>
+  <!-- Settings Content -->
+
+  <pwm-settings-form [fModel]="settings$ | async" (save)="saveSettings($event)"></pwm-settings-form>
 </div>

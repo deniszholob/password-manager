@@ -8,6 +8,7 @@ import { FORMLY_SETTINGS_CONFIG } from './settings-form.const';
 
 @Component({
   selector: 'pwm-settings-form',
+  styles: [':host{display:contents}'],
   templateUrl: './settings-form.component.html',
   // styleUrls: ['./settings-form.component.scss'],
 })
