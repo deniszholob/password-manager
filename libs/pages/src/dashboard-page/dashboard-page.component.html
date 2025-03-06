@@ -10,6 +10,7 @@
       (selectedFileChange)="onSelectPinnedFile($event)"
       (removeFileChange)="onRemovePinnedFile($event)"
       (showFileChange)="onShowItemInFolder($event.path)"
+      [disabled]="!!appData?.unsavedChanges"
     ></pwm-file-tabs>
 
     <aside id="status" class="flex flex-col px-4 mx-auto">
@@ -53,7 +54,7 @@
           [name]="selectedFile.displayAs"
           (clearSearch)="clearSearch()"
           [(searchQuery)]="searchQuery"
-          [disabledSearch]="!fileData || fileData.entries.length <= 0"
+          [disabledSearch]="!fileData || fileData.entries.length <= 0 || !!appData?.unsavedChanges"
           (createNewEntry)="createNewEntry()"
           [disabledCreateNew]="!!newEntry || !!appData?.unsavedChanges"
           (openSettings)="toggleSettings()"

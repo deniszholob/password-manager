@@ -6,14 +6,15 @@
 
     <button
       *ngFor="let file of files; let i = index; let first = first"
-      class="flex flex-row items-center gap-1 p-1 hover:bg-gray-700"
+      class="flex flex-row items-center gap-1 p-1 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
       [ngClass]="{
         'bg-gray-900 hover:bg-gray-900': file?.path === selectedFile?.path
       }"
       [attr.aria-label]="file?.path"
-      [attr.data-balloon-pos]="first ? 'down-left' : 'down'"
+      [attr.data-balloon-pos]="disabled ? undefined : first ? 'down-left' : 'down'"
       data-balloon-nofocus
       (mouseup)="onTabClick(file, $event)"
+      [disabled]="disabled"
     >
       <i
         class="p-2 text-xs text-gray-400 rounded-md hover:text-blue-500 fas fa-file hover:bg-gray-800"
@@ -31,12 +32,13 @@
     </button>
 
     <button
-      class="px-4 py-1 text-gray-400 hover:bg-gray-700 hover:text-white"
+      class="px-4 py-1 text-gray-400 hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
       [ngClass]="{ 'bg-gray-900 hover:bg-gray-900': !selectedFile }"
       aria-label="New"
-      data-balloon-pos="down"
+      [attr.data-balloon-pos]="disabled ? undefined : 'down'"
       data-balloon-nofocus
       (click)="onCreateFile()"
+      [disabled]="disabled"
     >
       <ng-container *ngIf="selectedFile">
         <i class="fas fa-plus"></i>

@@ -19,6 +19,9 @@ export class FileTabsComponent {
   // constructor() {}
 
   @Input()
+  public disabled: boolean = false;
+
+  @Input()
   public files: FileDisplay[] = [];
 
   @Input()
@@ -34,6 +37,7 @@ export class FileTabsComponent {
   /** change tab with left click, remove tab with middle click */
   public onTabClick(file: FileDisplay, event: MouseEvent): void {
     // console.log('onTabClick', file, event, event.button);
+    if (this.disabled) return;
     if (event.button === MouseButtons.MIDDLE) {
       return this.onRemoveFile(file, event);
     }
@@ -47,12 +51,14 @@ export class FileTabsComponent {
   }
 
   public onCreateFile(): void {
+    if (this.disabled) return;
     this.selectedFile = undefined;
     this.selectedFileChange.emit(this.selectedFile);
   }
 
   public onSelectFile(file: FileDisplay, event: Event): void {
     event.stopPropagation();
+    if (this.disabled) return;
     this.selectedFile = file;
     // console.log('selectedFile', this.selectedFile);
     this.selectedFileChange.emit(this.selectedFile);
@@ -60,6 +66,7 @@ export class FileTabsComponent {
 
   public onRemoveFile(file: FileDisplay, event: Event): void {
     event.stopPropagation();
+    if (this.disabled) return;
     this.removeFileChange.emit(file);
   }
 

@@ -35,6 +35,13 @@
 
 @tailwind utilities;
 
+// TODO: Seems not available in tw 2.2, REMOVE after upgrading
+@layer utilities {
+  .disabled\:cursor-not-allowed:disabled {
+    cursor: not-allowed;
+  }
+}
+
 // TODO: Take what's needed and remove the default?
 @import '~@fortawesome/fontawesome-free/css/all';
 @import 'colors';

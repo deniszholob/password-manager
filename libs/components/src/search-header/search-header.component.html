@@ -29,7 +29,7 @@
         id="search"
         name="search"
         title="Search (Service Name, URL, Email, Username, Notes)"
-        class="w-full py-2 pl-10 text-black placeholder-gray-500 dark:text-white dark:bg-gray-800"
+        class="w-full py-2 pl-10 text-black placeholder-gray-500 dark:text-white dark:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
         [placeholder]="'Search ' + (name ?? '')"
         [disabled]="disabledSearch"
         [ngModel]="searchQuery"
@@ -39,18 +39,18 @@
 
     <button
       type="button"
-      class="p-2 text-green-500 hover:text-green-200 disabled:opacity-50"
+      class="p-2 text-green-500 hover:text-green-200 disabled:opacity-50 disabled:cursor-not-allowed"
       (click)="createNewEntryClick($event)"
       [disabled]="disabledCreateNew"
       aria-label="New Entry"
-      data-balloon-pos="left"
+      [attr.data-balloon-pos]="disabledCreateNew ? undefined : 'left'"
       data-balloon-nofocus
     >
       <i class="fas fa-plus fa-2x"></i>
     </button>
   </div>
 
-  <div class="flex flex-row gap-2">
+  <div class="flex flex-row gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
     <ng-select
       class="flex-auto"
       [items]="tags"
@@ -60,11 +60,12 @@
       (ngModelChange)="tagsChange($event)"
       [multiple]="true"
       [hideSelected]="true"
+      [disabled]="disabledSearch"
     >
     </ng-select>
 
     <ng-select
-      class="min-w-[200px]"
+      class="min-w-[200px] disabled:opacity-50 disabled:cursor-not-allowed"
       [items]="fieldCheckOptions"
       bindLabel="Field Checks"
       placeholder="Check Field Values"
@@ -72,6 +73,7 @@
       (ngModelChange)="fieldChecksChange($event)"
       [multiple]="false"
       [hideSelected]="true"
+      [disabled]="disabledSearch"
     >
     </ng-select>
   </div>

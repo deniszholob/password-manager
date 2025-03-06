@@ -73,31 +73,36 @@ export class SearchHeaderComponent implements AfterViewInit {
     }, 0);
   }
 
-  public openSettingsClick() {
+  public openSettingsClick(): void {
     this.openSettings.emit();
   }
 
-  public clearSearchClick(event: Event) {
+  public clearSearchClick(event: Event): void {
+    if (this.disabledSearch) return;
     this.clearSearch.next(event);
   }
 
-  public createNewEntryClick(event: Event) {
+  public createNewEntryClick(event: Event): void {
+    if (this.disabledCreateNew) return;
     this.createNewEntry.next(event);
   }
 
-  public searchChange(newValue: string) {
+  public searchChange(newValue: string): void {
+    if (this.disabledSearch) return;
     // console.log(`searchChange() -`, newValue);
     this.searchQuery = newValue;
     this.searchQueryChange.emit(newValue);
   }
 
-  public tagsChange(newValue: string[]) {
+  public tagsChange(newValue: string[]): void {
+    if (this.disabledSearch) return;
     // console.log(`tagsChange() -`, newValue);
     this.filterTags = newValue;
     this.filterTagsChange.emit(newValue);
   }
 
-  public fieldChecksChange(newValue: FieldCheckOptions) {
+  public fieldChecksChange(newValue: FieldCheckOptions): void {
+    if (this.disabledSearch) return;
     this.filterFieldChecksChange.emit(newValue);
   }
 }
