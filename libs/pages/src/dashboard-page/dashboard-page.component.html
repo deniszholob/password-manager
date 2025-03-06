@@ -111,40 +111,5 @@
     </ng-container>
   </div>
 
-  <footer class="text-xs font-light text-center">
-    <!-- <section
-      class="w-full p-1 bg-yellow-900 decoration-clone"
-      *ngIf="unsavedChanges"
-    >
-      Unsaved changes!
-    </section> -->
-
-    <section class="flex flex-row flex-wrap py-1 bg-gray-800 justify-evenly">
-      <p class="px-2">
-        <span class="text-muted">Design by</span>
-        <a
-          class="text-blue-500 no-underline hover:text-blue-200"
-          href="http://deniszholob.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          deniszholob.com
-        </a>
-      </p>
-
-      <p class="px-2">
-        <a
-          class="text-blue-500 no-underline hover:text-blue-200"
-          href="{{ GITHUB }}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <i class="fab fa-github"></i>
-          Github
-        </a>
-      </p>
-
-      <p class="text-muted">v{{ version }} - {{ date | date : 'yyyy/MM/dd' }}</p>
-    </section>
-  </footer>
+  <pwm-footer></pwm-footer>
 </main>

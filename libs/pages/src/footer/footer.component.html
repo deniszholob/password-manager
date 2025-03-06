@@ -1,0 +1,41 @@
+<footer class="text-xs font-light text-center">
+  <section class="w-full p-1 bg-yellow-900 decoration-clone" *ngIf="!!appData?.unsavedChanges">
+    Unsaved changes!
+  </section>
+
+  <section class="flex flex-row flex-wrap items-center gap-2 py-1 bg-gray-800 justify-evenly">
+    <p class="flex flex-row items-center">
+      <span class="text-muted">Made by</span>
+      <pwm-link [link]="APP_INFO.author"></pwm-link>
+    </p>
+
+    <div class="flex flex-row items-baseline gap-1">
+      <span class="text-muted">Donate</span>
+      <p class="flex flex-row flex-wrap items-center">
+        <ng-container *ngFor="let link of LINKS_DONATE">
+          <pwm-link [link]="link"></pwm-link>
+        </ng-container>
+      </p>
+    </div>
+
+    <div class="flex flex-row items-center gap-1">
+      <span class="hidden text-muted sm:inline-flex">Connect</span>
+      <p class="flex flex-row">
+        <ng-container *ngFor="let link of LINKS_CONNECT">
+          <pwm-link [link]="link"></pwm-link>
+        </ng-container>
+      </p>
+
+      <div
+        class="px-1 border border-gray-600 text-muted tooltip-xs"
+        [attr.data-balloon-pos]="'up-right'"
+        [attr.aria-label]="'v' + version + ' - ' + (date | date : 'yyyy/MM/dd')"
+      >
+        v{{ version }}
+      </div>
+    </div>
+  </section>
+</footer>
+
+<!-- <p class="text-muted">v{{ version }} - {{ date | date : 'yyyy/MM/dd' }}</p> -->
+<!-- 'This is a personal project. I am not responsible for any damage caused by the use of this software.' -->

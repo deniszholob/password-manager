@@ -25,11 +25,10 @@ import {
   FileDisplay,
 } from '@pwm/util';
 import { Observable, of, Subject } from 'rxjs';
-import { APP_TITLE, GITHUB } from '../pages.data';
+import { APP_TITLE, WEB_WARNING } from '../pages.data';
 import { FieldCheckOptions, SearchHeaderComponent } from '@pwm/components';
 import { catchError, take, takeUntil, tap } from 'rxjs/operators';
 
-const WEB_WARNING = `DO NOT Enter sensitive information, this is a demo only!`;
 // const ENTRY_MOCK: Entry|undefined = mockSavedFile[0];
 
 /** TODO: Autocomplete
@@ -44,7 +43,6 @@ export class DashboardPageComponent implements OnDestroy {
   // #region Class Properties
   private readonly clearSub$ = new Subject<void>();
   public readonly APP_TITLE: string = APP_TITLE;
-  public readonly GITHUB: string = GITHUB;
   public WEB_WARNING: string | null = null;
   private _searchQuery: string = '';
 

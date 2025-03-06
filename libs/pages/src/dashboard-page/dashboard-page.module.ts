@@ -10,14 +10,19 @@ import {
 import { DashboardPageComponent } from './dashboard-page.component';
 import { EntryEditModule } from './entry-edit';
 import { SettingsEditModule } from './settings-edit';
+import { FooterModule } from '../footer/footer.module';
 
 @NgModule({
   imports: [
+    // Angular
     CommonModule,
     ComponentsModule,
     FormsModule,
+    // Internal - pages
+    FooterModule,
     EntryEditModule,
     SettingsEditModule,
+    // Internal - components
     FilePickerModule,
     FileTabsModule,
   ],

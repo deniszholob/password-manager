@@ -1,0 +1,19 @@
+<ng-container *ngIf="link">
+  <a
+    class="px-1 text-blue-500 no-underline hover:text-blue-200 tooltip-xs"
+    [title]="link.name"
+    href="{{ link.url }}"
+    title="{{ link.title ?? link.name }}"
+    target="_blank"
+    rel="noopener noreferrer"
+    [attr.data-balloon-pos]="'up'"
+    [attr.aria-label]="link.title ?? link.name"
+  >
+    <div *ngIf="link.icon">
+      <i class=" {{ link.icon }}"></i>
+    </div>
+    <div *ngIf="!link.icon">
+      <span> {{ link.name }} </span>
+    </div>
+  </a>
+</ng-container>
