@@ -196,6 +196,8 @@ export default class App {
         EVENT_CHANNELS.fileOpenedApp,
         process.argv
       );
+      // Not use if this matters
+      App.mainWindow.webContents.focus();
     });
   }
 

@@ -39,74 +39,75 @@
       <pwm-file-selection [recentFiles]="recentFiles"></pwm-file-selection>
     </div>
 
-    <div
-      *ngIf="selectedFile"
-      id="main-container"
-      class="container relative flex flex-col flex-auto mx-auto"
-      [ngClass]="[
-        getIsSettingsOpen() ? 'hidden sm:flex' : '',
-        getIsEditEntryOpen() ? 'max-w-screen-xlg' : 'max-w-screen-lg'
-      ]"
-    >
-      <pwm-search-header
-        [ngClass]="detailEntry ? 'hidden lg:block' : ''"
-        [name]="selectedFile.displayAs"
-        (clearSearch)="clearSearch()"
-        [(searchQuery)]="searchQuery"
-        [disabledSearch]="!fileData || fileData.entries.length <= 0"
-        (createNewEntry)="createNewEntry()"
-        [disabledCreateNew]="!!newEntry || !!appData?.unsavedChanges"
-        (openSettings)="toggleSettings()"
-        [tags]="(allTags$ | async) ?? []"
-        (filterTagsChange)="searchFilters = $event"
-        (filterFieldChecksChange)="fieldChecks = $event"
-      ></pwm-search-header>
-
-      <aside
-        id="new-file"
-        class="flex flex-col justify-between py-8 text-center"
-        *ngIf="!fileData || (fileData.entries.length <= 0 && !newEntry)"
+    <ng-container *ngIf="selectedFile">
+      <div
+        id="main-container"
+        class="container relative flex flex-col flex-auto mx-auto"
+        [ngClass]="[
+          getIsSettingsOpen() ? 'hidden sm:flex' : '',
+          getIsEditEntryOpen() ? 'max-w-screen-xlg' : 'max-w-screen-lg'
+        ]"
       >
-        <h2 class="mb-6 text-2xl text-gray-500">Looks like an empty canvas</h2>
-        <p>
-          <button type="button" class="text-green-500" (click)="createNewEntry()">
-            Add an entry
-          </button>
-          to get started.
-        </p>
-      </aside>
+        <pwm-search-header
+          [ngClass]="detailEntry ? 'hidden lg:block' : ''"
+          [name]="selectedFile.displayAs"
+          (clearSearch)="clearSearch()"
+          [(searchQuery)]="searchQuery"
+          [disabledSearch]="!fileData || fileData.entries.length <= 0"
+          (createNewEntry)="createNewEntry()"
+          [disabledCreateNew]="!!newEntry || !!appData?.unsavedChanges"
+          (openSettings)="toggleSettings()"
+          [tags]="(allTags$ | async) ?? []"
+          (filterTagsChange)="searchFilters = $event"
+          (filterFieldChecksChange)="fieldChecks = $event"
+        ></pwm-search-header>
 
-      <div id="center-pane" class="flex flex-row flex-1 overflow-y-auto">
-        <pwm-search-results
-          class="flex flex-col flex-auto px-4 overflow-y-auto"
-          *ngIf="this.fileData && (!!this.fileData?.entries?.length || !!this.newEntry)"
-          [ngClass]="getIsEditEntryOpen() ? 'hidden lg:flex' : ''"
-          [newEntry]="newEntry"
-          [filteredSearchResults]="filteredSearchResults"
-          [totalResultsCount]="fileData.entries.length"
-          [selectedEntry]="detailEntry"
-          (selectedEntryChange)="selectEntryDetail($event)"
-          [disableSelect]="!!appData?.unsavedChanges"
+        <aside
+          id="new-file"
+          class="flex flex-col justify-between py-8 text-center"
+          *ngIf="!fileData || (fileData.entries.length <= 0 && !newEntry)"
         >
-          <p noEntries *ngIf="searchQuery">
-            <button type="button" class="text-red-500" (click)="clearSearch()">Clear</button>
-            the search to show {{ fileData.entries.length }} Entries.
+          <h2 class="mb-6 text-2xl text-gray-500">Looks like an empty canvas</h2>
+          <p>
+            <button type="button" class="text-green-500" (click)="createNewEntry()">
+              Add an entry
+            </button>
+            to get started.
           </p>
-        </pwm-search-results>
+        </aside>
 
-        <pwm-entry-edit
-          class="flex flex-col flex-auto overflow-auto"
-          [ngClass]="{
-            'bg-red-800 bg-opacity-5': !!appData?.unsavedChanges
-          }"
-          *ngIf="getIsEditEntryOpen()"
-          [detailEntry]="detailEntry"
-          (saveEntry)="saveDetailEntry($event)"
-          (deleteEntry)="deleteDetailEntry($event)"
-          (cancelEntry)="cancelDetailEntry()"
-        ></pwm-entry-edit>
+        <div id="center-pane" class="flex flex-row flex-1 overflow-y-auto">
+          <pwm-search-results
+            class="flex flex-col flex-auto px-4 overflow-y-auto"
+            *ngIf="this.fileData && (!!this.fileData?.entries?.length || !!this.newEntry)"
+            [ngClass]="getIsEditEntryOpen() ? 'hidden lg:flex' : ''"
+            [newEntry]="newEntry"
+            [filteredSearchResults]="filteredSearchResults"
+            [totalResultsCount]="fileData.entries.length"
+            [selectedEntry]="detailEntry"
+            (selectedEntryChange)="selectEntryDetail($event)"
+            [disableSelect]="!!appData?.unsavedChanges"
+          >
+            <p noEntries *ngIf="searchQuery">
+              <button type="button" class="text-red-500" (click)="clearSearch()">Clear</button>
+              the search to show {{ fileData.entries.length }} Entries.
+            </p>
+          </pwm-search-results>
+
+          <pwm-entry-edit
+            class="flex flex-col flex-auto overflow-auto"
+            [ngClass]="{
+              'bg-red-800 bg-opacity-5': !!appData?.unsavedChanges
+            }"
+            *ngIf="getIsEditEntryOpen()"
+            [detailEntry]="detailEntry"
+            (saveEntry)="saveDetailEntry($event)"
+            (deleteEntry)="deleteDetailEntry($event)"
+            (cancelEntry)="cancelDetailEntry()"
+          ></pwm-entry-edit>
+        </div>
       </div>
-    </div>
+    </ng-container>
   </div>
 
   <footer class="text-xs font-light text-center">

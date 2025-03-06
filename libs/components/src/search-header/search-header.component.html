@@ -24,12 +24,12 @@
       </button>
 
       <input
+        #searchInput
         type="text"
         id="search"
         name="search"
         title="Search (Service Name, URL, Email, Username, Notes)"
         class="w-full py-2 pl-10 text-black placeholder-gray-500 dark:text-white dark:bg-gray-800"
-        autofocus
         [placeholder]="'Search ' + (name ?? '')"
         [disabled]="disabledSearch"
         [ngModel]="searchQuery"

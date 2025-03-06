@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 
 export type FieldCheckOptions =
   | 'No Service Name'
@@ -10,9 +18,8 @@ export type FieldCheckOptions =
 @Component({
   selector: 'pwm-search-header',
   templateUrl: './search-header.component.html',
-  // styleUrls: ['./search-header.component.scss'],
 })
-export class SearchHeaderComponent {
+export class SearchHeaderComponent implements AfterViewInit {
   @Input()
   public name?: string;
 
@@ -51,6 +58,20 @@ export class SearchHeaderComponent {
     'No Password',
   ];
   public fieldChecks: string | null = null;
+
+  @ViewChild('searchInput')
+  private searchInput?: ElementRef<HTMLInputElement>;
+
+  /** Called after ngAfterContentInit when the component's view has been initialized. Applies to components only. */
+  public ngAfterViewInit(): void {
+    this.focusSearchInput();
+  }
+
+  public focusSearchInput(): void {
+    setTimeout(() => {
+      this.searchInput?.nativeElement.focus();
+    }, 0);
+  }
 
   public openSettingsClick() {
     this.openSettings.emit();

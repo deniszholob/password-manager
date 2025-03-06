@@ -1,4 +1,11 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import {
   AppData,
@@ -19,7 +26,7 @@ import {
 } from '@pwm/util';
 import { Observable, of, Subject } from 'rxjs';
 import { APP_TITLE, GITHUB } from '../pages.data';
-import { FieldCheckOptions } from '@pwm/components';
+import { FieldCheckOptions, SearchHeaderComponent } from '@pwm/components';
 import { catchError, take, takeUntil, tap } from 'rxjs/operators';
 
 const WEB_WARNING = `DO NOT Enter sensitive information, this is a demo only!`;
@@ -33,7 +40,7 @@ const WEB_WARNING = `DO NOT Enter sensitive information, this is a demo only!`;
   templateUrl: './dashboard-page.component.html',
   // styleUrls: ['./dashboard-page.component.scss'],
 })
-export class DashboardPageComponent implements OnInit, OnDestroy {
+export class DashboardPageComponent implements OnDestroy {
   // #region Class Properties
   private readonly clearSub$ = new Subject<void>();
   public readonly APP_TITLE: string = APP_TITLE;
@@ -98,14 +105,15 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   // #endregion
 
+  @ViewChild(SearchHeaderComponent)
+  private searchHeaderComponent?: SearchHeaderComponent;
+
   // #region Constructor + Lifecycle
   constructor(
-    private rawFileIOService: RawFileIOService,
     private dataService: DataService,
     private dataStore: DataStoreService,
     private settingsStore: SettingsStore,
     private appStore: AppStore,
-    private router: Router,
     @Inject('BUILD_VERSION') public version: string,
     @Inject('BUILD_DATE') public date: number
   ) {
@@ -131,11 +139,13 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   // (click)="$event.target.select()"
   // #myInput (click)="myInput.select()"
 
-  public ngOnInit(): void {}
-
   public ngOnDestroy(): void {
     this.clearSub$.next();
     this.clearSub$.complete();
+  }
+
+  private focusSearch(): void {
+    this.searchHeaderComponent?.focusSearchInput();
   }
   // #endregion
 
@@ -198,6 +208,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         }
 
         this.selectedFile = selectedFile;
+        this.focusSearch();
 
         // TODO: Remove if this never happens
         // if (
@@ -406,13 +417,14 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.error = this.dataService.onShowItemInExplorer(path);
   }
 
-  public selectEntryDetail(entry: Entry | null) {
+  public selectEntryDetail(entry: Entry | null): void {
     if (!this.appStore.getState()?.unsavedChanges) {
+      if (entry == null) return this.closeDetailView();
       this.detailEntry = entry;
     }
   }
 
-  public saveDetailEntry(entry: Entry) {
+  public saveDetailEntry(entry: Entry): void {
     if (!this.fileData) throw new Error('fileData is null');
     const fileData = this.fileData;
 
@@ -503,15 +515,16 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  public cancelDetailEntry() {
+  public cancelDetailEntry(): void {
     // console.log('cancelDetailEntry()');
     this.closeDetailView();
   }
 
-  private closeDetailView() {
+  private closeDetailView(): void {
     // console.log('closeDetailView()');
     this.detailEntry = null;
     // this.selectedIdx = null;
+    this.focusSearch();
     this.search();
   }
 

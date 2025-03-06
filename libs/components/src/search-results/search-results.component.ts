@@ -68,16 +68,19 @@ export class SearchResultsComponent {
   // Listen for the list being focused
   @HostListener('focus', ['$event'])
   protected onListFocusIn(event: FocusEvent): void {
+    // console.log('onListFocusIn()');
     this.onListFocus(true);
   }
 
   // Listen for the root element losing focus
   @HostListener('blur', ['$event'])
   protected onRootBlur(): void {
+    // console.log('onRootBlur()');
     this.onListFocus(false);
   }
 
   public onListFocus(focused: boolean): void {
+    // console.log('onListFocus()', focused);
     this.isListFocused = focused;
   }
 
