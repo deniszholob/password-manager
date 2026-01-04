@@ -563,6 +563,8 @@ export class DashboardPageComponent implements OnDestroy {
 
     this.newEntry = {
       guid: this.getUniqueGuid(),
+      dateCreated: Date.now(),
+      dateAccessed: 0,
       usedTimes: 0,
       password: '',
       serviceName: `New-${this.fileData?.entries.length}`,

@@ -3,14 +3,16 @@ import { Recovery } from '../recovery/recovery.model';
 
 export interface Entry {
   guid: string;
-  serviceName: string;
-  email?: string;
-  password: string;
-  username: string;
-  serviceUrl?: string;
-  recovery?: Recovery[];
-  tags?: string[];
-  notes?: string;
+  dateCreated: number;
+  dateAccessed: number;
   usedTimes: number;
+  password: string;
+  serviceName: string;
+  username: string;
   iconSrc?: IconSrcOptions;
+  recovery?: Recovery[];
+  notes?: string;
+  serviceUrl?: string;
+  email?: string;
+  tags?: string[];
 }

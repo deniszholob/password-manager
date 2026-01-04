@@ -15,6 +15,8 @@ export const MOCK_Entry: Entry = {
   tags: ['mock-tag'],
   notes: 'This is a mock note',
   usedTimes: 0,
+  dateAccessed: Date.now(),
+  dateCreated: 0,
 };
 
 export const MOCK_Entry_Array: Entry[] = [MOCK_Entry];

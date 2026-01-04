@@ -37,6 +37,8 @@ export const mockEntry: Entry = {
   notes: 'Mock Notes',
   usedTimes: 0,
   iconSrc: IconSrcOptions.fontawesome,
+  dateAccessed: Date.now(),
+  dateCreated: 0,
 };
 
 export const mockEntryEmpty: Entry = {
@@ -45,6 +47,8 @@ export const mockEntryEmpty: Entry = {
   password: '',
   serviceName: '',
   usedTimes: 0,
+  dateAccessed: Date.now(),
+  dateCreated: 0,
 };
 
 export const mockSavedFile: FileData = {
