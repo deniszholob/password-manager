@@ -71,6 +71,7 @@ export class DataService {
           errorHas(err, ERRORS.ANGULAR_NO_DATA) ||
           errorHas(err, ERRORS.INVALID_CONTENTS)
         ) {
+          // TODO: Instead of deleting the entry, mark as a warning, on next time to open clear if success or keep on fail
           return this.clearDataFilePathFromSettingsFile(location).pipe(
             switchMap(() => {
               // TODO: console warn happens but not sure about the throw
@@ -243,7 +244,7 @@ export class DataService {
     const newSettingsState: SettingsData = {
       ...settingsState,
       pinnedFiles: settingsState.pinnedFiles.filter((p) => p !== filePath),
-      recentFiles: settingsState.recentFiles.filter((p) => p !== filePath),
+      // recentFiles: settingsState.recentFiles.filter((p) => p !== filePath),
     };
 
     if (settingsState.dataFile === filePath) {
