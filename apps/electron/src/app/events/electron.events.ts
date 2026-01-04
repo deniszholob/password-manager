@@ -56,6 +56,7 @@ class ElectronEventHandler implements ElectronWindowApiRendererEvents {
     await shell.showItemInFolder(path);
   }
 }
+
 const handler = new ElectronEventHandler();
 
 ipcMain.handle(EVENT_CHANNELS.e_open_file, (event, arg) =>

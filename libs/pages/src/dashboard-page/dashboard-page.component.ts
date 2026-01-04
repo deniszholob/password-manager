@@ -561,23 +561,18 @@ export class DashboardPageComponent implements OnDestroy {
     if (!this.fileData) throw new Error('fileData is null');
     // console.log('createNewEntry()');
 
-    const ENTRY_EMPTY = {
+    this.newEntry = {
       guid: this.getUniqueGuid(),
       usedTimes: 0,
-      // email: '',
       password: '',
-      serviceName: ``,
-      // tags: [],
-      // recovery: [],
-      // serviceUrl: '',
-      username: '',
-      // notes: '',
-    };
-
-    this.newEntry = {
-      ...ENTRY_EMPTY,
       serviceName: `New-${this.fileData?.entries.length}`,
+      username: '',
       iconSrc: this.settingsStore.getState()?.defaultIconSrc,
+      recovery: [],
+      notes: '',
+      // serviceUrl: '',
+      // email: '',
+      tags: [],
     };
     this.detailEntry = this.newEntry;
     // this.selectedIdx = -1;

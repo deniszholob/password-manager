@@ -15,12 +15,11 @@ import { format } from 'url';
 import { environment } from '../environments/environment';
 import { homeFile } from './api/util';
 import { AppMenu } from './app-menu';
-import { rendererAppName, rendererAppPort } from './constants';
-
-const DEFAULT_RESOLUTION = {
-  w: 1920,
-  h: 1080,
-};
+import {
+  DEFAULT_RESOLUTION,
+  rendererAppName,
+  rendererAppPort,
+} from './constants';
 
 export default class App {
   // Keep a global reference of the window object, if you don't, the window will
@@ -80,21 +79,6 @@ export default class App {
     if (App.mainWindow === null) {
       App.onReady();
     }
-  }
-
-  private static initMenu() {
-    // Default menu
-    // let menu: Menu | null = Menu.getApplicationMenu();
-    // let template: (MenuItemConstructorOptions | MenuItem)[] = menu
-    //   ? menu.items.map((v, i) => {
-    //       v.id = String(i + 1);
-    //       return v;
-    //     })
-    //   : [];
-    const template = AppMenu.getMenuTemplate();
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
-    // App.mainWindow.setMenu(null);
   }
 
   private static initMainWindow() {
@@ -171,6 +155,21 @@ export default class App {
     });
   }
 
+  private static initMenu() {
+    // Default menu
+    // let menu: Menu | null = Menu.getApplicationMenu();
+    // let template: (MenuItemConstructorOptions | MenuItem)[] = menu
+    //   ? menu.items.map((v, i) => {
+    //       v.id = String(i + 1);
+    //       return v;
+    //     })
+    //   : [];
+    const template = AppMenu.getMenuTemplate();
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+    // App.mainWindow.setMenu(null);
+  }
+
   private static loadMainWindow() {
     if (!App.mainWindow) {
       throw new Error('Electron window is null!');
@@ -196,7 +195,7 @@ export default class App {
         EVENT_CHANNELS.fileOpenedApp,
         process.argv
       );
-      // Not use if this matters
+      // Not sure if this matters
       App.mainWindow.webContents.focus();
     });
   }
