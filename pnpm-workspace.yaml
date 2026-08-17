@@ -1,0 +1,11 @@
+packages:
+  - '.'
+
+allowBuilds:
+  '@angular/cli': true
+  '@fortawesome/fontawesome-free': true
+  '@nrwl/angular': true
+  core-js: true
+  core-js-pure: true
+  cypress: true
+  electron: true
