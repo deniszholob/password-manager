@@ -18,8 +18,8 @@ on:
     workflow_dispatch:
 
 env:
-    NODE_VERSION: '16.20.2'
-    PNPM_VERSION: '8'
+    NODE_VERSION: '22.23.2'
+    PNPM_VERSION: '11.18.0'
     NX_CACHE_DIR: '.nx'
 
 jobs:
@@ -68,7 +68,14 @@ jobs:
                       ${{runner.os}}-
 
             - name: Install NPM Dependencies
-              run: pnpm install
+              run: pnpm install --frozen-lockfile
+
+            - name: Print toolchain
+              run: |
+                  node -v
+                  pnpm -v
+                  pnpm exec nx report
+                  pnpm exec ng version
 
             - name: Display file structure
               run: ls -R
@@ -115,7 +122,14 @@ jobs:
                       ${{runner.os}}-
 
             - name: Install NPM Dependencies
-              run: pnpm install
+              run: pnpm install --frozen-lockfile
+
+            - name: Print toolchain
+              run: |
+                  node -v
+                  pnpm -v
+                  pnpm exec nx report
+                  pnpm exec ng version
 
             - name: Build
               run: pnpm run build:web

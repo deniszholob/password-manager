@@ -8,7 +8,7 @@
   "homepage": "https://github.com/deniszholob/password-manager",
   "private": true,
   "engines": {
-    "node": ">= 16.20.2 <= 17.0.0"
+    "node": "22.23.2"
   },
   "build": {
     "appId": "com.electron.password-manager",
@@ -72,7 +72,7 @@
     "dep-graph": "pnpm run nx -- dep-graph",
     "help": "pnpm run nx -- help",
     "ng": "pnpm run nx",
-    "nx": "node --openssl-legacy-provider ./node_modules/@nrwl/cli/bin/nx",
+    "nx": "NODE_OPTIONS=--openssl-legacy-provider nx",
     "postinstall": "exitzero electron-builder install-app-deps && ngcc --properties es2021 browser module main"
   },
   "dependencies": {
