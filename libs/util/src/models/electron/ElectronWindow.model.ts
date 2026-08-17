@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { MyFile, ElectronResult } from './ElectronFile.model';
-import { IpcRenderer } from 'electron';
+import type { IpcRenderer } from 'electron';
 import { Observable } from 'rxjs';
 
 /** Exposed Electron API to Angular in the preload Electron contextBridge */

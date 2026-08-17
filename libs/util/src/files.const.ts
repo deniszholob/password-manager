@@ -1,4 +1,4 @@
-import { FileFilter } from 'electron/main';
+import type { FileFilter } from 'electron/main';
 
 const FILE_FILTERS_TEXT: FileFilter[] = [
   {
